@@ -1,0 +1,35 @@
+????
+    ----
+    People
+    ----
+
+
+    Personality score, which would be a range of values from -3 to 3, which would dictate what kind of actions the person would do.
+    A -3 score would mean that the person would do very bad things, whilst 100 would mean they would be an angel.
+    People could form relationships with other people in order to increase their influence together.
+    Influence could dictate the chance of someone's action to be successful.
+    People's goals could be set by different programmed actions, for example:
+        -grow their influence as much as possible
+        -get as much money as possible
+        -be leading influential person in as many planets as possible
+        -killing as many people as possible
+        -try and keep everything as it is
+        -be a part of every planet
+????
+
+----
+Planets
+----
+
+Planets' influence will be dictated by the population, and also the influential people in its range. 
+Planets' influence could work that as it has larger influence, it would be able to control 
+other planets with lesser influence in a range of that influence.
+Missions will be a good way to either increase or decrease the influence of a planet.
+
+
+----
+Commodities
+----
+
+Inhabited planets will each have an individual market which will dictate which commodities each planet sells/buys. 
+Some planets will be consumers, some planets will be producers, and there would be trade ships to transport these between planets.
