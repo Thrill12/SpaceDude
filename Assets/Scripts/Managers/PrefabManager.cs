@@ -14,4 +14,10 @@ public class PrefabManager : MonoBehaviour
     public GameObject commodityMarketDisplayObject;
     public GameObject commodityInventoryDisplayObject;
 
+    [Space(5)]
+
+    [Header("Objects")]
+
+    public GameObject cargoShip;
+
 }

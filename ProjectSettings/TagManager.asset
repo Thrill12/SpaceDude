@@ -8,6 +8,7 @@ TagManager:
   - PrefabManager
   - UIManager
   - Progress
+  - TMManager
   layers:
   - Default
   - TransparentFX

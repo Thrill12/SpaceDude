@@ -11,6 +11,20 @@ public class Commodity : ScriptableObject
     public float stack;
     public Type commodityType;
 
+    public Commodity()
+    {
+
+    }
+
+    public Commodity(Commodity comm, float stack)
+    {
+        commodityIcon = comm.commodityIcon;
+        commodityName = comm.commodityName;
+        commodityPrice = comm.commodityPrice;
+        commodityType = comm.commodityType;
+        this.stack = stack;
+    }
+
     public enum Type
     {
         Food,
