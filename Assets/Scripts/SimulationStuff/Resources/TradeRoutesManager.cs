@@ -29,15 +29,15 @@ public class TradeRoutesManager : MonoBehaviour
         SpawnNewShip(route.sender, route.receiver, route);
     }
 
-    public void SpawnNewShip(Planet origin, Planet destination, TradeRoute route)
+    public void SpawnNewShip(Planet sender, Planet receiver, TradeRoute route)
     {
-        GameObject ship = Instantiate(pf.cargoShip, origin.transform.position, Quaternion.identity);
+        GameObject ship = Instantiate(pf.cargoShip, sender.gameObject.transform.position, Quaternion.identity);
         ship.transform.position = new Vector3(ship.transform.position.x, ship.transform.position.y, 0);
 
         CargoShip s = ship.GetComponent<CargoShip>();
 
-        s.origin = origin.gameObject;
-        s.destination = destination.gameObject;
+        s.origin = sender.gameObject;
+        s.destination = receiver.gameObject;
         s.commodityCarried = route.commodityToTransport;
     }
 }
