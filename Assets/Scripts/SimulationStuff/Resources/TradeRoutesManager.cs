@@ -13,6 +13,14 @@ public class TradeRoutesManager : MonoBehaviour
         pf = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
     }
 
+    public void TickAllTradeRoutes()
+    {
+        foreach (var item in allRoutes)
+        {
+            SpawnNewShip(item.sender, item.receiver, item);
+        }
+    }
+
     public void AddNewRoute(TradeRoute route)
     {
         allRoutes.Add(route);
