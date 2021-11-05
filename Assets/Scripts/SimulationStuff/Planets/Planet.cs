@@ -27,16 +27,14 @@ public class Planet : MonoBehaviour
     public float projectedFoodConsumptionNextTick;
     public float totalFoodReserves;
 
-    [Space(5)]
-
-    private float planetTick = 5;
-    private float nextTick = 0;
     private PrefabManager pf;
     private TradeRoutesManager tmManager;
 
     private void Start()
     {
         tmManager = GameObject.FindGameObjectWithTag("TMManager").GetComponent<TradeRoutesManager>();
+
+        availableTradeRoutes = new List<TradeRoute>();
 
         if(products.Count() == 0)
         {
@@ -67,26 +65,24 @@ public class Planet : MonoBehaviour
             GenerateResource(new PlanetProduction(item.comProduced, Mathf.Abs(item.comAmountPerTick) * 10f));
         }
 
+        totalWealth = population * commoditiesInMarket.Sum(x => x.stack);
+
         Tick();
     }
 
     private void Update()
     {
-        if (nextTick <= 0)
-        {
-            nextTick = planetTick;
-            Tick();
-        }
-
         totalInfluence = influenceModifier * population;
-
-        nextTick -= Time.deltaTime;
-
+        
         projectedFoodConsumptionNextTick = population * foodPerBillion;
     }
 
     public void Tick()
     {
+        
+        FindAllDeficits();
+        HandlePopulationUsage();
+
         foreach (PlanetProduction prod in products)
         {
             GenerateResource(prod);
@@ -95,9 +91,43 @@ public class Planet : MonoBehaviour
         foreach (PlanetProduction item in dependencies)
         {
             SubtractResource(item);
+        }                   
+    }
+
+    public void FindAllDeficits()
+    {
+        if (dependencies.Count != 0)
+        {
+            foreach (var item in dependencies)
+            {
+                if (item.lookingForTypeOnly)
+                {
+                    if (IncomeDeficit.CalculateProfit(this, item.typeLookingFor) < 0)
+                    {
+                        TryForNewTradeRoutes(item.typeLookingFor, item.comAmountPerTick);
+                    }
+                }
+                else
+                {
+                    if (IncomeDeficit.CalculateProfit(this, item.comProduced) < 0)
+                    {
+                        TryForNewTradeRoutes(item.comProduced, item.comAmountPerTick);
+                    }
+                }
+                
+            }
         }
 
-        HandlePopulationUsage();
+        if(availableTradeRoutes.Count() > 0)
+        {
+            foreach (var item in availableTradeRoutes.Where(x => x.sender == this))
+            {
+                if (IncomeDeficit.CalculateProfit(this, item.commodityToTransport) < 0)
+                {
+                    TryForNewTradeRoutes(item.commodityToTransport, item.commodityToTransport.stack);
+                }
+            }
+        }           
     }
 
     public void HandlePopulationUsage()
@@ -105,19 +135,11 @@ public class Planet : MonoBehaviour
         List<Commodity> foodItems = commoditiesInMarket.Where(x => x.commodityType == Commodity.Type.Food).ToList();
         totalFoodReserves = foodItems.Sum(x => x.stack);
 
-        float foodNet = IncomeDeficit.CalculateProfit(this, Commodity.Type.Food);
+        if (population == 0) return;                  
 
-        if (population == 0) return;             
-        
-        if(foodNet < 0)
+        if(dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == Commodity.Type.Food).Count() != 0)
         {
-            WarningLowFood();
-            TryForNewTradeRoutes(Commodity.Type.Food, foodNet);
-        }        
-
-        if(dependencies.Where(x => x.typeLookingFor == Commodity.Type.Food).Count() != 0)
-        {
-            dependencies.Where(x => x.typeLookingFor == Commodity.Type.Food).First().comAmountPerTick = -(foodPerBillion * population);
+            dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == Commodity.Type.Food).First().comAmountPerTick = -(foodPerBillion * population);
         }
         else
         {
@@ -132,7 +154,7 @@ public class Planet : MonoBehaviour
 
     public void TryForNewTradeRoutes(Commodity.Type type, float amount)
     {
-        Debug.Log(planetName + " is trying to find routes for " + amount + " " + type.ToString() + ".");
+        Debug.Log(planetName + " is trying to find routes for " + Mathf.Abs(amount) + " " + type.ToString() + ".");
 
         List<GameObject> possibilities = FindPlanetsSupplyingCommodityType(type).Select(x => x.gameObject).OrderBy(x => Vector2.Distance(gameObject.transform.position, x.gameObject.transform.position)).ToList();
 
@@ -140,9 +162,30 @@ public class Planet : MonoBehaviour
 
         foreach (var item in possibilities)
         {
-            if(RequestTradeRoute(this, item.GetComponent<Planet>(), type, amount))
+            if (item == gameObject) return;
+
+            if (RequestTradeRoute(this, item.GetComponent<Planet>(), type, Mathf.Abs(amount)))
             {
                 SetUpTradeRoute(this, item.GetComponent<Planet>(), type, amount);
+            }
+        }
+    }
+
+    public void TryForNewTradeRoutes(Commodity comm, float amount)
+    {
+        Debug.Log(planetName + " is trying to find routes for " + Mathf.Abs(amount) + " " + comm.commodityName.ToString() + ".");
+
+        List<GameObject> possibilities = FindPlanetsSupplyingCommodity(comm).Select(x => x.gameObject).OrderBy(x => Vector2.Distance(gameObject.transform.position, x.gameObject.transform.position)).ToList();
+
+        possibilities.Remove(gameObject);
+
+        foreach (var item in possibilities)
+        {
+            if (item == gameObject) return;
+
+            if (RequestTradeRoute(this, item.GetComponent<Planet>(), comm, Mathf.Abs(amount)))
+            {
+                SetUpTradeRoute(this, item.GetComponent<Planet>(), comm, amount);
             }
         }
     }
@@ -175,7 +218,7 @@ public class Planet : MonoBehaviour
     public bool RequestTradeRoute(Planet asker, Planet giver, Commodity comm, float amountRequested)
     {
         Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + Mathf.Abs(amountRequested) + " " + comm.commodityName);
-        float spare = IncomeDeficit.CalculateProfit(giver, Commodity.Type.Food, comm);
+        float spare = IncomeDeficit.CalculateProfit(giver, comm);
 
         if (spare > 0)
         {
@@ -201,19 +244,19 @@ public class Planet : MonoBehaviour
     {
         Debug.Log(asker.planetName + " setting up trade route with " + giver.planetName + " for " + Mathf.Abs(amount) + " " + type.ToString());
 
-        Commodity comm = giver.commoditiesInMarket.Where(x => x.commodityType == type).OrderBy(x => x.stack).First();
+        Commodity comm = giver.commoditiesInMarket.Where(x => x.commodityType == type).OrderBy(x => x.stack).ToList()[0];
 
-        //PlanetProduction prod = new PlanetProduction(type, Mathf.Abs(amount));
-        //prod.originDestination = giver;
-        //prod.comProduced = comm;
-        //asker.receivingFromPlanets.Add(prod);
+        TradeRoute route = new TradeRoute(giver, asker, comm, Mathf.Abs(amount));
+        tmManager.AddNewRoute(route);
+    }
 
-        //prod = new PlanetProduction(type, amount);
-        //prod.originDestination = asker;
-        //prod.comProduced = comm;
-        //giver.sendingToPlanets.Add(prod);
+    public void SetUpTradeRoute(Planet asker, Planet giver, Commodity comm, float amount)
+    {
+        Debug.Log(asker.planetName + " setting up trade route with " + giver.planetName + " for " + Mathf.Abs(amount) + " " + comm.commodityName.ToString());
 
-        TradeRoute route = new TradeRoute(giver, asker, comm, amount);
+        Commodity commo = giver.commoditiesInMarket.Where(x => x.commodityName == comm.commodityName).OrderBy(x => x.stack).ToList()[0];
+
+        TradeRoute route = new TradeRoute(giver, asker, commo, Mathf.Abs(amount));
         tmManager.AddNewRoute(route);
     }
 
@@ -239,7 +282,7 @@ public class Planet : MonoBehaviour
         }
         catch
         {
-            Debug.Log("SOMETHING WRONG IN SUBTRACT RESOURCE");
+            totalWealth -= prod.comAmountPerTick * population;
         }           
     }
 

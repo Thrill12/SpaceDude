@@ -1322,6 +1322,10 @@ PrefabInstance:
       value: Demeter
       objectReference: {fileID: 0}
     - target: {fileID: 6178985294195034629, guid: 8101bf2c319df8448a231f97df4947a2, type: 3}
+      propertyPath: population
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6178985294195034629, guid: 8101bf2c319df8448a231f97df4947a2, type: 3}
       propertyPath: products.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -3046,7 +3050,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1427094983
   m_SortingLayer: -2
-  m_SortingOrder: -7427
+  m_SortingOrder: -28443
   m_Sprite: {fileID: -6109005529162474001, guid: 05bad30e0c325254b800e25fcdfc49e3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3930,6 +3934,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1614215702}
     m_Modifications:
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: population
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: planetDescription
+      value: As the moon of Earth, it now acts as a safehouse for all the important
+        political figures on Earth, and of course the rich that can afford to buy
+        property and construct their own habitats. The moon economy is very refined,
+        however is very limited to the amount of oxygen they consume. Afterall, we
+        all know richer people consume more oxygen.
+      objectReference: {fileID: 0}
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: dependencies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: startingComms.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: startingComms.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: cb78eab19f8106f4e974507dcd5a2db9, type: 2}
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: startingComms.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 32aeff30a5dbb614a8d7b3c1f6651ff7, type: 2}
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: dependencies.Array.data[0].comProduced
+      value: 
+      objectReference: {fileID: 11400000, guid: 6651c015026a40143b91b784dff8580e, type: 2}
+    - target: {fileID: 3105190698579875427, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
+      propertyPath: dependencies.Array.data[0].comAmountPerTick
+      value: -150
+      objectReference: {fileID: 0}
     - target: {fileID: 5002673354134746188, guid: c13ab2fafe9b362449814c434f9cb3f6, type: 3}
       propertyPath: m_SortingOrder
       value: -150
@@ -4827,6 +4867,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239978577}
   m_CullTransparentMesh: 1
+--- !u!1 &1269090276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1269090278}
+  - component: {fileID: 1269090277}
+  m_Layer: 0
+  m_Name: PlanetTickManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1269090277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269090276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3713059e237c2aa47901eca84fa44d05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tickCooldown: 10
+  trManager: {fileID: 1954770961}
+--- !u!4 &1269090278
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269090276}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3306.8628, y: 1181.6239, z: -19167.977}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1275228418
 GameObject:
   m_ObjectHideFlags: 0
@@ -6930,6 +7015,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 470576120}
     m_Modifications:
     - target: {fileID: -1386198888811070300, guid: 533ff3d5132ffc9409369b5aa5ada7af, type: 3}
+      propertyPath: population
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: -1386198888811070300, guid: 533ff3d5132ffc9409369b5aa5ada7af, type: 3}
       propertyPath: products.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -6947,7 +7036,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 734d31f4c14ade2469801cadbef3940d, type: 2}
     - target: {fileID: -1386198888811070300, guid: 533ff3d5132ffc9409369b5aa5ada7af, type: 3}
       propertyPath: products.Array.data[0].comAmountPerTick
-      value: 25
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: -1386198888811070300, guid: 533ff3d5132ffc9409369b5aa5ada7af, type: 3}
       propertyPath: dependencies.Array.data[0].comAmountPerTick
