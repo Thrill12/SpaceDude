@@ -1400,9 +1400,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followCam: {fileID: 1309191507}
   starCamera: {fileID: 0}
-  minCamSize: 20
-  moveSpeed: 5
-  accelAcceleration: 0.05
+  minCamSize: 15
+  moveSpeed: 3
+  accelAcceleration: 0.01
   maxSpeed: 100
   maxAngVel: 100
   drag: 1

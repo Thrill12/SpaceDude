@@ -72,14 +72,13 @@ public class Planet : MonoBehaviour
 
     private void Update()
     {
-        totalInfluence = influenceModifier * population;
+        totalInfluence = influenceModifier / population * totalWealth;
         
         projectedFoodConsumptionNextTick = population * foodPerBillion;
     }
 
     public void Tick()
-    {
-        
+    {       
         FindAllDeficits();
         HandlePopulationUsage();
 
@@ -96,26 +95,23 @@ public class Planet : MonoBehaviour
 
     public void FindAllDeficits()
     {
-        if (dependencies.Count != 0)
+        foreach (var item in dependencies)
         {
-            foreach (var item in dependencies)
+            if (item.lookingForTypeOnly)
             {
-                if (item.lookingForTypeOnly)
+                if (IncomeDeficit.CalculateProfit(this, item.typeLookingFor) < 0)
                 {
-                    if (IncomeDeficit.CalculateProfit(this, item.typeLookingFor) < 0)
-                    {
-                        TryForNewTradeRoutes(item.typeLookingFor, item.comAmountPerTick);
-                    }
+                    TryForNewTradeRoutes(item.typeLookingFor, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.comProduced)));
                 }
-                else
-                {
-                    if (IncomeDeficit.CalculateProfit(this, item.comProduced) < 0)
-                    {
-                        TryForNewTradeRoutes(item.comProduced, item.comAmountPerTick);
-                    }
-                }
-                
             }
+            else
+            {
+                if (IncomeDeficit.CalculateProfit(this, item.comProduced) < 0)
+                {
+                    TryForNewTradeRoutes(item.comProduced, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.comProduced)));
+                }
+            }
+                
         }
 
         if(availableTradeRoutes.Count() > 0)
@@ -124,7 +120,7 @@ public class Planet : MonoBehaviour
             {
                 if (IncomeDeficit.CalculateProfit(this, item.commodityToTransport) < 0)
                 {
-                    TryForNewTradeRoutes(item.commodityToTransport, item.commodityToTransport.stack);
+                    TryForNewTradeRoutes(item.commodityToTransport, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.commodityToTransport)));
                 }
             }
         }           
@@ -143,7 +139,8 @@ public class Planet : MonoBehaviour
         }
         else
         {
-            dependencies.Add(new PlanetProduction(Commodity.Type.Food, -(foodPerBillion * population)));
+            PlanetProduction prod = new PlanetProduction(Commodity.Type.Food, -(foodPerBillion * population));
+            prod.lookingForTypeOnly = true;
         }
     }
 
@@ -168,6 +165,10 @@ public class Planet : MonoBehaviour
             {
                 SetUpTradeRoute(this, item.GetComponent<Planet>(), type, amount);
             }
+            else
+            {
+                TryForNewTradeRoutes(type, Mathf.FloorToInt(amount / 2));
+            }
         }
     }
 
@@ -186,6 +187,10 @@ public class Planet : MonoBehaviour
             if (RequestTradeRoute(this, item.GetComponent<Planet>(), comm, Mathf.Abs(amount)))
             {
                 SetUpTradeRoute(this, item.GetComponent<Planet>(), comm, amount);
+            }
+            else
+            {
+                TryForNewTradeRoutes(comm, Mathf.FloorToInt(amount / 2));
             }
         }
     }
@@ -254,7 +259,7 @@ public class Planet : MonoBehaviour
     {
         Debug.Log(asker.planetName + " setting up trade route with " + giver.planetName + " for " + Mathf.Abs(amount) + " " + comm.commodityName.ToString());
 
-        Commodity commo = giver.commoditiesInMarket.Where(x => x.commodityName == comm.commodityName).OrderBy(x => x.stack).ToList()[0];
+        Commodity commo = new Commodity(comm, amount);
 
         TradeRoute route = new TradeRoute(giver, asker, commo, Mathf.Abs(amount));
         tmManager.AddNewRoute(route);

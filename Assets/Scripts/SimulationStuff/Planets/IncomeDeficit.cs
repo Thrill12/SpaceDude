@@ -20,36 +20,25 @@ public static class IncomeDeficit
 
         float income = 0, deficit = 0;
 
-        if(planetToTrack.products.Count() > 0)
+        foreach (var item in planetToTrack.products.Where(x => x.comProduced.commodityName == commodityToTrack.commodityName))
         {
-            if (planetToTrack.products.Where(x => x.comProduced.commodityName == commodityToTrack.commodityName).Count() > 0)
-            {
-                income += planetToTrack.products.Where(x => x.comProduced.commodityName == commodityToTrack.commodityName).Sum(x => x.comAmountPerTick);
-            }
-        }
-            
-        if(planetToTrack.availableTradeRoutes.Count() > 0)
-        {
-            if (planetToTrack.availableTradeRoutes.Where(x => x.receiver = planetToTrack).Where(x => x.commodityToTransport.commodityName == commodityToTrack.commodityName).Count() > 0)
-            {
-                income += planetToTrack.availableTradeRoutes.Where(x => x.receiver = planetToTrack).
-                    Where(x => x.commodityToTransport.commodityName == commodityToTrack.commodityName).Sum(x => x.commodityToTransport.stack);
-            }
-
-            if (planetToTrack.availableTradeRoutes.Where(x => x.sender = planetToTrack).Where(x => x.commodityToTransport.commodityName == commodityToTrack.commodityName).Count() > 0)
-            {
-                deficit += planetToTrack.availableTradeRoutes.Where(x => x.sender = planetToTrack).
-                    Where(x => x.commodityToTransport.commodityName == commodityToTrack.commodityName).Sum(x => x.commodityToTransport.stack);
-            }
+            income += item.comAmountPerTick;
         }
 
-        if(planetToTrack.dependencies.Count() > 0)
+        foreach (var item in planetToTrack.availableTradeRoutes.Where(x => x.receiver = planetToTrack).Where(x => x.commodityToTransport.commodityName == commodityToTrack.commodityName))
         {
-            if (planetToTrack.dependencies.Where(x => x.lookingForTypeOnly == false).Where(x => x.comProduced.commodityName == commodityToTrack.commodityName).Count() > 0)
-            {
-                deficit += planetToTrack.dependencies.Where(x => x.comProduced.commodityName == commodityToTrack.commodityName).Sum(x => x.comAmountPerTick);
-            }
-        }                       
+            income += item.commodityToTransport.stack;
+        }
+
+        foreach (var item in planetToTrack.availableTradeRoutes.Where(x => x.sender = planetToTrack).Where(x => x.commodityToTransport.commodityName == commodityToTrack.commodityName))
+        {
+            deficit += item.commodityToTransport.stack;
+        }
+
+        foreach (var item in planetToTrack.dependencies.Where(x => x.lookingForTypeOnly == false).Where(x => x.comProduced.commodityName == commodityToTrack.commodityName))
+        {
+            deficit += item.comAmountPerTick;
+        }                     
 
         profit = income + deficit; 
 
@@ -64,7 +53,6 @@ public static class IncomeDeficit
         float profit = 0;
 
         float income = 0, deficit = 0;
-
 
         if (planetToTrack.products.Where(x => x.typeLookingFor == type).Count() > 0)
         {
@@ -85,7 +73,6 @@ public static class IncomeDeficit
         {
             deficit += planetToTrack.availableTradeRoutes.Where(x => x.commodityToTransport.commodityType == type).Where(x => x.sender == planetToTrack).Sum(x => x.commodityToTransport.stack);
         }
-
 
         profit = income + deficit;
 
