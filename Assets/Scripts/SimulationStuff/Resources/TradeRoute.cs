@@ -6,8 +6,8 @@ using UnityEngine;
 [System.Serializable]
 public class TradeRoute
 {
-    public Planet sender;
-    public Planet receiver;
+    public readonly Planet sender;
+    public readonly Planet receiver;
     public Commodity commodityToTransport;
 
     public TradeRoute(Planet sender, Planet receiver, Commodity commToTransport, float amount)
