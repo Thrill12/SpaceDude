@@ -25,6 +25,15 @@ public class Commodity : ScriptableObject
         this.stack = stack;
     }
 
+    public void ChangeToComm(Commodity comm, float stack)
+    {
+        commodityIcon = comm.commodityIcon;
+        commodityName = comm.commodityName;
+        commodityPrice = comm.commodityPrice;
+        commodityType = comm.commodityType;
+        this.stack = stack;
+    }
+
     public enum Type
     {
         Food,

@@ -6,12 +6,7 @@ public class TradeRoutesManager : MonoBehaviour
 {
     public List<TradeRoute> allRoutes;
 
-    private PrefabManager pf;
-
-    private void Start()
-    {
-        pf = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
-    }
+    public PrefabManager pf;
 
     public void TickAllTradeRoutes()
     {
@@ -31,6 +26,8 @@ public class TradeRoutesManager : MonoBehaviour
 
     public void SpawnNewShip(Planet sender, Planet receiver, TradeRoute route)
     {
+        Debug.Log(route.sender + " -> " + route.receiver + " | " + route.commodityToTransport.commodityName + " |");
+
         GameObject ship = Instantiate(pf.cargoShip, sender.gameObject.transform.position, Quaternion.identity);
         ship.transform.position = new Vector3(ship.transform.position.x, ship.transform.position.y, 0);
 
@@ -38,6 +35,6 @@ public class TradeRoutesManager : MonoBehaviour
 
         s.origin = sender.gameObject;
         s.destination = receiver.gameObject;
-        s.commodityCarried = route.commodityToTransport;
+        s.commodityCarried = route.commodityToTransport;      
     }
 }

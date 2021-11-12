@@ -38,9 +38,7 @@ public class CargoShip : MonoBehaviour
         Vector2 pos2D = new Vector2(transform.position.x, transform.position.y);
 
         travelledDistance = Vector2.Distance(pos2D, origin.transform.position);
-        progressCount = travelledDistance / routeDistance;
-
-        
+        progressCount = travelledDistance / routeDistance;        
 
         if (pos2D == dest2D)
         {

@@ -9,9 +9,8 @@ public class PlanetProduction
 {   
     public float comAmountPerTick;
     public bool lookingForTypeOnly = false;
-    [ConditionalField("lookingForTypeOnly")]public Commodity.Type typeLookingFor;
-    [ConditionalField("lookingForTypeOnly", true)] public Commodity comProduced;
-    [ConditionalField("originDestination")] public Planet originDestination;
+    [ConditionalField("lookingForTypeOnly")]        public Commodity.Type typeLookingFor;
+    [ConditionalField("lookingForTypeOnly", true)]  public Commodity comProduced;
 
     public PlanetProduction(Commodity comm, float comTick)
     {
