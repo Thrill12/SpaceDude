@@ -16,4 +16,4 @@ MonoBehaviour:
   commodityName: Wire
   commodityPrice: 1
   stack: 0
-  commodityType: 1
+  commodityType: 2

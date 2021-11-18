@@ -16,4 +16,4 @@ MonoBehaviour:
   commodityName: Steel Plate
   commodityPrice: 4
   stack: 0
-  commodityType: 2
+  commodityType: 3

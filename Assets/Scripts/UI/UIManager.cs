@@ -15,16 +15,19 @@ public class UIManager : MonoBehaviour
     [Space(5)]
 
     [Header("Planet UI")]
-
-    public GameObject planetUI;
+  
     public TMP_Text planetName;
     public TMP_Text planetDescription;
-    public GameObject planetMarketLayout;
-    public Image planetImage;
-    public Slider marketUnitSelector;
     public TMP_Text marketUnitSelectorText;
+    public TMP_Text populationCounter;
+
+    public GameObject planetMarketLayout;
+    public GameObject planetUI;
     public GameObject marketBuyButton;
     public GameObject marketSellButton;
+
+    public Image planetImage;
+    public Slider marketUnitSelector;     
 
     [Space(5)]
 
@@ -158,6 +161,7 @@ public class UIManager : MonoBehaviour
         planetName.text = planetCheck.planetHoveredP.planetName;
         planetDescription.text = planetCheck.planetHoveredP.planetDescription;
         planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
+        populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
 
         MarketSwitchToMarketComms();
     }

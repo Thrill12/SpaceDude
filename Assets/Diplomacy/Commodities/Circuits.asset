@@ -16,4 +16,4 @@ MonoBehaviour:
   commodityName: Circuit
   commodityPrice: 50
   stack: 0
-  commodityType: 1
+  commodityType: 2

@@ -16,4 +16,4 @@ MonoBehaviour:
   commodityName: Wheat
   commodityPrice: 2
   stack: 1000
-  commodityType: 0
+  commodityType: 1
