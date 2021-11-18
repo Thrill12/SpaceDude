@@ -20,4 +20,10 @@ public class PrefabManager : MonoBehaviour
 
     public GameObject cargoShip;
 
+    [Space(5)]
+
+    [Header("Player suit stuff")]
+
+    public GameObject playerSuitBullet;
+
 }

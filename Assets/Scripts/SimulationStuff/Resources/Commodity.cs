@@ -36,6 +36,7 @@ public class Commodity : ScriptableObject
 
     public enum Type
     {
+        None,
         Food,
         Electronic,
         BuildingSupply,

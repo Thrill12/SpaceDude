@@ -16,4 +16,4 @@ MonoBehaviour:
   commodityName: Wood
   commodityPrice: 5
   stack: 0
-  commodityType: 2
+  commodityType: 3

@@ -16,4 +16,4 @@ MonoBehaviour:
   commodityName: Oxygen Tank
   commodityPrice: 150
   stack: 500
-  commodityType: 3
+  commodityType: 4
