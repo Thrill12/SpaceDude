@@ -16,12 +16,14 @@ public class ShootingScript : MonoBehaviour
 
     private List<GameObject> usedObjs = new List<GameObject>();
     private List<GameObject> children = new List<GameObject>();
-    private PlayerMovement movement;
+    private PlayerShipMovement movement;
+    private UIManager ui;
 
     private void Start()
     {
         src = GetComponent<AudioSource>();
-        movement = transform.parent.GetComponent<PlayerMovement>();
+        movement = transform.parent.GetComponent<PlayerShipMovement>();
+        ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
 
         foreach (Transform trans in shootSourcesParent.transform)
         {
@@ -31,7 +33,8 @@ public class ShootingScript : MonoBehaviour
 
     private void Update()
     {
-        if (movement.ui.isInUI) return;
+        if (movement.isPlayerInShip == false) return;
+        if (ui.isInUI) return;
 
         if (nextFire <= 0)
         {

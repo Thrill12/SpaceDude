@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.domybest.mybox": "file:Z:/UNITY STUFF/Sp4ce_Dud3/SpaceDude/MyBox-master",
+    "com.domybest.mybox": "file:C:/UnityStuff/SpaceDude/MyBox-master",
     "com.unity.2d.animation": "5.0.3",
     "com.unity.2d.pixel-perfect": "4.0.1",
     "com.unity.2d.psdimporter": "4.0.2",

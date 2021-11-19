@@ -9,7 +9,7 @@ public class TickManager : MonoBehaviour
 
     public TradeRoutesManager trManager;
 
-    private float nextTick = 0;
+    private float nextTick = 1;
     private List<Planet> allPlanets;
 
     private void Start()
