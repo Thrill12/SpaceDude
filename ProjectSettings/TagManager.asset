@@ -9,6 +9,8 @@ TagManager:
   - UIManager
   - Progress
   - TMManager
+  - PlayerSuit
+  - GalacticEventHandler
   layers:
   - Default
   - TransparentFX

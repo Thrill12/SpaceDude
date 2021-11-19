@@ -10,7 +10,7 @@ public class TradeRoute
     public Planet receiver;
     public Commodity commodityToTransport;
     public Commodity.Type commTypeToTransport = Commodity.Type.None;
-    public float amount;
+    [ConditionalField("commTypeToTransport")]public float amount;
 
     public TradeRoute(Planet sender, Planet receiver, Commodity commToTransport, float amount)
     {

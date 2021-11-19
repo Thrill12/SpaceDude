@@ -8,6 +8,7 @@ public class Planet : MonoBehaviour
     public string planetName;
     public string planetDescription;
     public bool breathableAtmosphere;
+    public bool isTakenOverByAliens;
     public float totalInfluence;
     //In Billion
     public long population;
@@ -31,13 +32,15 @@ public class Planet : MonoBehaviour
 
     private PrefabManager pf;
     private TradeRoutesManager tmManager;
+    private GalacticEventHandler galacticEventHandler;
 
-    private void Start()
+    private void Awake()
     {
         tmManager = GameObject.FindGameObjectWithTag("TMManager").GetComponent<TradeRoutesManager>();
         pf = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         allPlanets = GameObject.FindGameObjectsWithTag("Planet").Select(x => x.GetComponent<Planet>()).ToList();
         GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.z);
+        galacticEventHandler = GameObject.FindGameObjectWithTag("GalacticEventHandler").GetComponent<GalacticEventHandler>();
 
         availableTradeRoutes = new List<TradeRoute>();
 
@@ -101,6 +104,7 @@ public class Planet : MonoBehaviour
                 if (IncomeDeficit.CalculateProfit(this, item.typeLookingFor) < 0)
                 {
                     TryForNewTradeRoutes(item.typeLookingFor, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.typeLookingFor)));
+                    WarningLowResource(item.typeLookingFor.ToString());
                 }
             }
             else
@@ -108,6 +112,7 @@ public class Planet : MonoBehaviour
                 if (IncomeDeficit.CalculateProfit(this, item.comProduced) < 0)
                 {
                     TryForNewTradeRoutes(item.comProduced, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.comProduced)));
+                    WarningLowResource(item.comProduced.commodityName);
                 }
             }               
         }
@@ -119,6 +124,7 @@ public class Planet : MonoBehaviour
                 if (IncomeDeficit.CalculateProfit(this, item.commodityToTransport) < 0)
                 {
                     TryForNewTradeRoutes(item.commodityToTransport, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.commodityToTransport)));
+                    WarningLowResource(item.commodityToTransport.commodityName);
                 }
             }
 
@@ -127,6 +133,7 @@ public class Planet : MonoBehaviour
                 if (IncomeDeficit.CalculateProfit(this, item.commTypeToTransport) < 0)
                 {
                     TryForNewTradeRoutes(item.commTypeToTransport, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.commTypeToTransport)));
+                    WarningLowResource(item.commodityToTransport.commodityName);
                 }
             }
         }           
@@ -166,7 +173,8 @@ public class Planet : MonoBehaviour
 
     public void WarningLowResource(string warning)
     {
-        Debug.Log("WARNING! " + this.planetName + " has LOW " + warning.ToUpper());
+        //Do a bunch of switch cases to do different messages for different warnings and resources lacking
+        galacticEventHandler.AddNewGalacticEvent($"{planetName} is severely lacking {warning}", this);
     }
 
     public void TryForNewTradeRoutes(Commodity.Type type, float amount)
@@ -340,7 +348,7 @@ public class Planet : MonoBehaviour
     public List<Planet> FindPlanetsSupplyingCommodity(Commodity comToSearch)
     {
         List<Planet> planets = allPlanets.Where(x => x.products.
-        Where(x => x.comProduced.commodityName == comToSearch.commodityName).ToList().Count >= 0).ToList();
+        Where(x => x.comProduced.commodityName == comToSearch.commodityName).ToList().Count >= 0 && x.isTakenOverByAliens == false).ToList();
 
         return planets;
     }
@@ -348,7 +356,7 @@ public class Planet : MonoBehaviour
     public List<Planet> FindPlanetsSupplyingCommodityType(Commodity.Type type)
     {
         List<Planet> planets = allPlanets.Where(x => x.products.
-        Where(x => x.comProduced.commodityType == type).ToList().Count >= 0).ToList();
+        Where(x => x.comProduced.commodityType == type).ToList().Count >= 0 && x.isTakenOverByAliens == false).ToList();
 
         return planets;
     }

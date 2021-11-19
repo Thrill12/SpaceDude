@@ -11,6 +11,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
     public GameObject planetHovered;
     public Planet planetHoveredP;
 
+    private PlayerShipMovement shipMovement;
     private GameObject planetBorder;
 
     private SpriteRenderer planetBorderRend;
@@ -26,7 +27,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         progress = GameObject.FindGameObjectWithTag("Progress").GetComponent<ProgressHolderd>();
-
+        shipMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShipMovement>();
         planetBorder = Instantiate(pfManager.planetBorder, transform.position, Quaternion.identity);
 
         planetBorderRend = planetBorder.GetComponent<SpriteRenderer>();
@@ -36,6 +37,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
 
     private void Update()
     {
+        if (!shipMovement.isPlayerInShip) return;
         if (isOverPlanet)
         {
             planetBorder.SetActive(true);

@@ -5,10 +5,13 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerShipMovement : MonoBehaviour
 {
+    public bool isPlayerInShip = true;
+
+    [Space(5)]
+
     public CinemachineVirtualCamera followCam;
-    public Camera starCamera;
 
     public float minCamSize = 20;
 
@@ -33,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 mousePos;
     [HideInInspector]
     public float currentSpeed;
+    private PlayersuitManager playerSuit;
 
     public GameObject thrust;
 
@@ -44,18 +48,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        isPlayerInShip = true;
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed;
         src = GetComponent<AudioSource>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
+        playerSuit = GetComponent<PlayersuitManager>();
     }
 
     private void Update()
     {
+          
+
         if (ui.isInUI) return;
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            playerSuit.PlayerLeaveShip();
+        }
 
         inputX = Input.GetAxisRaw("Horizontal");
         inputY = Input.GetAxisRaw("Vertical");
+
+        if (!isPlayerInShip) return;
 
         if (Input.GetMouseButton(0))
         {
@@ -87,7 +102,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MoveAndTurn();
+        if (isPlayerInShip)
+        {
+            MoveAndTurn();
+        }
+        
     }
 
     public void ChangeCameraZoomVelocity()
@@ -155,11 +174,18 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetAxis("Vertical") > 0)
         {
             moveSpeed += accelAcceleration;
-            thrust.SetActive(true);
         }
         else
         {
             moveSpeed = baseMoveSpeed;
+        }
+
+        if (rb.velocity.magnitude > 0.5f)
+        {
+            thrust.SetActive(true);
+        }
+        else
+        {
             thrust.SetActive(false);
         }
 

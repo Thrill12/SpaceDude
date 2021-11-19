@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public int commSelectedInMarketWindowUnits;
 
-    private PlayerMovement playerMovement;
+    private PlayerShipMovement playerMovement;
     private PrefabManager pfManager;
     private GameObject player;
     private PlanetCheckerRaycast planetCheck;
@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShipMovement>();
         player = GameObject.FindGameObjectWithTag("Player");
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         planetCheck = player.GetComponent<PlanetCheckerRaycast>();

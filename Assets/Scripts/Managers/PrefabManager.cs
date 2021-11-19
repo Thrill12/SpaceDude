@@ -13,6 +13,7 @@ public class PrefabManager : MonoBehaviour
     public GameObject planetHolderUI;
     public GameObject commodityMarketDisplayObject;
     public GameObject commodityInventoryDisplayObject;
+    public GameObject galacticEventPrefab;
 
     [Space(5)]
 
