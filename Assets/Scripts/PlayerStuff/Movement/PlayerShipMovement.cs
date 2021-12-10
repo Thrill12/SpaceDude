@@ -62,10 +62,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (ui.isInUI) return;
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            playerSuit.PlayerLeaveShip();
-        }
+        
 
         inputX = Input.GetAxisRaw("Horizontal");
         inputY = Input.GetAxisRaw("Vertical");
@@ -78,17 +75,14 @@ public class PlayerShipMovement : MonoBehaviour
         }
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            playerSuit.PlayerLeaveShip();
+        }
+
         if (Input.GetKeyDown(KeyCode.Z))
         {
             dampeners = !dampeners;
-        }
-
-        for (int i = 1; i < 10; i++)
-        {
-            if (Input.GetButtonDown(i.ToString()))
-            {
-                Debug.Log("Button " + i + " was pressed.");
-            }
         }
 
         if (Input.GetKeyDown(KeyCode.F1))
@@ -171,7 +165,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         currentSpeed = rb.velocity.magnitude;
 
-        if (Input.GetAxis("Vertical") > 0)
+        if (inputY > 0)
         {
             moveSpeed += accelAcceleration;
         }
@@ -180,7 +174,7 @@ public class PlayerShipMovement : MonoBehaviour
             moveSpeed = baseMoveSpeed;
         }
 
-        if (rb.velocity.magnitude > 0.5f)
+        if (inputY != 0)
         {
             thrust.SetActive(true);
         }
@@ -192,14 +186,12 @@ public class PlayerShipMovement : MonoBehaviour
         if (currentSpeed > maxSpeed)
         {
             rb.velocity = rb.velocity.normalized * maxSpeed;
-        }
-
-        
+        }        
     }
 
     public void ManageThrustVolume(float interval)
     {
-        if (inputY != 0)
+        if (rb.velocity.magnitude >= 0.5f)
         {
             if (currentVol < 1)
             {
@@ -209,7 +201,6 @@ public class PlayerShipMovement : MonoBehaviour
             {
                 currentVol = 1;
             }
-
 
             if (currentVol > lastVol)
             {
@@ -229,14 +220,7 @@ public class PlayerShipMovement : MonoBehaviour
         }
         else
         {
-            if (currentVol > 0)
-            {
-                currentVol -= interval * 4;
-            }
-            else
-            {
-                currentVol = 0;
-            }
+            currentVol = 0;
         }
 
         src.volume = currentVol;

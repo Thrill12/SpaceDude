@@ -1,0 +1,180 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: StationTIlesSpriteAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: -931493284425913039, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 814100358431600263, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 5769662111529959046, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 8501229379153569890, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -305168554068363993, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -6208134848360472016, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -1745049011280948865, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 5211745164843661978, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -9148341807223554030, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -9048192641222686197, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 1114646796741094055, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3684562326207342857, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -5052320489504722407, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 91974681427787221, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -1866338419035408968, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 8049239735045566497, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3211815418825281083, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -113996178595609863, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -4582401877760778594, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -8139105514105801121, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -5918354282546245974, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -8355083117788888566, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 8938356945095094423, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -8120323925528636241, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 4023018930920339469, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 5094737752361063794, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -6419999111262848172, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3497689606471582950, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -6941422852762540485, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -4819012328685627586, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3590207636862898149, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -408396846168208039, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 1558959487191823921, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3786115476455808955, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -7781352479309441268, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 356223449659879753, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 595508747133529673, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 8901531028996712117, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -8474740879727053552, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3318589669578194417, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -5892618101177633896, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 4521207776522067839, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 824959492066083578, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -7606234629451901924, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 6482964590553171806, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -7657094741939605724, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 3168918426942389004, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 1339269231420215825, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 1421881976529914242, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -1474506998622769691, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -8269629686364622043, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 252558984209222252, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3624728776038038798, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -778764822399169897, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 8854592227059702305, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 2818063909598327431, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -224872910991652484, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 2203797919881089718, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -9000362276992120081, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 5945357789820212794, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: 8673527630790295319, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  - {fileID: -3317108722525156635, guid: da1cf07e3d564ea41920be4c67cf53f0, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Dungeon_Tileset_41
+  - Dungeon_Tileset_40
+  - Dungeon_Tileset_43
+  - Dungeon_Tileset_42
+  - Dungeon_Tileset_34
+  - Dungeon_Tileset_45
+  - Dungeon_Tileset_35
+  - Dungeon_Tileset_29
+  - Dungeon_Tileset_44
+  - Dungeon_Tileset_28
+  - Dungeon_Tileset_27
+  - Dungeon_Tileset_30
+  - Dungeon_Tileset_26
+  - Dungeon_Tileset_31
+  - Dungeon_Tileset_25
+  - Dungeon_Tileset_32
+  - Dungeon_Tileset_24
+  - Dungeon_Tileset_33
+  - Dungeon_Tileset_23
+  - Dungeon_Tileset_22
+  - Dungeon_Tileset_21
+  - Dungeon_Tileset_20
+  - Dungeon_Tileset_7
+  - Dungeon_Tileset_6
+  - Dungeon_Tileset_5
+  - Dungeon_Tileset_4
+  - Dungeon_Tileset_3
+  - Dungeon_Tileset_70
+  - Dungeon_Tileset_2
+  - Dungeon_Tileset_71
+  - Dungeon_Tileset_1
+  - Dungeon_Tileset_72
+  - Dungeon_Tileset_12
+  - Dungeon_Tileset_0
+  - Dungeon_Tileset_73
+  - Dungeon_Tileset_63
+  - Dungeon_Tileset_13
+  - Dungeon_Tileset_62
+  - Dungeon_Tileset_10
+  - Dungeon_Tileset_102
+  - Dungeon_Tileset_61
+  - Dungeon_Tileset_11
+  - Dungeon_Tileset_60
+  - Dungeon_Tileset_16
+  - Dungeon_Tileset_100
+  - Dungeon_Tileset_17
+  - Dungeon_Tileset_101
+  - Dungeon_Tileset_78
+  - Dungeon_Tileset_54
+  - Dungeon_Tileset_14
+  - Dungeon_Tileset_79
+  - Dungeon_Tileset_55
+  - Dungeon_Tileset_15
+  - Dungeon_Tileset_9
+  - Dungeon_Tileset_52
+  - Dungeon_Tileset_8
+  - Dungeon_Tileset_53
+  - Dungeon_Tileset_50
+  - Dungeon_Tileset_18
+  - Dungeon_Tileset_69
+  - Dungeon_Tileset_51
+  - Dungeon_Tileset_19
+  m_RenderDataMap: {}
+  m_Tag: StationTIlesSpriteAtlas
+  m_IsVariant: 0

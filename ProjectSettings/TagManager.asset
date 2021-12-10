@@ -11,6 +11,11 @@ TagManager:
   - TMManager
   - PlayerSuit
   - GalacticEventHandler
+  - Visualizer
+  - EndObject
+  - PlayerSuitSpawner
+  - Wall
+  - StationGenerator
   layers:
   - Default
   - TransparentFX
@@ -19,11 +24,11 @@ TagManager:
   - Water
   - UI
   - BackgroundStars
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Walls
+  - SuitEnvironment
+  - PlayerSuitBullets
+  - PlayerShipBullets
   - 
   - 
   - 
@@ -50,6 +55,12 @@ TagManager:
     locked: 0
   - name: Planets
     uniqueID: 458104105
+    locked: 0
+  - name: Ground
+    uniqueID: 1469225385
+    locked: 0
+  - name: Walls
+    uniqueID: 128903707
     locked: 0
   - name: Default
     uniqueID: 0

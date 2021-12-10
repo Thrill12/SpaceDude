@@ -9,6 +9,7 @@ public class GalacticEventHandler : MonoBehaviour
 {
     public List<GalacticEvent> allEvents = new List<GalacticEvent>();
     public GameObject galacticEventHolder;
+    public GameObject galacticEventsMainObject;
 
     private PrefabManager pf;
     private void Start()
@@ -30,5 +31,6 @@ public class GalacticEventHandler : MonoBehaviour
             GameObject.FindGameObjectsWithTag("Planet").ToList().Where(x => x.GetComponent<Planet>() == galEvent.eventSource)
             .First().gameObject.GetComponent<SpriteRenderer>().sprite;
         instantiated.transform.Find("GalacticEventDetails").GetComponent<TMP_Text>().text = galEvent.eventDescription;
+        galacticEventsMainObject.GetComponent<Animator>().SetTrigger("NewEvent");
     }
 }
