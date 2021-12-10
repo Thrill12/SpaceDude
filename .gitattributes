@@ -168,3 +168,7 @@
 /Assets/TextMesh[[:space:]]Pro/Resources/Fonts[[:space:]]&[[:space:]]Materials/LiberationSans[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
 /Assets/TextMesh[[:space:]]Pro/Sprites/EmojiOne.png filter=lfs diff=lfs merge=lfs -text
 /Assets/Scenes/UniverseScene.unity filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Player/Shooting/BlueShipBulletImpactParticles.prefab filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Player/Shooting/YellowBulletImpactParticles.prefab filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Stations/StationGenerator.prefab filter=lfs diff=lfs merge=lfs -text
+/Assets/Sprites/SuitEnvironments/tileset.png.meta filter=lfs diff=lfs merge=lfs -text

@@ -8,8 +8,6 @@ public class PlayerSuitMovement : MonoBehaviour
     public float dashSpeed = 5;
     public float dashTime = 1;
 
-    public GameObject playerFlashlight;
-
     private GameObject playerShip;
     private float inputX;
     private float inputY;
@@ -31,26 +29,19 @@ public class PlayerSuitMovement : MonoBehaviour
         inputY = Input.GetAxisRaw("Vertical");
 
         RotatePlayerToMouse();
-        ToggleFlashlight();
         Dash();
 
-        if(isOverShip && Input.GetKeyDown(KeyCode.F))
+        Debug.Log(isOverShip);
+
+        if (isOverShip == true && Input.GetKeyDown(KeyCode.F))
         {
             playerShip.GetComponent<PlayersuitManager>().PlayerEnterShip();
-        }
+        }        
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
-    }
-
-    private void ToggleFlashlight()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            playerFlashlight.SetActive(!playerFlashlight.activeInHierarchy);
-        }
     }
 
     private void RotatePlayerToMouse()
@@ -92,19 +83,17 @@ public class PlayerSuitMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.CompareTag("Player"))
+        if (collision.CompareTag("PlayerSuitSpawner"))
         {
             isOverShip = true;
-            Debug.Log("Is over ship");
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (other.transform.CompareTag("Player"))
+        if (collision.CompareTag("PlayerSuitSpawner"))
         {
             isOverShip = false;
-            Debug.Log("Is not over ship");
         }
     }
 }

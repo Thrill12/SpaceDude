@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1199885856525886415}
   - component: {fileID: 1199885856525886408}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BulletLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,8 @@ GameObject:
   - component: {fileID: 1199885856826008899}
   - component: {fileID: 404207230590443944}
   - component: {fileID: -7048933023005091788}
-  m_Layer: 0
+  - component: {fileID: 2502406260005184487}
+  m_Layer: 10
   m_Name: PlayerSuitBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,4 +195,17 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.55
+--- !u!114 &2502406260005184487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199885856826008898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76adde400861ff64db9d59c08317a383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  impactParticles: {fileID: 3842217551754517919, guid: 643475d64c4afa441acfed47013b1863, type: 3}

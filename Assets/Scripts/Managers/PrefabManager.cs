@@ -26,5 +26,6 @@ public class PrefabManager : MonoBehaviour
     [Header("Player suit stuff")]
 
     public GameObject playerSuitBullet;
+    public GameObject playerSuitYellowBulletImpactParticles;
 
 }
