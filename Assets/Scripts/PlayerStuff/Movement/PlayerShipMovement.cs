@@ -13,7 +13,8 @@ public class PlayerShipMovement : MonoBehaviour
 
     public CinemachineVirtualCamera followCam;
 
-    public float minCamSize = 20;
+    public float startFOV = 95;
+    public float maxFOV = 120;
 
     public float moveSpeed;
     private float baseMoveSpeed;
@@ -105,13 +106,18 @@ public class PlayerShipMovement : MonoBehaviour
 
     public void ChangeCameraZoomVelocity()
     {
-        if(rb.velocity.magnitude / 2 > minCamSize)
+        float newFOV = rb.velocity.magnitude * 2;
+
+        if(newFOV > startFOV)
         {
-            followCam.m_Lens.OrthographicSize = rb.velocity.magnitude / 2;
+            if (newFOV < maxFOV)
+            {
+                followCam.m_Lens.FieldOfView = newFOV;
+            }
         }
         else
         {
-            followCam.m_Lens.OrthographicSize = minCamSize;
+            followCam.m_Lens.FieldOfView = startFOV;
         }        
     }
 
