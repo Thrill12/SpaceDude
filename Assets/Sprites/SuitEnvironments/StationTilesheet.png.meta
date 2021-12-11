@@ -99,6 +99,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -108,8 +109,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -700,6 +701,32 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      StationTilesheet_11: -8866826663128071194
+      StationTilesheet_10: 3411393801710139144
+      StationTilesheet_12: 1693299308175717080
+      StationTilesheet_16: 1990514422351733916
+      StationTilesheet_8: -2267226100976511323
+      StationTilesheet_19: -840794245106585834
+      StationTilesheet_14: 110616691337277005
+      StationTilesheet_17: 3061237165203808305
+      StationTilesheet_23: -6390808500110324195
+      StationTilesheet_21: -535466153275020144
+      StationTilesheet_15: -4657161557179167409
+      StationTilesheet_6: -7377054355961749950
+      StationTilesheet_13: 1242200208578469094
+      StationTilesheet_18: -1592052474024080486
+      StationTilesheet_3: 7954459102719688003
+      StationTilesheet_24: 6654478718424887517
+      StationTilesheet_4: -3815542503789513882
+      StationTilesheet_1: -7512646670025607779
+      StationTilesheet_0: -7580492328324590735
+      StationTilesheet_22: 1709855455501943246
+      StationTilesheet_5: -3222655004225621179
+      StationTilesheet_20: -4295790858363441793
+      StationTilesheet_9: -7517988198436624642
+      StationTilesheet_7: 3585118286815873348
+      StationTilesheet_2: -1275043588444787304
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

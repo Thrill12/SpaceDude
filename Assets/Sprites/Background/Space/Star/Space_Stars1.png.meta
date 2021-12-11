@@ -51,6 +51,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -60,8 +61,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -673,6 +674,33 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Space_Stars1_2: 3167223707508580711
+      Space_Stars1_4: -3678757803058555676
+      Space_Stars1_5: 3615936235769507316
+      Space_Stars1_7: 2391136617174997446
+      Space_Stars1_1: -8319224655781335272
+      Space_Stars1_6: -1134905025921482692
+      Space_Stars1_23: 6002084380050766125
+      Space_Stars1_14: 244677860676554698
+      Space_Stars1_15: 9054097270696114894
+      Space_Stars1_3: -7455527047086959275
+      Space_Stars1_11: 5813691502076509549
+      Space_Stars1_9: 2190847224327958644
+      Space_Stars1_10: -6307389151682610644
+      Space_Stars1_16: 1830045494769318159
+      Space_Stars1_8: -3830825685872065036
+      Space_Stars1_12: -763693860990551884
+      Space_Stars1_0: 8481098793898274611
+      Space_Stars1_20: -527780551551806648
+      Space_Stars1_24: 6062487903610044528
+      Space_Stars1_25: -8743297772132421119
+      Space_Stars1_21: -8471675298176459488
+      Space_Stars1_18: -3305283780931083575
+      Space_Stars1_22: -7442657815851488299
+      Space_Stars1_19: 692647029044157983
+      Space_Stars1_17: 7810228393381698655
+      Space_Stars1_13: 7071011853323899219
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
