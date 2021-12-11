@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(CompositeCollider2D))]
 public class ShadowCaster2DTileMap : MonoBehaviour
