@@ -50,7 +50,7 @@ public class PlayerSuitMovement : MonoBehaviour
     //Called every n of a second. Use for physics updating.
     private void FixedUpdate()
     {
-        //Moves the player by adding velocity to the rigi body from the captured input.
+        //Moves the player by adding velocity to the rigid body from the captured input.
         MovePlayer();
     }
 
