@@ -29,7 +29,7 @@ TagManager:
   - SuitEnvironment
   - PlayerSuitBullets
   - PlayerShipBullets
-  - 
+  - ExtremeUI
   - 
   - 
   - 
@@ -70,4 +70,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 1306387681
+    locked: 0
+  - name: ExtremeUI
+    uniqueID: 1254453905
     locked: 0
