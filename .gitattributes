@@ -224,3 +224,5 @@
 /Assets/SciFi[[:space:]]ui/Legacy/Interface_5.png filter=lfs diff=lfs merge=lfs -text
 /Assets/SciFi[[:space:]]ui/Legacy/Interface_5_Glow.png filter=lfs diff=lfs merge=lfs -text
 /Assets/mount-fuji-panaromic-8k-uj-7680x4320.jpg filter=lfs diff=lfs merge=lfs -text
+/Assets/TextMesh[[:space:]]Pro/Examples[[:space:]]&[[:space:]]Extras/Resources/Fonts[[:space:]]&[[:space:]]Materials/Electronic[[:space:]]Highway[[:space:]]Sign[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
+/Assets/TextMesh[[:space:]]Pro/Examples[[:space:]]&[[:space:]]Extras/Resources/Fonts[[:space:]]&[[:space:]]Materials/Roboto-Bold[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
