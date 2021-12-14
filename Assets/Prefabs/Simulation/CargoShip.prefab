@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7723718285495040507}
   - component: {fileID: 7723718285495040510}
   - component: {fileID: 358125204723457202}
-  - component: {fileID: 917797573726847521}
   m_Layer: 0
   m_Name: CargoShip
   m_TagString: Untagged
@@ -31,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -38, y: -372.0001, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -125,10 +125,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99757885d14584459cf5af17e49dfeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.1
+  flightState: 0
+  perspectiveMask: BackgroundStars
+  orthoMask: Ship
+  launchSpeed: 100
   commodityCarried: {fileID: 11400000, guid: 734d31f4c14ade2469801cadbef3940d, type: 2}
   origin: {fileID: 0}
   destination: {fileID: 0}
+  speedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  progressCount: 0
+  routeDistance: 0
+  travelledDistance: 0
+  planetRadiusFloat: 0
   hasDroppedCargo: 0
 --- !u!50 &358125204723457202
 Rigidbody2D:
@@ -151,22 +164,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!95 &917797573726847521
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7723718285495040506}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 39cd61734d15d6f4cad91ccff928b3ad, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0

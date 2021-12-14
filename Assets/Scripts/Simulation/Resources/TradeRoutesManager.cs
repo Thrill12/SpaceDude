@@ -6,6 +6,8 @@ using UnityEngine;
 public class TradeRoutesManager : MonoBehaviour
 {
     public List<TradeRoute> allRoutes;
+    [Header("Cargo Ship Speed Curve"), Tooltip("The 0-1 value is a perecentage of jopurney completion, so 0.5 = 50% complete. Speed should be an inveerted U shape.")]
+    public AnimationCurve speedCurve;
 
     public PrefabManager pf;
 
@@ -37,12 +39,13 @@ public class TradeRoutesManager : MonoBehaviour
         }
 
         GameObject ship = Instantiate(pf.cargoShip, sender.gameObject.transform.position, Quaternion.identity);
-        ship.transform.position = new Vector3(ship.transform.position.x, ship.transform.position.y, 0);
+        
 
         CargoShip s = ship.GetComponent<CargoShip>();
 
         s.origin = sender.gameObject;
         s.destination = receiver.gameObject;
+        s.speedCurve = speedCurve;
 
         if(route.commodityToTransport != null)
         {

@@ -13,9 +13,7 @@ public class PlayerShipMovement : MonoBehaviour
 
     [Header("Camera Settings")]
     public CinemachineVirtualCamera followCam;
-    public AnimationCurve fovCurve;
-    private float startFOV;
-    private float maxFOV;
+    public AnimationCurve camSizeCurve;
 
     [Header("Movement Settings")]
     public float moveSpeed;
@@ -57,9 +55,6 @@ public class PlayerShipMovement : MonoBehaviour
         src = GetComponent<AudioSource>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         playerSuit = GetComponent<PlayersuitManager>();
-        startFOV = fovCurve.Evaluate(0);
-        maxFOV = fovCurve.Evaluate(1);
-
     }
 
     private void Update()
@@ -111,19 +106,8 @@ public class PlayerShipMovement : MonoBehaviour
 
     public void ChangeCameraZoomVelocity()
     {
-        float newFOV = fovCurve.Evaluate(rb.velocity.magnitude / 100);
-
-        if(newFOV > startFOV)
-        {
-            if (newFOV < maxFOV)
-            {
-                followCam.m_Lens.FieldOfView = newFOV;
-            }
-        }
-        else
-        {
-            followCam.m_Lens.FieldOfView = startFOV;
-        }        
+        float newSize = camSizeCurve.Evaluate(rb.velocity.magnitude / 100);
+        followCam.m_Lens.OrthographicSize = newSize;   
     }
 
     public void MoveAndTurn()
