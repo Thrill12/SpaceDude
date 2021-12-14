@@ -129,6 +129,7 @@ public class CargoShip : MonoBehaviour
     {
         hasDroppedCargo = true;
         destination.GetComponent<Planet>().ReceiveCommodity(commodityCarried);
+        GetComponent<Animator>().SetTrigger("GetOutOfOrbit");
         Destroy(gameObject, 2);
     }
 
