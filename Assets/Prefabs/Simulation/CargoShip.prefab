@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flightState: 0
   perspectiveMask: BackgroundStars
-  orthoMask: Ship
+  orthoMask: SuitEnvironment
   launchSpeed: 100
   commodityCarried: {fileID: 11400000, guid: 734d31f4c14ade2469801cadbef3940d, type: 2}
   origin: {fileID: 0}

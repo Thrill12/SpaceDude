@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Intensity: 2
   m_LightVolumeIntensity: 0
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: a9999257
+  m_ApplyToSortingLayers: a99992571d1df5db
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -237,4 +237,4 @@ MonoBehaviour:
   - {x: -0.07486631, y: 0.09008035, z: 0}
   m_ShapePathHash: 849515421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 174466
+  m_InstanceId: 128378
