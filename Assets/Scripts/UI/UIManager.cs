@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
     public GameObject inventory;
 
     [HideInInspector]
-    public Commodity commSelectedInMarketWindow;
+    public BaseItem commSelectedInMarketWindow;
     [HideInInspector]
     public int commSelectedInMarketWindowUnits;
 
@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
     private PlanetCheckerRaycast planetCheck;
     [HideInInspector]
     public List<Planet> allPlanets = new List<Planet>();
-    private PlayerInventory inv;
+    private Inventory inv;
 
     public bool isInUI;
 
@@ -57,7 +57,7 @@ public class UIManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         planetCheck = player.GetComponent<PlanetCheckerRaycast>();
-        inv = player.GetComponent<PlayerInventory>();
+        inv = player.GetComponent<Inventory>();
 
         foreach (var item in GameObject.FindGameObjectsWithTag("Planet"))
         {
@@ -224,36 +224,36 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void MarketSelectCommodityInMarketWindow(Commodity comm)
+    public void MarketSelectCommodityInMarketWindow(BaseItem comm)
     {
         commSelectedInMarketWindow = comm;
-        marketUnitSelector.maxValue = comm.stack;
-        marketUnitSelector.value = comm.stack;
+        marketUnitSelector.maxValue = comm.itemStack;
+        marketUnitSelector.value = comm.itemStack;
     }
 
     public void MarketBuyCommodity()
     {
         try
         {
-            if(commSelectedInMarketWindow.stack >= commSelectedInMarketWindowUnits)
+            if(commSelectedInMarketWindow.itemStack >= commSelectedInMarketWindowUnits)
             {
-                commSelectedInMarketWindow.stack -= commSelectedInMarketWindowUnits;
-                Commodity newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
-                newCommToAdd.stack = commSelectedInMarketWindowUnits;
+                commSelectedInMarketWindow.itemStack -= commSelectedInMarketWindowUnits;
+                BaseItem newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
+                newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
-                inv.AddToInventory(newCommToAdd);
-                if(commSelectedInMarketWindow.stack == 0)
+                inv.AddItemToInventory(newCommToAdd);
+                if(commSelectedInMarketWindow.itemStack == 0)
                 {
                     planetCheck.planetHoveredP.commoditiesInMarket.Remove(commSelectedInMarketWindow);
                 }
             }
-            else if (commSelectedInMarketWindow.stack == commSelectedInMarketWindowUnits)
+            else if (commSelectedInMarketWindow.itemStack == commSelectedInMarketWindowUnits)
             {
-                commSelectedInMarketWindow.stack -= commSelectedInMarketWindowUnits;
-                Commodity newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
-                newCommToAdd.stack = commSelectedInMarketWindowUnits;
+                commSelectedInMarketWindow.itemStack -= commSelectedInMarketWindowUnits;
+                BaseItem newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
+                newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
-                inv.AddToInventory(newCommToAdd);
+                inv.AddItemToInventory(newCommToAdd);
                 planetCheck.planetHoveredP.commoditiesInMarket.Remove(commSelectedInMarketWindow);
             }
             else
@@ -273,22 +273,22 @@ public class UIManager : MonoBehaviour
     {
         try
         {
-            if (commSelectedInMarketWindow.stack > commSelectedInMarketWindowUnits)
+            if (commSelectedInMarketWindow.itemStack > commSelectedInMarketWindowUnits)
             {
-                commSelectedInMarketWindow.stack -= commSelectedInMarketWindowUnits;
-                Commodity newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
-                newCommToAdd.stack = commSelectedInMarketWindowUnits;
+                commSelectedInMarketWindow.itemStack -= commSelectedInMarketWindowUnits;
+                BaseItem newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
+                newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
                 planetCheck.planetHoveredP.ReceiveCommodity(newCommToAdd);
             }
-            else if (commSelectedInMarketWindow.stack == commSelectedInMarketWindowUnits)
+            else if (commSelectedInMarketWindow.itemStack == commSelectedInMarketWindowUnits)
             {
-                commSelectedInMarketWindow.stack -= commSelectedInMarketWindowUnits;
-                Commodity newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
-                newCommToAdd.stack = commSelectedInMarketWindowUnits;
+                commSelectedInMarketWindow.itemStack -= commSelectedInMarketWindowUnits;
+                BaseItem newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
+                newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
                 planetCheck.planetHoveredP.ReceiveCommodity(newCommToAdd);
-                player.GetComponent<PlayerInventory>().commsInInventory.Remove(commSelectedInMarketWindow);
+                player.GetComponent<Inventory>().items.Remove(commSelectedInMarketWindow);
             }
             else
             {
@@ -333,25 +333,25 @@ public class UIManager : MonoBehaviour
             Debug.Log("No children to remove");
         }
 
-        foreach (Commodity item in planetCheck.planetHoveredP.commoditiesInMarket)
+        foreach (BaseItem item in planetCheck.planetHoveredP.commoditiesInMarket)
         {
             GameObject obj = Instantiate(pfManager.commodityMarketDisplayObject, planetMarketLayout.transform);
             obj.GetComponent<CommodityInvHolder>().commodityHeld = item;
             try
             {
-                List<List<Commodity>> commodities = allPlanets.Select(x => x.commoditiesInMarket).ToList();
-                List<Commodity> accCommodity = new List<Commodity>();
-                foreach (List<Commodity> list in commodities)
+                List<List<BaseItem>> commodities = allPlanets.Select(x => x.commoditiesInMarket).ToList();
+                List<BaseItem> accCommodity = new List<BaseItem>();
+                foreach (List<BaseItem> list in commodities)
                 {
-                    foreach (Commodity comm in list)
+                    foreach (BaseItem comm in list)
                     {
                         accCommodity.Add(comm);
                     }
                 }
 
-                List<Commodity> matching = accCommodity.Where(x => x.commodityName == item.commodityName).ToList();
+                List<BaseItem> matching = accCommodity.Where(x => x.itemName == item.itemName).ToList();
                 matching.Remove(item);
-                float average = (float)matching.Average(x => x.commodityPrice);
+                float average = (float)matching.Average(x => x.itemValue);
 
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "$" + average;
             }
@@ -360,10 +360,10 @@ public class UIManager : MonoBehaviour
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "Only sold here";
             }
 
-            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.commodityIcon;
-            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.commodityName;
-            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.commodityPrice;
-            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.stack + " units";
+            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.itemIcon;
+            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.itemName;
+            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.itemValue;
+            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.itemStack + " units";
         }
     }
 
@@ -384,25 +384,25 @@ public class UIManager : MonoBehaviour
             Debug.Log("No children to remove");
         }
 
-        foreach (Commodity item in player.GetComponent<PlayerInventory>().commsInInventory)
+        foreach (BaseItem item in player.GetComponent<Inventory>().items)
         {
             GameObject obj = Instantiate(pfManager.commodityMarketDisplayObject, planetMarketLayout.transform);
             obj.GetComponent<CommodityInvHolder>().commodityHeld = item;
             try
             {
-                List<List<Commodity>> commodities = allPlanets.Select(x => x.commoditiesInMarket).ToList();
-                List<Commodity> accCommodity = new List<Commodity>();
-                foreach (List<Commodity> list in commodities)
+                List<List<BaseItem>> commodities = allPlanets.Select(x => x.commoditiesInMarket).ToList();
+                List<BaseItem> accCommodity = new List<BaseItem>();
+                foreach (List<BaseItem> list in commodities)
                 {
-                    foreach (Commodity comm in list)
+                    foreach (BaseItem comm in list)
                     {
                         accCommodity.Add(comm);
                     }
                 }
 
-                List<Commodity> matching = accCommodity.Where(x => x.commodityName == item.commodityName).ToList();
+                List<BaseItem> matching = accCommodity.Where(x => x.itemName == item.itemName).ToList();
                 matching.Remove(item);
-                float average = (float)matching.Average(x => x.commodityPrice);
+                float average = (float)matching.Average(x => x.itemValue);
 
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "$" + average;
             }
@@ -411,10 +411,10 @@ public class UIManager : MonoBehaviour
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "Only sold here";
             }
 
-            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.commodityIcon;
-            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.commodityName;
-            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.commodityPrice;
-            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.stack + " units";
+            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.itemIcon;
+            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.itemName;
+            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.itemValue;
+            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.itemStack + " units";
         }
     }
 }

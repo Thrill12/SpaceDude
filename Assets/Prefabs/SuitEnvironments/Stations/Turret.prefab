@@ -48,12 +48,12 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
+  m_FalloffIntensity: 0.638
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_Intensity: 2
-  m_LightVolumeIntensity: 0
+  m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: a99992571d1df5db
+  m_ApplyToSortingLayers: a99992571beaae07110a6b09
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_UseRendererSilhouette: 1
   m_CastsShadows: 1
   m_SelfShadows: 0
-  m_ApplyToSortingLayers: a9999257
+  m_ApplyToSortingLayers: a99992571beaae07
   m_ShapePath:
   - {x: -0.077249125, y: -0.10318559, z: 0}
   - {x: 0.07367493, y: -0.10437698, z: 0}
@@ -237,4 +237,4 @@ MonoBehaviour:
   - {x: -0.07486631, y: 0.09008035, z: 0}
   m_ShapePathHash: 849515421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 128378
+  m_InstanceId: 189420

@@ -8,22 +8,32 @@ public class TradeRoute
 {
     public Planet sender;
     public Planet receiver;
-    public Commodity commodityToTransport;
-    public Commodity.Type commTypeToTransport = Commodity.Type.None;
-    [ConditionalField("commTypeToTransport")]public float amount;
+    public BaseItem itemToTransport;
+    public ItemType itemTypeToTransport = ItemType.None;
+    [ConditionalField("itemTypeToTransport")]public int amount;
 
-    public TradeRoute(Planet sender, Planet receiver, Commodity commToTransport, float amount)
+    public TradeRoute(Planet sender, Planet receiver, BaseItem itToTransport, int amount)
     {
         this.sender = sender;
         this.receiver = receiver;
-        commodityToTransport = new Commodity(commToTransport, amount);
+        if (typeof(GeneralItem).IsAssignableFrom(itToTransport.GetType()))
+        {
+            itemToTransport = itToTransport;
+            GeneralItem genItem = (GeneralItem)itemToTransport;
+            genItem.itemStack = amount;
+            itemToTransport = genItem;
+        }
+        else
+        {
+            itemToTransport = itToTransport;
+        }       
     }
 
-    public TradeRoute(Planet sender, Planet receiver, Commodity.Type commTypeToTransport, float amount)
+    public TradeRoute(Planet sender, Planet receiver, ItemType itemTypeToTransport, int amount)
     {
         this.sender = sender;
         this.receiver = receiver;
-        this.commTypeToTransport = commTypeToTransport;
+        this.itemTypeToTransport = itemTypeToTransport;
         this.amount = amount;
     }
 }

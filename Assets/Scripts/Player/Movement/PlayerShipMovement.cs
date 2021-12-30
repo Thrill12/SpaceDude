@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 
 public class PlayerShipMovement : MonoBehaviour
 {
@@ -27,6 +28,10 @@ public class PlayerShipMovement : MonoBehaviour
     [Space(5)]
     public float rotationSpeed;
 
+    [Space(10)]
+    public GameObject rightWing;
+    public GameObject leftWing;
+
     private Rigidbody2D rb;
 
     private Vector2 posOfMouseOnWorld;
@@ -39,7 +44,8 @@ public class PlayerShipMovement : MonoBehaviour
     public float currentSpeed;
     private PlayersuitManager playerSuit;
 
-    public GameObject thrust;
+    public GameObject leftThrust;
+    public GameObject rightThrust;
 
     private AudioSource src;
     private float lastVol = 0;
@@ -58,15 +64,13 @@ public class PlayerShipMovement : MonoBehaviour
     }
 
     private void Update()
-    {
-          
-
-        if (ui.isInUI) return;
-
-        
+    {       
+        if (ui.isInUI) return;        
 
         inputX = Input.GetAxisRaw("Horizontal");
         inputY = Input.GetAxisRaw("Vertical");
+
+        ChangeParticleThrustRate();
 
         if (!isPlayerInShip) return;
 
@@ -100,8 +104,7 @@ public class PlayerShipMovement : MonoBehaviour
         if (isPlayerInShip)
         {
             MoveAndTurn();
-        }
-        
+        }       
     }
 
     public void ChangeCameraZoomVelocity()
@@ -169,19 +172,18 @@ public class PlayerShipMovement : MonoBehaviour
             moveSpeed = baseMoveSpeed;
         }
 
-        if (inputY != 0)
-        {
-            thrust.SetActive(true);
-        }
-        else
-        {
-            thrust.SetActive(false);
-        }
+        
 
         if (currentSpeed > maxSpeed)
         {
             rb.velocity = rb.velocity.normalized * maxSpeed;
         }        
+    }
+
+    public void ChangeParticleThrustRate()
+    {
+        leftThrust.GetComponent<VisualEffect>().SetInt(Shader.PropertyToID("Spawn Rate"), (int)Mathf.Floor(currentSpeed * 250));
+        rightThrust.GetComponent<VisualEffect>().SetInt(Shader.PropertyToID("Spawn Rate"), (int)Mathf.Floor(currentSpeed * 250));
     }
 
     public void ManageThrustVolume(float interval)
@@ -219,5 +221,17 @@ public class PlayerShipMovement : MonoBehaviour
         }
 
         src.volume = currentVol;
+    }
+
+    public void FoldInWings()
+    {
+        rightWing.GetComponent<Animator>().SetTrigger("FoldIn");
+        leftWing.GetComponent<Animator>().SetTrigger("FoldIn");
+    }
+
+    public void FoldOutWings()
+    {
+        rightWing.GetComponent<Animator>().SetTrigger("FoldOut");
+        leftWing.GetComponent<Animator>().SetTrigger("FoldOut");
     }
 }

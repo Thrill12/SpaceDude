@@ -33,8 +33,6 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     protected override void RunProceduralGeneration()
     {
-        tilemapVisualizer = GameObject.FindGameObjectWithTag("Visualizer").GetComponent<TilemapVisualizer>();
-
         tilemapVisualizer.Clear();
 
         wallTilemap = transform.parent.transform.Find("Grid").transform.Find("WallTileMap").gameObject;

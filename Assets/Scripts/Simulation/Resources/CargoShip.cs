@@ -15,7 +15,7 @@ public class CargoShip : MonoBehaviour
     public string orthoMask;
     public float launchSpeed;
 
-    public Commodity commodityCarried;
+    public BaseItem commodityCarried;
     public GameObject origin;
     public GameObject destination;
 
@@ -43,7 +43,7 @@ public class CargoShip : MonoBehaviour
         planetRadiusFloat = destination.GetComponent<SpriteRenderer>().bounds.extents.x / routeDistance;
 
         //Sets the objects layer to that of the perspective mask.
-        gameObject.layer = LayerMask.NameToLayer(perspectiveMask);
+        gameObject.layer = gameObject.layer = LayerMask.NameToLayer(perspectiveMask);
         //On spawn the ship would be taking off from a body - set the FlightState to Launching.
         flightState = FlightState.Launching;
     }
@@ -54,10 +54,9 @@ public class CargoShip : MonoBehaviour
 
         switch (flightState)
         { 
-
             case FlightState.Launching:
-                zDist = (0 - transform.position.z);
-                if (zDist < 0) { zDist = -(zDist); }
+
+                zDist = Mathf.Abs(0 - transform.position.z);
 
                 if (zDist > 5)
                 {
@@ -70,7 +69,9 @@ public class CargoShip : MonoBehaviour
                     gameObject.layer = LayerMask.NameToLayer(orthoMask);
                 }
                 break;
+
             case FlightState.Travelling:
+
                 Vector2 pos2D = new Vector2(transform.position.x, transform.position.y);
 
                 travelledDistance = Vector2.Distance(pos2D, origin.transform.position);
@@ -85,9 +86,10 @@ public class CargoShip : MonoBehaviour
                     gameObject.layer = LayerMask.NameToLayer(perspectiveMask);
                 }
                 break;
+
             case FlightState.Landing:
-                 zDist = (destination.transform.position.z - transform.position.z);
-                if (zDist < 0) { zDist = -(zDist); }
+
+                zDist = Mathf.Abs(destination.transform.position.z - transform.position.z);
 
                 if ( zDist > 5)
                 {
@@ -97,8 +99,6 @@ public class CargoShip : MonoBehaviour
                 {
                     DropCargo();
                 }
-                break;
-            default:
                 break;
         }
     }
@@ -111,14 +111,15 @@ public class CargoShip : MonoBehaviour
         transform.up = -rb.velocity.normalized;
     }
 
-    public void TakeCargo(Planet planet, Commodity commToTake, float stackToTake)
+    public void TakeCargo(Planet planet, BaseItem commToTake, int stackToTake)
     {
-        Commodity comm = planet.commoditiesInMarket.Where(x => x.commodityName == commToTake.commodityName).First();
-        if (comm.stack >= stackToTake)
+        BaseItem comm = planet.commoditiesInMarket.Where(x => x.itemName == commToTake.itemName).First();
+        if (comm.itemStack >= stackToTake)
         {
             if(planet.SubtractResource(commToTake, stackToTake))
             {
-                commodityCarried = new Commodity(commToTake, stackToTake);              
+                commodityCarried = commToTake;
+                commodityCarried.itemStack = stackToTake;
             }
         }
 

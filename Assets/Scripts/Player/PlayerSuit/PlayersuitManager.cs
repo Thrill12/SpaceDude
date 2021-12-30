@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Rendering.Universal;
 
 public class PlayersuitManager : MonoBehaviour
 {
@@ -34,12 +35,13 @@ public class PlayersuitManager : MonoBehaviour
         suitVolume.SetActive(true);
 
         playerSuitSpawn.GetComponent<SpriteRenderer>().enabled = true;
+        playerSuitSpawn.GetComponent<Light2D>().enabled = true;
 
         ship.GetComponent<Rigidbody2D>().velocity *= 0;
         ship.GetComponent<Rigidbody2D>().mass = 100000;
-        ship.thrust.SetActive(false);
         ship.isPlayerInShip = false;
-        ship.followCam.gameObject.SetActive(false);       
+        ship.followCam.gameObject.SetActive(false);
+        ship.FoldInWings();
     }
 
     public void PlayerEnterShip()
@@ -51,8 +53,10 @@ public class PlayersuitManager : MonoBehaviour
 
         ship.GetComponent<Rigidbody2D>().mass = 1;
         playerSuitSpawn.GetComponent<SpriteRenderer>().enabled = false;
+        playerSuitSpawn.GetComponent<Light2D>().enabled = false;
 
         ship.isPlayerInShip = true;
         ship.followCam.gameObject.SetActive(true);
+        ship.FoldOutWings();
     }
 }

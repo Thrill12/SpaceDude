@@ -227,3 +227,5 @@
 /Assets/TextMesh[[:space:]]Pro/Examples[[:space:]]&[[:space:]]Extras/Resources/Fonts[[:space:]]&[[:space:]]Materials/Electronic[[:space:]]Highway[[:space:]]Sign[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
 /Assets/TextMesh[[:space:]]Pro/Examples[[:space:]]&[[:space:]]Extras/Resources/Fonts[[:space:]]&[[:space:]]Materials/Roboto-Bold[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
 /Assets/Sprites/Player/Player[[:space:]]Ship/PlayerShipSprite[[:space:]](1)1640870496.psb filter=lfs diff=lfs merge=lfs -text
+/Assets/Scenes/Andrei's[[:space:]]Dungeon.unity filter=lfs diff=lfs merge=lfs -text
+/Assets/Scenes/Little[[:space:]]Timmy's[[:space:]]Sandbox.unity filter=lfs diff=lfs merge=lfs -text

@@ -16,6 +16,7 @@ TagManager:
   - PlayerSuitSpawner
   - Wall
   - StationGenerator
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -30,7 +31,7 @@ TagManager:
   - PlayerSuitBullets
   - PlayerShipBullets
   - ExtremeUI
-  - 
+  - Ship
   - 
   - 
   - 
@@ -66,7 +67,7 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: Player
-    uniqueID: 3690274077
+    uniqueID: 158009873
     locked: 0
   - name: WorldUI
     uniqueID: 3412181561

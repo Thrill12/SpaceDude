@@ -29,13 +29,13 @@ public class TradeRoutesManager : MonoBehaviour
 
     public void SpawnNewShip(Planet sender, Planet receiver, TradeRoute route)
     {
-        if(route.commodityToTransport != null)
+        if(route.itemToTransport != null)
         {
-            Debug.Log(route.sender + " -> " + route.receiver + " | " + route.commodityToTransport.commodityName + " |");
+            Debug.Log(route.sender + " -> " + route.receiver + " | " + route.itemToTransport.itemName + " |");
         }
         else
         {
-            Debug.Log(route.sender + " -> " + route.receiver + " | " + route.commTypeToTransport.ToString() + " |");
+            Debug.Log(route.sender + " -> " + route.receiver + " | " + route.itemTypeToTransport.ToString() + " |");
         }
 
         GameObject ship = Instantiate(pf.cargoShip, sender.gameObject.transform.position, Quaternion.identity);
@@ -47,14 +47,14 @@ public class TradeRoutesManager : MonoBehaviour
         s.destination = receiver.gameObject;
         s.speedCurve = speedCurve;
 
-        if(route.commodityToTransport != null)
+        if(route.itemToTransport != null)
         {
-            s.commodityCarried = route.commodityToTransport;
+            s.commodityCarried = route.itemToTransport;
         }
         else
         {
-            s.commodityCarried = route.sender.commoditiesInMarket.Where(x => x.commodityType == route.commTypeToTransport).First();
-            s.commodityCarried.stack = route.amount;
+            s.commodityCarried = route.sender.commoditiesInMarket.Where(x => x.itemType == route.itemTypeToTransport).First();
+            s.commodityCarried.itemStack = route.amount;
         }
              
     }

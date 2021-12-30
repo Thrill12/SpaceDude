@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CommodityInvHolder : MonoBehaviour
 {
-    public Commodity commodityHeld;
+    public BaseItem commodityHeld;
 
     private UIManager ui;
 
@@ -16,7 +16,7 @@ public class CommodityInvHolder : MonoBehaviour
 
     private void Update()
     {
-        transform.Find("Commodity Units").GetComponent<TMP_Text>().text = commodityHeld.stack + " units";
+        transform.Find("Commodity Units").GetComponent<TMP_Text>().text = commodityHeld.itemStack + " units";
     }
 
     public void SelectCommodity()
