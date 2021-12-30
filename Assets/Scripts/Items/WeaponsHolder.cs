@@ -43,6 +43,8 @@ public class WeaponsHolder : MonoBehaviour
     {
         if (currentlyEquippedWeapon == null) return;
 
+        Debug.Log(weaponObject.name);
+
         currentlyEquippedWeapon.Attack(weaponObject);
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
     }
@@ -66,8 +68,8 @@ public class WeaponsHolder : MonoBehaviour
 
         if (currentlyEquippedWeapon == null) return;
 
-        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, Quaternion.identity);
-        weaponObject.transform.parent = gameObject.transform;
+        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, transform.rotation);
+        weaponObject.transform.parent = transform;
 
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
 

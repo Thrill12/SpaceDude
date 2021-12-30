@@ -12,22 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6959a5f84b1d93745babd28f5ae84f17, type: 3}
   m_Name: Union Issued Pistol
   m_EditorClassIdentifier: 
-  itemName: 
+  itemName: Union Issued Pistol
   itemDescription: 
   itemIcon: {fileID: 0}
-  itemRarity: {fileID: 0}
-  itemValue: 0
-  itemStack: 0
-  itemMaxStack: 0
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemValue: 751
+  itemStack: 1
+  itemMaxStack: 1
   itemType: 6
-  itemSlot: 
+  itemSlot: Secondary Weapon
   itemMods: []
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
   hostEntity: {fileID: 0}
   isEquipped: 0
-  weaponObject: {fileID: 0}
+  weaponObject: {fileID: 7326627345084724259, guid: d81c191e5961823499de38367d1354c6, type: 3}
   damage:
     BaseValue: 0
     _value: 0
@@ -44,14 +44,14 @@ MonoBehaviour:
     statModifiers: []
     isDirty: 1
   attackCooldown:
-    BaseValue: 0
+    BaseValue: 1
     _value: 0
     statModifiers: []
     isDirty: 1
   large: 0
-  projectile: {fileID: 0}
+  projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
-    BaseValue: 0
+    BaseValue: 150
     _value: 0
     statModifiers: []
     isDirty: 1

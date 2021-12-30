@@ -14,7 +14,7 @@ public class ItemHolder : MonoBehaviour
         itemHeld = ScriptableObject.Instantiate(itemHeld);
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = itemHeld.itemRarity.rarityColor;
-        itemNameText = transform.Find("Canvas").GetComponentInChildren<TMP_Text>();
+        itemNameText = GetComponentInChildren<TMP_Text>();
         itemNameText.text = itemHeld.itemName;
         if (itemHeld.itemIcon != null)
         {

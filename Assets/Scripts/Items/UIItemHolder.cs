@@ -22,7 +22,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private void Awake()
     {
         canvasObject = GameObject.FindGameObjectWithTag("UICanvas");
-        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
+        inventory = GameObject.FindGameObjectWithTag("PlayerSuit").GetComponent<Inventory>();
         inventoryDisplayObject = canvasObject.transform.Find("InventoryBackground").transform.Find("InventoryHolder").gameObject;
         equippedInventoryDisplayObject = canvasObject.transform.Find("EquippedItemsDisplay").transform.Find("InventoryHolder").gameObject;
         img = GetComponent<Image>();
@@ -46,7 +46,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
 
         itemNameText.text = itemHeld.itemName;
-        canvasObject.GetComponent<Canvas>().worldCamera = Camera.main;
+        canvasObject.GetComponent<Canvas>().worldCamera = GameObject.FindGameObjectWithTag("UICamera").GetComponent<Camera>(); ;
     }
 
     private void Update()

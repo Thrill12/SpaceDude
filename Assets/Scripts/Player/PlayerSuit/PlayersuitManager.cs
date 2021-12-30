@@ -6,19 +6,16 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayersuitManager : MonoBehaviour
 {
-    public GameObject playerSuitPrefab;
+    public GameObject instantiatedPlayerSuit;
     public GameObject playerSuitCamPrefab;
     public GameObject playerSuitSpawn;
-    public GameObject suitVolume;
-    [HideInInspector]
-    public GameObject instantiatedPlayerSuit;
+    public GameObject suitVolume;   
     [HideInInspector]
     public GameObject instantiatedPlayerSuitCam;
     public PlayerShipMovement ship;
 
     private void Start()
     {
-        instantiatedPlayerSuit = Instantiate(playerSuitPrefab, transform.position, Quaternion.identity);
         instantiatedPlayerSuit.SetActive(false);
         instantiatedPlayerSuitCam = Instantiate(playerSuitCamPrefab, transform.position, Quaternion.identity);
         instantiatedPlayerSuitCam.SetActive(false);
