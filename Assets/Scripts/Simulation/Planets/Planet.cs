@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
+    [HideInInspector]
     public string planetName;
     public string planetDescription;
     public bool breathableAtmosphere;
@@ -14,8 +15,8 @@ public class Planet : MonoBehaviour
     public long population;
     public float totalWealth;
     public float influenceModifier;
-    public List<Commodity> startingComms;
-    public List<Commodity> commoditiesInMarket;
+    public List<BaseItem> startingComms;
+    public List<BaseItem> commoditiesInMarket;
     public List<TradeRoute> availableTradeRoutes;
     public List<PlanetProduction> products;
     public List<PlanetProduction> dependencies;
@@ -36,6 +37,7 @@ public class Planet : MonoBehaviour
 
     private void Awake()
     {
+        planetName = gameObject.name;
         //Get required references
         tmManager = GameObject.FindGameObjectWithTag("TMManager").GetComponent<TradeRoutesManager>();
         pf = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
@@ -57,20 +59,31 @@ public class Planet : MonoBehaviour
 
         foreach (var item in startingComms)
         {
-            commoditiesInMarket.Add((Commodity)ScriptableObject.Instantiate(item));
+            commoditiesInMarket.Add(ScriptableObject.Instantiate(item));
         }
 
         foreach (PlanetProduction item in dependencies)
         {
-            GenerateResource(new PlanetProduction(item.comProduced, Mathf.Abs(item.comAmountPerTick) * 2f));
+            GenerateResource(new PlanetProduction(item.comProduced, Mathf.Abs(item.comAmountPerTick) * 2));
         }
 
         foreach (PlanetProduction item in products)
         {
-            GenerateResource(new PlanetProduction(item.comProduced, Mathf.Abs(item.comAmountPerTick) * 10f));
+            GenerateResource(new PlanetProduction(item.comProduced, Mathf.Abs(item.comAmountPerTick) * 10));
         }
 
-        totalWealth = population * commoditiesInMarket.Sum(x => x.stack);
+        foreach (var item in commoditiesInMarket)
+        {
+            if (typeof(GeneralItem).IsAssignableFrom(item.GetType()))
+            {
+                GeneralItem genItem = (GeneralItem)item;
+                totalWealth += genItem.itemStack * genItem.itemValue;
+            }
+            else
+            {
+                totalWealth += item.itemValue;
+            }
+        }
     }
 
     //On the planet's own update, update influence and project food consumpton in the next tick.
@@ -115,28 +128,28 @@ public class Planet : MonoBehaviour
                 if (IncomeDeficit.CalculateProfit(this, item.comProduced) < 0)
                 {
                     TryForNewTradeRoutes(item.comProduced, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.comProduced)));
-                    WarningLowResource(item.comProduced.commodityName);
+                    WarningLowResource(item.comProduced.itemName);
                 }
             }               
         }
 
         if(availableTradeRoutes.Count() > 0)
         {
-            foreach (var item in availableTradeRoutes.Where(x => x.sender == this).Where(x => x.commodityToTransport != null))
+            foreach (var item in availableTradeRoutes.Where(x => x.sender == this).Where(x => x.itemToTransport != null))
             {
-                if (IncomeDeficit.CalculateProfit(this, item.commodityToTransport) < 0)
+                if (IncomeDeficit.CalculateProfit(this, item.itemToTransport) < 0)
                 {
-                    TryForNewTradeRoutes(item.commodityToTransport, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.commodityToTransport)));
-                    WarningLowResource(item.commodityToTransport.commodityName);
+                    TryForNewTradeRoutes(item.itemToTransport, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.itemToTransport)));
+                    WarningLowResource(item.itemToTransport.itemName);
                 }
             }
 
-            foreach (var item in availableTradeRoutes.Where(x => x.sender == this).Where(x => x.commTypeToTransport != Commodity.Type.None))
+            foreach (var item in availableTradeRoutes.Where(x => x.sender == this).Where(x => x.itemTypeToTransport != ItemType.None))
             {
-                if (IncomeDeficit.CalculateProfit(this, item.commTypeToTransport) < 0)
+                if (IncomeDeficit.CalculateProfit(this, item.itemTypeToTransport) < 0)
                 {
-                    TryForNewTradeRoutes(item.commTypeToTransport, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.commTypeToTransport)));
-                    WarningLowResource(item.commodityToTransport.commodityName);
+                    TryForNewTradeRoutes(item.itemTypeToTransport, Mathf.Abs(IncomeDeficit.CalculateProfit(this, item.itemTypeToTransport)));
+                    WarningLowResource(item.itemToTransport.itemName);
                 }
             }
         }           
@@ -144,31 +157,31 @@ public class Planet : MonoBehaviour
 
     public void HandlePopulationUsage()
     {
-        List<Commodity> foodItems = commoditiesInMarket.Where(x => x.commodityType == Commodity.Type.Food).ToList();
-        totalFoodReserves = foodItems.Sum(x => x.stack);
+        List<BaseItem> foodItems = commoditiesInMarket.Where(x => x.itemType == ItemType.Food).ToList();
+        totalFoodReserves = foodItems.Sum(x => x.itemStack);
 
         if (population == 0) return;                  
 
-        if(dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == Commodity.Type.Food).Count() != 0)
+        if(dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == ItemType.Food).Count() != 0)
         {
-            dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == Commodity.Type.Food).First().comAmountPerTick = -(foodPerBillion * population);
+            dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == ItemType.Food).First().comAmountPerTick = (int)-(foodPerBillion * population);
         }
         else
         {
-            PlanetProduction prod = new PlanetProduction(Commodity.Type.Food, -(foodPerBillion * population));
+            PlanetProduction prod = new PlanetProduction(ItemType.Food, (int)-(foodPerBillion * population));
             dependencies.Add(prod);
             WarningLowResource(prod.typeLookingFor.ToString());
         }
 
         if (breathableAtmosphere) return;
 
-        if (dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == Commodity.Type.Breathing).Count() != 0)
+        if (dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == ItemType.Breathing).Count() != 0)
         {
-            dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == Commodity.Type.Breathing).First().comAmountPerTick = -(breathingPerBillion * population);
+            dependencies.Where(x => x.comProduced == null).Where(x => x.typeLookingFor == ItemType.Breathing).First().comAmountPerTick = (int)-(breathingPerBillion * population);
         }
         else
         {
-            PlanetProduction prod = new PlanetProduction(Commodity.Type.Breathing, -(breathingPerBillion * population));
+            PlanetProduction prod = new PlanetProduction(ItemType.Breathing, (int)-(breathingPerBillion * population));
             dependencies.Add(prod);
             WarningLowResource(prod.typeLookingFor.ToString());
         }
@@ -180,7 +193,7 @@ public class Planet : MonoBehaviour
         galacticEventHandler.AddNewGalacticEvent($"{planetName} is severely lacking {warning}", this);
     }
 
-    public void TryForNewTradeRoutes(Commodity.Type type, float amount)
+    public void TryForNewTradeRoutes(ItemType type, int amount)
     {
         Debug.Log(planetName + " is trying to find routes for " + Mathf.Abs(amount) + " " + type.ToString() + ".");
 
@@ -201,9 +214,9 @@ public class Planet : MonoBehaviour
         }
     }
 
-    public void TryForNewTradeRoutes(Commodity comm, float amount)
+    public void TryForNewTradeRoutes(BaseItem comm, int amount)
     {
-        Debug.Log(planetName + " is trying to find routes for " + Mathf.Abs(amount) + " " + comm.commodityName.ToString() + ".");
+        Debug.Log(planetName + " is trying to find routes for " + Mathf.Abs(amount) + " " + comm.itemName.ToString() + ".");
 
         List<GameObject> possibilities = FindPlanetsSupplyingCommodity(comm).Select(x => x.gameObject)
             .OrderBy(x => Vector2.Distance(gameObject.transform.position, x.gameObject.transform.position)).ToList();
@@ -222,7 +235,7 @@ public class Planet : MonoBehaviour
         }
     }
 
-    public bool RequestTradeRoute(Planet asker, Planet giver, Commodity.Type type, float amountRequested)
+    public bool RequestTradeRoute(Planet asker, Planet giver, ItemType type, float amountRequested)
     {
         Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + amountRequested + " " + type.ToString());
         float spare = IncomeDeficit.CalculateProfit(giver, type);
@@ -247,9 +260,9 @@ public class Planet : MonoBehaviour
         }
     }
 
-    public bool RequestTradeRoute(Planet asker, Planet giver, Commodity comm, float amountRequested)
+    public bool RequestTradeRoute(Planet asker, Planet giver, BaseItem comm, float amountRequested)
     {
-        Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + Mathf.Abs(amountRequested) + " " + comm.commodityName);
+        Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + Mathf.Abs(amountRequested) + " " + comm.itemName);
         float spare = IncomeDeficit.CalculateProfit(giver, comm);
 
         if (spare > 0)
@@ -272,39 +285,39 @@ public class Planet : MonoBehaviour
         }
     }
 
-    public void SetUpTradeRoute(Planet asker, Planet giver, Commodity.Type type, float amount)
+    public void SetUpTradeRoute(Planet asker, Planet giver, ItemType type, int amount)
     {
         if (asker == giver) return;
 
         Debug.Log(asker.planetName + " setting up trade route with " + giver.planetName + " for " + Mathf.Abs(amount) + " " + type.ToString());
 
-        TradeRoute route = new TradeRoute(giver, asker, type, Mathf.Abs(amount));
+        TradeRoute route = new TradeRoute(giver, asker, type, (int)Mathf.Abs(amount));
         tmManager.AddNewRoute(route);
     }
 
-    public void SetUpTradeRoute(Planet asker, Planet giver, Commodity comm, float amount)
+    public void SetUpTradeRoute(Planet asker, Planet giver, BaseItem comm, int amount)
     {
         if (asker == giver) return;
 
-        Debug.Log(asker.planetName + " setting up trade route with " + giver.planetName + " for " + Mathf.Abs(amount) + " " + comm.commodityName.ToString());
+        Debug.Log(asker.planetName + " setting up trade route with " + giver.planetName + " for " + Mathf.Abs(amount) + " " + comm.itemName.ToString());
 
-        Commodity commo = (Commodity)ScriptableObject.Instantiate(comm);
-        commo.ChangeToComm(comm, amount);
+        BaseItem commo = Instantiate(comm);
+        //commo.ChangeToComm(comm, amount);
 
-        TradeRoute route = new TradeRoute(giver, asker, commo, Mathf.Abs(amount));
+        TradeRoute route = new TradeRoute(giver, asker, commo, (int)Mathf.Abs(amount));
         tmManager.AddNewRoute(route);
     }
 
     public void GenerateResource(PlanetProduction prod)
     {
-        if (commoditiesInMarket.Where(x => x.commodityName == prod.comProduced.commodityName).ToList().Count != 0)
+        if (commoditiesInMarket.Where(x => x.itemName == prod.comProduced.itemName).ToList().Count != 0)
         {
-            commoditiesInMarket.Where(x => x.commodityName == prod.comProduced.commodityName).First().stack += prod.comAmountPerTick;
+            commoditiesInMarket.Where(x => x.itemName == prod.comProduced.itemName).First().itemStack += prod.comAmountPerTick;
         }
         else
         {
-            commoditiesInMarket.Add((Commodity)ScriptableObject.Instantiate(prod.comProduced));
-            commoditiesInMarket.Where(x => x.commodityName == prod.comProduced.commodityName).First().stack += prod.comAmountPerTick;
+            commoditiesInMarket.Add(ScriptableObject.Instantiate(prod.comProduced));
+            commoditiesInMarket.Where(x => x.itemName == prod.comProduced.itemName).First().itemStack += prod.comAmountPerTick;
         }
     }
 
@@ -312,8 +325,8 @@ public class Planet : MonoBehaviour
     {
         try
         {
-            List<Commodity> comms = commoditiesInMarket.Where(x => x.commodityType == prod.typeLookingFor).ToList();
-            comms[0].stack -= Mathf.Abs(prod.comAmountPerTick);
+            List<BaseItem> comms = commoditiesInMarket.Where(x => x.itemType == prod.typeLookingFor).ToList();
+            comms[0].itemStack -= Mathf.Abs(prod.comAmountPerTick);
         }
         catch
         {
@@ -321,13 +334,13 @@ public class Planet : MonoBehaviour
         }           
     }
 
-    public bool SubtractResource(Commodity commToTake, float amount)
+    public bool SubtractResource(BaseItem commToTake, int amount)
     {
-        Commodity comm = commoditiesInMarket.Where(x => x.commodityName == commToTake.commodityName).First();
+        BaseItem comm = commoditiesInMarket.Where(x => x.itemName == commToTake.itemName).First();
 
-        if(comm.stack >= Mathf.Abs(amount))
+        if(comm.itemStack >= Mathf.Abs(amount))
         {
-            comm.stack -= Mathf.Abs(amount);
+            comm.itemStack -= Mathf.Abs(amount);
             return true;
         }
         else
@@ -336,11 +349,11 @@ public class Planet : MonoBehaviour
         }
     }
 
-    public void ReceiveCommodity(Commodity comm)
+    public void ReceiveCommodity(BaseItem comm)
     {
-        if (commoditiesInMarket.Where(x => x.commodityName == comm.commodityName).Count() != 0)
+        if (commoditiesInMarket.Where(x => x.itemName == comm.itemName).Count() != 0)
         {
-            commoditiesInMarket.Where(x => x.commodityName == comm.commodityName).First().stack += comm.stack;
+            commoditiesInMarket.Where(x => x.itemName == comm.itemName).First().itemStack += comm.itemStack;
         }
         else
         {
@@ -348,18 +361,18 @@ public class Planet : MonoBehaviour
         }
     }  
 
-    public List<Planet> FindPlanetsSupplyingCommodity(Commodity comToSearch)
+    public List<Planet> FindPlanetsSupplyingCommodity(BaseItem comToSearch)
     {
         List<Planet> planets = allPlanets.Where(x => x.products.
-        Where(x => x.comProduced.commodityName == comToSearch.commodityName).ToList().Count >= 0 && x.isTakenOverByAliens == false).ToList();
+        Where(x => x.comProduced.itemName == comToSearch.itemName).ToList().Count >= 0 && x.isTakenOverByAliens == false).ToList();
 
         return planets;
     }
 
-    public List<Planet> FindPlanetsSupplyingCommodityType(Commodity.Type type)
+    public List<Planet> FindPlanetsSupplyingCommodityType(ItemType type)
     {
         List<Planet> planets = allPlanets.Where(x => x.products.
-        Where(x => x.comProduced.commodityType == type).ToList().Count >= 0 && x.isTakenOverByAliens == false).ToList();
+        Where(x => x.comProduced.itemType == type).ToList().Count >= 0 && x.isTakenOverByAliens == false).ToList();
 
         return planets;
     }

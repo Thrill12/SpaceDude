@@ -6,11 +6,11 @@ using UnityEngine;
 
 public static class IncomeDeficit
 {
-    public static float CalculateProfit(Planet planet, Commodity comm)
+    public static int CalculateProfit(Planet planet, BaseItem comm)
     {
-        float profit = 0;
+        int profit = 0;
 
-        float income = 0, deficit = 0;
+        int income = 0, deficit = 0;
 
         income += GetIncomeOfCommodityFromPlanetProducts(planet, comm);
         income += GetIncomeOfCommodityFromPlanetTradeRoutes(planet, comm);
@@ -23,11 +23,11 @@ public static class IncomeDeficit
         return profit;
     }
 
-    public static float CalculateProfit(Planet planet, Commodity.Type type)
+    public static int CalculateProfit(Planet planet, ItemType type)
     {
-        float profit = 0;
+        int profit = 0;
 
-        float income = 0, deficit = 0;
+        int income = 0, deficit = 0;
 
         income += GetIncomeOfCommodityFromPlanetProducts(planet, type);
         income += GetIncomeOfCommodityFromPlanetTradeRoutes(planet, type);
@@ -40,55 +40,55 @@ public static class IncomeDeficit
         return profit;
     }
 
-    private static float GetDeficitOfCommodityFromPlanetTradeRoutes(Planet planet, Commodity comm)
+    private static int GetDeficitOfCommodityFromPlanetTradeRoutes(Planet planet, BaseItem comm)
     {
-        float def = planet.availableTradeRoutes.Where(x => x.commodityToTransport != null && comm != null && x.commodityToTransport.commodityName == comm.commodityName)
-            .Where(x => x.sender == planet).Sum(x => x.commodityToTransport.stack);
+        int def = planet.availableTradeRoutes.Where(x => x.itemToTransport != null && comm != null && x.itemToTransport.itemName == comm.itemName)
+        .Where(x => x.sender == planet).Sum(x => x.itemToTransport.itemStack);
         return def;
     }
 
-    private static float GetDeficitOfCommodityFromPlanetTradeRoutes(Planet planet, Commodity.Type type)
+    private static int GetDeficitOfCommodityFromPlanetTradeRoutes(Planet planet, ItemType type)
     {
-        float def = planet.availableTradeRoutes.Where(x => x.commTypeToTransport == type)
+        int def = planet.availableTradeRoutes.Where(x => x.itemTypeToTransport == type)
                 .Where(x => x.sender == planet).Sum(x => x.amount);
         return def;
     }
 
-    private static float GetDeficitOfCommodityFromPlanetDependencies(Planet planet, Commodity comm)
+    private static int GetDeficitOfCommodityFromPlanetDependencies(Planet planet, BaseItem comm)
     {
-        float def = planet.dependencies.Where(x => comm != null && x.comProduced != null && x.comProduced.commodityName == comm.commodityName).Sum(x => x.comAmountPerTick);
+        int def = planet.dependencies.Where(x => comm != null && x.comProduced != null && x.comProduced.itemName == comm.itemName).Sum(x => x.comAmountPerTick);
         return def;      
     }
 
-    private static float GetDeficitOfCommodityFromPlanetDependencies(Planet planet, Commodity.Type type)
+    private static int GetDeficitOfCommodityFromPlanetDependencies(Planet planet, ItemType type)
     {
-        float def = planet.dependencies.Where(x => x.lookingForTypeOnly == true && x.typeLookingFor == type).Sum(x => x.comAmountPerTick);
+        int def = planet.dependencies.Where(x => x.lookingForTypeOnly == true && x.typeLookingFor == type).Sum(x => x.comAmountPerTick);
         return def;
     }
 
-    private static float GetIncomeOfCommodityFromPlanetTradeRoutes(Planet planet, Commodity comm)
+    private static int GetIncomeOfCommodityFromPlanetTradeRoutes(Planet planet, BaseItem comm)
     {
-        float inc = planet.availableTradeRoutes.Where(x => x.commodityToTransport != null && comm != null && x.receiver == planet && x.commodityToTransport.commodityName == comm.commodityName)
-            .Sum(x => x.commodityToTransport.stack);
-        return inc;        
+        int inc = planet.availableTradeRoutes.Where(x => x.itemToTransport != null && comm != null && x.receiver == planet && x.itemToTransport.itemName == comm.itemName)
+            .Sum(x => x.itemToTransport.itemStack);
+        return inc;
     }
 
-    private static float GetIncomeOfCommodityFromPlanetTradeRoutes(Planet planet, Commodity.Type type)
+    private static int GetIncomeOfCommodityFromPlanetTradeRoutes(Planet planet, ItemType type)
     {
-        float inc = planet.availableTradeRoutes.Where(x => x.commTypeToTransport == type)
+        int inc = planet.availableTradeRoutes.Where(x => x.itemTypeToTransport == type)
             .Where(x => x.receiver == planet).Sum(x => x.amount);
         return inc;
     }
 
-    private static float GetIncomeOfCommodityFromPlanetProducts(Planet planet, Commodity comm)
+    private static int GetIncomeOfCommodityFromPlanetProducts(Planet planet, BaseItem comm)
     {
-        float inc = planet.products.Where(x => x.lookingForTypeOnly == false && comm != null && x.comProduced.commodityName == comm.commodityName).Sum(x => x.comAmountPerTick);
+        int inc = planet.products.Where(x => x.lookingForTypeOnly == false && comm != null && x.comProduced.itemName == comm.itemName).Sum(x => x.comAmountPerTick);
         return inc;                
     }
 
-    private static float GetIncomeOfCommodityFromPlanetProducts(Planet planet, Commodity.Type type)
+    private static int GetIncomeOfCommodityFromPlanetProducts(Planet planet, ItemType type)
     {
-        float inc = planet.products.Where(x => x.comProduced.commodityType == type).Sum(x => x.comAmountPerTick);
+        int inc = planet.products.Where(x => x.comProduced.itemType == type).Sum(x => x.comAmountPerTick);
         return inc;
     }
 }

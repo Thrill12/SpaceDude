@@ -7,18 +7,18 @@ using UnityEngine;
 [System.Serializable]
 public class PlanetProduction
 {   
-    public float comAmountPerTick;
+    public int comAmountPerTick;
     public bool lookingForTypeOnly = false;
-    [ConditionalField("lookingForTypeOnly")]        public Commodity.Type typeLookingFor;
-    [ConditionalField("lookingForTypeOnly", true)]  public Commodity comProduced;
+    [ConditionalField("lookingForTypeOnly")]        public ItemType typeLookingFor;
+    [ConditionalField("lookingForTypeOnly", true)]  public BaseItem comProduced;
 
-    public PlanetProduction(Commodity comm, float comTick)
+    public PlanetProduction(BaseItem comm, int comTick)
     {
         comProduced = comm;
         comAmountPerTick = comTick;
     }
 
-    public PlanetProduction(Commodity.Type type, float comTick)
+    public PlanetProduction(ItemType type, int comTick)
     {
         lookingForTypeOnly = true;
         typeLookingFor = type;
