@@ -188,6 +188,7 @@ public class Planet : MonoBehaviour
     public void WarningLowResource(string warning)
     {
         //Do a bunch of switch cases to do different messages for different warnings and resources lacking
+        
     }
 
     public void TryForNewTradeRoutes(ItemType type, int amount)
