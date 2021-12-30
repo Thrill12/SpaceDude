@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de31f084c2ee74549add375075b03207, type: 3}
   m_Name: Common
   m_EditorClassIdentifier: 
-  rarityName: 
-  rarityColor: {r: 0, g: 0, b: 0, a: 0}
-  rarityWeightChance: 0
+  rarityName: Commom
+  rarityColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0}
+  rarityWeightChance: 1

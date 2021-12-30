@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3632f95bb3efea449099f22e9d3f542, type: 3}
   m_Name: Secondary Weapon
   m_EditorClassIdentifier: 
-  slotName: 
+  slotName: Secondary Weapon
   itemInSlot: {fileID: 0}

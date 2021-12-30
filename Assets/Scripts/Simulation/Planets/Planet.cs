@@ -33,7 +33,6 @@ public class Planet : MonoBehaviour
 
     private PrefabManager pf;
     private TradeRoutesManager tmManager;
-    private GalacticEventHandler galacticEventHandler;
 
     private void Awake()
     {
@@ -43,7 +42,6 @@ public class Planet : MonoBehaviour
         pf = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         allPlanets = GameObject.FindGameObjectsWithTag("Planet").Select(x => x.GetComponent<Planet>()).ToList();
         GetComponent<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(transform.position.z);
-        galacticEventHandler = GameObject.FindGameObjectWithTag("GalacticEventHandler").GetComponent<GalacticEventHandler>();
 
         availableTradeRoutes = new List<TradeRoute>();
 
@@ -190,7 +188,6 @@ public class Planet : MonoBehaviour
     public void WarningLowResource(string warning)
     {
         //Do a bunch of switch cases to do different messages for different warnings and resources lacking
-        galacticEventHandler.AddNewGalacticEvent($"{planetName} is severely lacking {warning}", this);
     }
 
     public void TryForNewTradeRoutes(ItemType type, int amount)
