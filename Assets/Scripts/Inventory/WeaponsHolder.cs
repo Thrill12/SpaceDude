@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class WeaponsHolder : MonoBehaviour
 {
     public BaseWeapon mainWeapon;
@@ -15,10 +16,12 @@ public class WeaponsHolder : MonoBehaviour
     public GameObject weaponObject;
 
     private float nextFire;
+    private AudioSource audioSource;
 
     private void Start()
     {
         SwapWeapons();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -43,6 +46,9 @@ public class WeaponsHolder : MonoBehaviour
     {
         if (currentlyEquippedWeapon == null) return;
 
+        Debug.Log(weaponObject.name);
+
+        audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
         currentlyEquippedWeapon.Attack(weaponObject);
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
     }
@@ -66,8 +72,8 @@ public class WeaponsHolder : MonoBehaviour
 
         if (currentlyEquippedWeapon == null) return;
 
-        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, Quaternion.identity);
-        weaponObject.transform.parent = gameObject.transform;
+        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, transform.rotation);
+        weaponObject.transform.parent = transform;
 
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
 

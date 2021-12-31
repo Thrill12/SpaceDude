@@ -26,6 +26,7 @@ public class RarityTable : ScriptableObject
     //getting picked than an item with rarity of 25.
     public BaseRarity GetRandomRarity()
     {
+        InitializeRarities();
         float diceRoll = Random.Range(0, totalRarityWeight);
 
         foreach (var rarity in rarities)

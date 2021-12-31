@@ -88,7 +88,7 @@ public class Inventory : MonoBehaviour
             {
                 items.Add(itemToAdd);
                 GameObject uiHolder = Instantiate(uiItemHolder, itemDisplay.transform);
-                uiHolder.GetComponentInChildren<UIItemHolder>().itemHeld = itemToAdd;
+                uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
                 uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
             }
         }
@@ -155,6 +155,7 @@ public class Inventory : MonoBehaviour
             EquipItem(itemToEquip);
         }
         itemToEquip.isEquipped = true;
+        itemToEquip.hostEntity = GetComponent<BaseEntity>();
     }
 
     public void UnequipItem(BaseEquippable itemToUnequip)
@@ -184,6 +185,7 @@ public class Inventory : MonoBehaviour
         }
 
         itemToUnequip.isEquipped = false;
+        itemToUnequip.hostEntity = null;
         Debug.Log(itemToUnequip.isEquipped);
     }
 }

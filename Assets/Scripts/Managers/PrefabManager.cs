@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,9 +18,18 @@ public class PrefabManager : MonoBehaviour
 
     [Space(5)]
 
+    public GameObject healthBarObject;
+
+    [Space(5)]
+
     [Header("Objects")]
 
     public GameObject cargoShip;
+    public GameObject itemObject;
+
+    [Space(5)]
+
+    public RarityTable rarityTable;
 
     [Space(5)]
 
@@ -28,4 +38,18 @@ public class PrefabManager : MonoBehaviour
     public GameObject playerSuitBullet;
     public GameObject playerSuitYellowBulletImpactParticles;
 
+    internal void SpawnItem(GameObject objPos, BaseItem baseItem)
+    {
+        if(baseItem != null)
+        {
+            GameObject obj = Instantiate(itemObject, objPos.transform.position, Quaternion.identity);
+            obj.GetComponent<ItemHolder>().itemHeld = baseItem;
+            obj.GetComponent<ItemHolder>().generateStats = true;
+        }
+    }
+
+    internal BaseRarity GetRandomRarity()
+    {
+        return rarityTable.GetRandomRarity();
+    }
 }

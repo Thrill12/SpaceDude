@@ -6,19 +6,16 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayersuitManager : MonoBehaviour
 {
-    public GameObject playerSuitPrefab;
+    public GameObject instantiatedPlayerSuit;
     public GameObject playerSuitCamPrefab;
     public GameObject playerSuitSpawn;
-    public GameObject suitVolume;
-    [HideInInspector]
-    public GameObject instantiatedPlayerSuit;
+    public GameObject suitVolume;   
     [HideInInspector]
     public GameObject instantiatedPlayerSuitCam;
     public PlayerShipMovement ship;
 
     private void Start()
     {
-        instantiatedPlayerSuit = Instantiate(playerSuitPrefab, transform.position, Quaternion.identity);
         instantiatedPlayerSuit.SetActive(false);
         instantiatedPlayerSuitCam = Instantiate(playerSuitCamPrefab, transform.position, Quaternion.identity);
         instantiatedPlayerSuitCam.SetActive(false);
@@ -37,11 +34,13 @@ public class PlayersuitManager : MonoBehaviour
         playerSuitSpawn.GetComponent<SpriteRenderer>().enabled = true;
         playerSuitSpawn.GetComponent<Light2D>().enabled = true;
 
-        ship.GetComponent<Rigidbody2D>().velocity *= 0;
-        ship.GetComponent<Rigidbody2D>().mass = 100000;
         ship.isPlayerInShip = false;
         ship.followCam.gameObject.SetActive(false);
         ship.FoldInWings();
+        ship.GetComponent<Rigidbody2D>().drag = ship.drag;
+        ship.thrusterParticleSpawnRate = 0;
+        ship.leftLight.intensity = 0;
+        ship.rightLight.intensity = 0;
     }
 
     public void PlayerEnterShip()
@@ -51,7 +50,6 @@ public class PlayersuitManager : MonoBehaviour
 
         suitVolume.SetActive(false);
 
-        ship.GetComponent<Rigidbody2D>().mass = 1;
         playerSuitSpawn.GetComponent<SpriteRenderer>().enabled = false;
         playerSuitSpawn.GetComponent<Light2D>().enabled = false;
 

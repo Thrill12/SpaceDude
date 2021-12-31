@@ -297,6 +297,9 @@ GameObject:
   - component: {fileID: 48211329198415422}
   - component: {fileID: -7717495220036303782}
   - component: {fileID: 5898455060828305356}
+  - component: {fileID: 8788695465270548820}
+  - component: {fileID: 6104419335816767539}
+  - component: {fileID: 1619563898779149639}
   m_Layer: 0
   m_Name: Player
   m_TagString: PlayerSuit
@@ -312,7 +315,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48211329198415412}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.181, y: 0.317, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -320,6 +323,7 @@ Transform:
   - {fileID: 48211327951254282}
   - {fileID: 48211328855345716}
   - {fileID: 48211328414196845}
+  - {fileID: 3060388201143529263}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -503,3 +507,114 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.34375
+--- !u!114 &8788695465270548820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48211329198415412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8aa8788ed0a84b4292c1011b4491dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  weaponHolder: {fileID: 0}
+  itemDisplay: {fileID: 0}
+  uiItemHolder: {fileID: 3435700734599979523, guid: b8ecc68b97979f34e92016a0755daa28, type: 3}
+  worldItemHolder: {fileID: 9171643131429873287, guid: e3bcd9158eba0574db0fc58bf3ea3e56, type: 3}
+  slots:
+  - {fileID: 11400000, guid: b13afcabeda4f6749a82bbea51d5ea85, type: 2}
+  items: []
+  itemsEquipped: []
+  uiItemHolders: []
+  maxItemCount: 30
+--- !u!114 &6104419335816767539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48211329198415412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64ee7effbca3411489dd18c0f8ddd15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainWeapon: {fileID: 0}
+  secondaryWeapon: {fileID: 0}
+  currentlyEquippedWeapon: {fileID: 0}
+  weaponObjectPosition: {fileID: 3060388201143529263}
+  weaponAttackSource: {fileID: 0}
+  weaponObject: {fileID: 0}
+--- !u!114 &1619563898779149639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48211329198415412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c075a12636834c34089a095711a0ee7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityName: Player
+  health: 0
+  maxHealth:
+    BaseValue: 500
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  armour:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  damageMultiplier:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  healthRegeneration:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  energyRegeneration:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+--- !u!1 &8552127421834615786
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3060388201143529263}
+  m_Layer: 0
+  m_Name: WeaponPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3060388201143529263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8552127421834615786}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.382, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 48211329198415410}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

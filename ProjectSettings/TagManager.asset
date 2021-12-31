@@ -17,6 +17,12 @@ TagManager:
   - Wall
   - StationGenerator
   - Item
+  - PlayerAttackSource
+  - InventoryBackground
+  - EquippedItemsDisplay
+  - UICanvas
+  - UICamera
+  - Projectile
   layers:
   - Default
   - TransparentFX
