@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6959a5f84b1d93745babd28f5ae84f17, type: 3}
+  m_Name: Union Issued Pistol
+  m_EditorClassIdentifier: 
+  itemName: 
+  itemDescription: 
+  itemIcon: {fileID: 0}
+  itemRarity: {fileID: 0}
+  itemValue: 0
+  itemStack: 0
+  itemMaxStack: 0
+  itemType: 6
+  itemSlot: 
+  itemMods: []
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0
+  weaponObject: {fileID: 0}
+  damage:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalChance:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalDamage:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  attackCooldown:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  large: 0
+  projectile: {fileID: 0}
+  projectileSpeed:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
