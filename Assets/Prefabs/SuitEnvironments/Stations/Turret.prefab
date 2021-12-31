@@ -136,6 +136,8 @@ GameObject:
   - component: {fileID: 267936398896959468}
   - component: {fileID: 169896915747577712}
   - component: {fileID: 3043783526829755439}
+  - component: {fileID: 8422777376399373941}
+  - component: {fileID: 7283469730192501926}
   m_Layer: 7
   m_Name: Turret
   m_TagString: Untagged
@@ -237,4 +239,84 @@ MonoBehaviour:
   - {x: -0.07486631, y: 0.09008035, z: 0}
   m_ShapePathHash: 849515421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 189420
+  m_InstanceId: 143430
+--- !u!114 &8422777376399373941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108898495478855683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44315e48b83d4e644b3c6703e15a1d73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityName: Turret
+  health: 0
+  maxHealth:
+    BaseValue: 250
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  armour:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  damageMultiplier:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  healthRegeneration:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  energy:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  energyRegeneration:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  pfMan: {fileID: 0}
+  healthBar: {fileID: 0}
+  dropTable:
+  - item: {fileID: 11400000, guid: 5d06246f41a4cc045af6b8e7ec9f35ab, type: 2}
+    weight: 100
+  - item: {fileID: 11400000, guid: 4410b2826db5b0344b0949e04e95889b, type: 2}
+    weight: 5
+  - item: {fileID: 0}
+    weight: 500
+  healthBarYOffset: 0.5
+--- !u!61 &7283469730192501926
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108898495478855683}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.5, y: 0.4375}
+    newSize: {x: 0.5, y: 0.4375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.4375}
+  m_EdgeRadius: 0

@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6959a5f84b1d93745babd28f5ae84f17, type: 3}
+  m_Name: MH53 Gauss Rifle
+  m_EditorClassIdentifier: 
+  itemName: MH53 Gauss Rifle
+  itemDescription: 
+  itemIcon: {fileID: 0}
+  itemRarity: {fileID: 11400000, guid: 635ab1b99fa9814498f4746cda084f8d, type: 2}
+  itemValue: 414
+  itemStack: 1
+  itemMaxStack: 1
+  itemType: 6
+  itemSlot: Primary Weapon
+  itemMods: []
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0
+  weaponObject: {fileID: 7344231824679981685, guid: 0c9962437f65e2840b7b744fc631657a, type: 3}
+  damage:
+    BaseValue: 25
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalChance:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalDamage:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  attackCooldown:
+    BaseValue: 0.6
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  large: 1
+  attackSound: {fileID: 8300000, guid: f3be60e9a22932e46bb8c244f160e43f, type: 3}
+  projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
+  projectileSpeed:
+    BaseValue: 500
+    _value: 0
+    statModifiers: []
+    isDirty: 1

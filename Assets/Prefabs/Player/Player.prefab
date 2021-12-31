@@ -299,6 +299,7 @@ GameObject:
   - component: {fileID: 5898455060828305356}
   - component: {fileID: 8788695465270548820}
   - component: {fileID: 6104419335816767539}
+  - component: {fileID: 1619563898779149639}
   m_Layer: 0
   m_Name: Player
   m_TagString: PlayerSuit
@@ -547,6 +548,45 @@ MonoBehaviour:
   weaponObjectPosition: {fileID: 3060388201143529263}
   weaponAttackSource: {fileID: 0}
   weaponObject: {fileID: 0}
+--- !u!114 &1619563898779149639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48211329198415412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c075a12636834c34089a095711a0ee7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityName: Player
+  health: 0
+  maxHealth:
+    BaseValue: 500
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  armour:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  damageMultiplier:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  healthRegeneration:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  energyRegeneration:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
 --- !u!1 &8552127421834615786
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ public abstract class BaseWeapon : BaseEquippable
     public Stat criticalDamage;
     public Stat attackCooldown;
     public bool large;
+    public AudioClip attackSound;
 
     public BaseWeapon()
     {

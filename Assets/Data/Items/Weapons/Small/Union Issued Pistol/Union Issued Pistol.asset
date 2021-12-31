@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Union Issued Pistol
   itemDescription: 
   itemIcon: {fileID: 0}
-  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemRarity: {fileID: 0}
   itemValue: 751
   itemStack: 1
   itemMaxStack: 1
@@ -29,7 +29,7 @@ MonoBehaviour:
   isEquipped: 0
   weaponObject: {fileID: 7326627345084724259, guid: d81c191e5961823499de38367d1354c6, type: 3}
   damage:
-    BaseValue: 0
+    BaseValue: 25
     _value: 0
     statModifiers: []
     isDirty: 1
@@ -49,9 +49,10 @@ MonoBehaviour:
     statModifiers: []
     isDirty: 1
   large: 0
+  attackSound: {fileID: 8300000, guid: f35a6ee92d4ebd047a737468dd3b6985, type: 3}
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
-    BaseValue: 150
+    BaseValue: 300
     _value: 0
     statModifiers: []
     isDirty: 1

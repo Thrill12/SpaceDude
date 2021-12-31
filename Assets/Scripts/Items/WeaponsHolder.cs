@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class WeaponsHolder : MonoBehaviour
 {
     public BaseWeapon mainWeapon;
@@ -15,10 +16,12 @@ public class WeaponsHolder : MonoBehaviour
     public GameObject weaponObject;
 
     private float nextFire;
+    private AudioSource audioSource;
 
     private void Start()
     {
         SwapWeapons();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -45,6 +48,7 @@ public class WeaponsHolder : MonoBehaviour
 
         Debug.Log(weaponObject.name);
 
+        audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
         currentlyEquippedWeapon.Attack(weaponObject);
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
     }

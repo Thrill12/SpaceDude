@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 
@@ -46,12 +47,16 @@ public class PlayerShipMovement : MonoBehaviour
 
     public GameObject leftThrust;
     public GameObject rightThrust;
+    public Light2D leftLight;
+    public Light2D rightLight;
 
     private AudioSource src;
     private float lastVol = 0;
     private float currentVol = 0;
     [HideInInspector]
     public UIManager ui;
+    [HideInInspector]
+    public int thrusterParticleSpawnRate = 0;
 
     private void Start()
     {
@@ -70,9 +75,30 @@ public class PlayerShipMovement : MonoBehaviour
         inputX = Input.GetAxisRaw("Horizontal");
         inputY = Input.GetAxisRaw("Vertical");
 
-        ChangeParticleThrustRate();
+        ChangeParticleThrustRate(thrusterParticleSpawnRate);
+
+        currentSpeed = rb.velocity.magnitude;
+
+        if (thrusterParticleSpawnRate > 5)
+        {
+            leftLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250)) * 2;
+            rightLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250)) * 2;
+        }
+        else
+        {
+            leftLight.intensity = 0;
+            rightLight.intensity = 0;
+        }
+
+        if (!isPlayerInShip)
+        {
+            inputY = 0;
+            inputX = 0;
+        }
 
         if (!isPlayerInShip) return;
+
+        thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
 
         if (Input.GetMouseButton(0))
         {
@@ -161,7 +187,7 @@ public class PlayerShipMovement : MonoBehaviour
             rb.angularDrag = angularDrag;
         }
 
-        currentSpeed = rb.velocity.magnitude;
+        
 
         if (inputY > 0)
         {
@@ -170,9 +196,7 @@ public class PlayerShipMovement : MonoBehaviour
         else
         {
             moveSpeed = baseMoveSpeed;
-        }
-
-        
+        }      
 
         if (currentSpeed > maxSpeed)
         {
@@ -180,10 +204,10 @@ public class PlayerShipMovement : MonoBehaviour
         }        
     }
 
-    public void ChangeParticleThrustRate()
+    public void ChangeParticleThrustRate(int rate)
     {
-        leftThrust.GetComponent<VisualEffect>().SetInt(Shader.PropertyToID("Spawn Rate"), (int)Mathf.Floor(currentSpeed * 250));
-        rightThrust.GetComponent<VisualEffect>().SetInt(Shader.PropertyToID("Spawn Rate"), (int)Mathf.Floor(currentSpeed * 250));
+        leftThrust.GetComponent<VisualEffect>().SetInt(Shader.PropertyToID("Spawn Rate"), rate);
+        rightThrust.GetComponent<VisualEffect>().SetInt(Shader.PropertyToID("Spawn Rate"), rate);
     }
 
     public void ManageThrustVolume(float interval)

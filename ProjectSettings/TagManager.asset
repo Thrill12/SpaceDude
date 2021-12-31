@@ -22,6 +22,7 @@ TagManager:
   - EquippedItemsDisplay
   - UICanvas
   - UICamera
+  - Projectile
   layers:
   - Default
   - TransparentFX
