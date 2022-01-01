@@ -231,3 +231,4 @@
 /Assets/Scenes/Little[[:space:]]Timmy's[[:space:]]Sandbox.unity filter=lfs diff=lfs merge=lfs -text
 /Assets/Scenes/Timmothee.unity filter=lfs diff=lfs merge=lfs -text
 /Assets/Data/Items/Weapons/Small/Union[[:space:]]Issued[[:space:]]Pistol/Union[[:space:]]Pistol.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Scenes/Timothee.unity filter=lfs diff=lfs merge=lfs -text
