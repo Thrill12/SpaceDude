@@ -108,7 +108,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            playerSuit.PlayerLeaveShip();
+            playerSuit.PlayerLeaveCockpit();
         }
 
         if (Input.GetKeyDown(KeyCode.Z))

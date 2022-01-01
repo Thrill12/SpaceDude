@@ -6,12 +6,22 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayersuitManager : MonoBehaviour
 {
+    [Header("Player Character")] 
     public GameObject instantiatedPlayerSuit;
     public GameObject playerSuitCamPrefab;
+    [Tooltip("The global volume for post processing which is enabled when controlling the player character.")]
+    public GameObject suitVolume;
+
+    [Header("Ship Spawn Points"), Tooltip("The spawn point in the ship interior where the player character is when the player leaves the cockpit and enters the main body of their ship.")]
     public GameObject playerSuitSpawn;
-    public GameObject suitVolume;   
+    [Tooltip("The external spawn point where the player is spawned when they leave out the ship's air lock which places them in space.")]
+    public GameObject airLockExterior;
+    [Tooltip("The internal location of the player when they enter the airlock.")]
+    public GameObject airLockInterior;
+    
     [HideInInspector]
     public GameObject instantiatedPlayerSuitCam;
+    [HideInInspector]
     public PlayerShipMovement ship;
 
     private void Start()
@@ -23,7 +33,7 @@ public class PlayersuitManager : MonoBehaviour
         ship = GetComponent<PlayerShipMovement>();
     }
 
-    public void PlayerLeaveShip()
+    public void PlayerLeaveCockpit()
     {
         instantiatedPlayerSuit.transform.position = playerSuitSpawn.transform.position;
         instantiatedPlayerSuit.SetActive(true);
@@ -43,7 +53,7 @@ public class PlayersuitManager : MonoBehaviour
         ship.rightLight.intensity = 0;
     }
 
-    public void PlayerEnterShip()
+    public void PlayerEnterCockpit()
     {
         instantiatedPlayerSuit.SetActive(false);
         instantiatedPlayerSuitCam.SetActive(false);

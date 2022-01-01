@@ -42,7 +42,7 @@ public class PlayerSuitMovement : MonoBehaviour
         Debug.Log(isOverShip);
         if (isOverShip == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
         {
-            playerShip.GetComponent<PlayersuitManager>().PlayerEnterShip(); //Player renters their ship.
+            playerShip.GetComponent<PlayersuitManager>().PlayerEnterCockpit(); //Player renters their ship.
         }
         #endregion
     }
