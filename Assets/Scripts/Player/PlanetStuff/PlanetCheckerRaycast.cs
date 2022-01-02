@@ -37,6 +37,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
 
     private void Update()
     {
+        //Checks if the player ship is above a planet or not, allowing a player to interact with it.
         if (!shipMovement.isPlayerPiloting) return;
         if (isOverPlanet)
         {
@@ -62,6 +63,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
 
     void FixedUpdate()
     {
+        //A 3D raycast hit is used as it needs to be shot behind the ship, not horizontally or vertically.
         RaycastHit hit;
 
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, planetLayer))

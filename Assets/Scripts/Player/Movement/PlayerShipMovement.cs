@@ -146,6 +146,7 @@ public class PlayerShipMovement : MonoBehaviour
     {    
         rb.AddForce(-transform.up * moveSpeed * inputY);
 
+        //Turning left and right
         if(rb.angularVelocity < 0)
         {
             if (rb.angularVelocity > -maxAngVel)
@@ -165,6 +166,7 @@ public class PlayerShipMovement : MonoBehaviour
             rb.AddTorque(-inputX * rotationSpeed);
         }
 
+        #region Dampeners and drag
         if (dampeners)
         {
             if (inputY != 0)
@@ -189,9 +191,10 @@ public class PlayerShipMovement : MonoBehaviour
         {
             rb.angularDrag = angularDrag;
         }
+        #endregion
 
-        
-
+        //Making the ship actually accelerate faster so it's not always stuck at a slow speed, but 
+        // also limits the player from just jumping into their ship and escaping, as they start quite slow
         if (inputY > 0)
         {
             moveSpeed += accelAcceleration;

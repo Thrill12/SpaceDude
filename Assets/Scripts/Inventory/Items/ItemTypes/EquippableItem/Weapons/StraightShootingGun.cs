@@ -8,6 +8,7 @@ public class StraightShootingGun : BaseWeapon
     public GameObject projectile;
     public Stat projectileSpeed;
 
+    //A normal shoot function for a straight shooting gun
     public override void Attack(GameObject weaponObject)
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

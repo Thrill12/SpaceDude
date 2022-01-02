@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+//Holds progress done by the player, will probably use this as a place to call saving/loading functions, 
+// and will probably act as storage for the databank on the ship
 public class ProgressHolderd : MonoBehaviour
 {
     public List<Planet> planetsDiscovered;

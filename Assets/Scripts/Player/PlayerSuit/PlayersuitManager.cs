@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.Rendering.Universal;
 
+//Manages the player suit, and sits on the ship as the player suit gets deactivated.
 public class PlayersuitManager : MonoBehaviour
 {
     [Header("Player Character")] 

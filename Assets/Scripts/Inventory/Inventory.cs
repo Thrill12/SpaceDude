@@ -57,6 +57,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    //This drops an item from the players innventory at the player's position
     public void SpawnDroppedItem(BaseItem itemDropped)
     {
         RemoveItemFromInventory(itemDropped);
@@ -64,6 +65,7 @@ public class Inventory : MonoBehaviour
         i.GetComponent<ItemHolder>().itemHeld = itemDropped;
     }
 
+    //Adding the item to the inventory and also adding the UI holder for it in the player's inventory
     public void AddItemToInventory(BaseItem itemToAdd)
     {
         if (items.Count < maxItemCount)

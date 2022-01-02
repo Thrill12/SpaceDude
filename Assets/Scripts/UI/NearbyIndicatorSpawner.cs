@@ -17,6 +17,7 @@ public class NearbyIndicatorSpawner : MonoBehaviour
     {
         if (playerObj.activeInHierarchy == false) return;
 
+        //Gets a list of all nearby objects that have the tag below, closer than the max distance
         nearbyObjects = Physics2D.OverlapCircleAll(playerObj.transform.position, maxDistance).ToList().Select(o => o.gameObject).Where(x => x.CompareTag("Player") || x.CompareTag("Enemy")
          || x.CompareTag("Neutral") || x.CompareTag("Neutral")).ToList();
 
@@ -26,6 +27,7 @@ public class NearbyIndicatorSpawner : MonoBehaviour
         }
     }
 
+    //Adds a new arrow for the object to be tracked
     private void AddObjectToBeTracked(GameObject objToTrack)
     {
         if (!objsDone.Contains(objToTrack))

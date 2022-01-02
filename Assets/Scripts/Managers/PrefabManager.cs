@@ -38,6 +38,7 @@ public class PrefabManager : MonoBehaviour
     public GameObject playerSuitBullet;
     public GameObject playerSuitYellowBulletImpactParticles;
 
+    //This is used by the inventory to spawn a dropped item
     internal void SpawnItem(GameObject objPos, BaseItem baseItem)
     {
         if(baseItem != null)

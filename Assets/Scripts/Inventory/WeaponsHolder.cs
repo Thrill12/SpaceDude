@@ -42,6 +42,8 @@ public class WeaponsHolder : MonoBehaviour
         nextFire -= Time.deltaTime;
     }
 
+    //Uses the abstract function in the weapon to attack. Passed in the weapon object to allow the gun to have
+    // access to its attack source, and any other damage or stats it needs
     public void Attack()
     {
         if (currentlyEquippedWeapon == null) return;
@@ -53,6 +55,7 @@ public class WeaponsHolder : MonoBehaviour
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
     }
 
+    //This swaps weapons when both are equipped, but is also called when the player picks up a weapon, so that they can immediately use the new one
     public void SwapWeapons()
     {
         Destroy(weaponObject);
