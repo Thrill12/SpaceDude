@@ -33,7 +33,7 @@ public class ShootingScript : MonoBehaviour
 
     private void Update()
     {
-        if (movement.isPlayerInShip == false) return;
+        if (movement.isPlayerPiloting == false) return;
         if (ui.isInUI) return;
 
         if (nextFire <= 0)

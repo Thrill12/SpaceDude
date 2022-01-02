@@ -10,19 +10,26 @@ public class PlayerSuitMovement : MonoBehaviour
     public float dashSpeed = 5;
     public float dashTime = 1;
 
-    private GameObject playerShip;
+    //Get the overarching player object.
+    private GameObject playerObj;
+
+    //Input variables
     private float inputX;
     private float inputY;
+    //Movement variables.
     private Coroutine isDashing;
     private bool isOverShip = true;
 
+    //Ref to the player's rigid body component.
     private Rigidbody2D rb;
 
     //Called at start of runtime.
     private void Start()
     {
+        //Get the player character's rigid body component.
         rb = GetComponent<Rigidbody2D>();
-        playerShip = GameObject.FindGameObjectWithTag("Player");
+        //Get the overarching player object.
+        playerObj = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame - updates input and applies vitals.
@@ -42,7 +49,7 @@ public class PlayerSuitMovement : MonoBehaviour
         Debug.Log(isOverShip);
         if (isOverShip == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
         {
-            playerShip.GetComponent<PlayersuitManager>().PlayerEnterCockpit(); //Player renters their ship.
+            playerObj.GetComponent<PlayersuitManager>().PlayerEnterCockpit(); //Player renters their ship.
         }
         #endregion
     }

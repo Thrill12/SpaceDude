@@ -37,7 +37,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
 
     private void Update()
     {
-        if (!shipMovement.isPlayerInShip) return;
+        if (!shipMovement.isPlayerPiloting) return;
         if (isOverPlanet)
         {
             planetBorder.SetActive(true);
