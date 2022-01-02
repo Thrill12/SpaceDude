@@ -20,7 +20,6 @@ public class ItemHolder : MonoBehaviour
 
         if (generateStats)
         {
-            itemHeld.itemRarity = (ItemRarity)prefabManager.GetRandomRarity();
             GenerateMods();
         }
 
