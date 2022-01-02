@@ -9,7 +9,7 @@ using UnityEngine.VFX;
 
 public class PlayerShipMovement : MonoBehaviour
 {
-    public bool isPlayerInShip = true;
+    public bool isPlayerPiloting = true;
 
     [Space(5)]
 
@@ -61,7 +61,7 @@ public class PlayerShipMovement : MonoBehaviour
 
     private void Start()
     {
-        isPlayerInShip = true;
+        isPlayerPiloting = true;
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed;
         src = GetComponent<AudioSource>();
@@ -91,7 +91,7 @@ public class PlayerShipMovement : MonoBehaviour
             rightLight.intensity = 0;
         }
 
-        if (!isPlayerInShip)
+        if (!isPlayerPiloting)
         {
             inputY = 0;
             inputX = 0;
@@ -99,7 +99,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         ManageThrustVolume(0.001f);
 
-        if (!isPlayerInShip) return;
+        if (!isPlayerPiloting) return;
 
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
 
@@ -130,7 +130,7 @@ public class PlayerShipMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isPlayerInShip)
+        if (isPlayerPiloting)
         {
             MoveAndTurn();
         }       
