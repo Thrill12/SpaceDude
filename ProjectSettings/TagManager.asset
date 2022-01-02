@@ -23,6 +23,9 @@ TagManager:
   - UICanvas
   - UICamera
   - Projectile
+  - Enemy
+  - Friendly
+  - Neutral
   layers:
   - Default
   - TransparentFX

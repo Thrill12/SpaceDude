@@ -11,7 +11,8 @@ public class BaseEntity : MonoBehaviour
     public Stat armour;
     public Stat damageMultiplier;
     public Stat healthRegeneration;
-    public Stat energy;
+    public float energy;
+    public Stat maxEnergy;
     public Stat energyRegeneration;
 
     float nextFireHealthRegen;
@@ -59,7 +60,7 @@ public class BaseEntity : MonoBehaviour
 
     public virtual void RegenEnergy(float energyToRegen)
     {
-        energy._value += energyToRegen;
+        maxEnergy._value += energyToRegen;
         nextFireEnergyRegen = 1;
     }
 

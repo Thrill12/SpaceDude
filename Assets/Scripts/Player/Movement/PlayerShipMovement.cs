@@ -25,6 +25,7 @@ public class PlayerShipMovement : MonoBehaviour
     public float maxAngVel = 100;
     public float drag = 5;
     public float angularDrag = 5;
+    public AnimationCurve thrusterSoundCurve;
 
     [Space(5)]
     public float rotationSpeed;
@@ -96,6 +97,8 @@ public class PlayerShipMovement : MonoBehaviour
             inputX = 0;
         }
 
+        ManageThrustVolume(0.001f);
+
         if (!isPlayerInShip) return;
 
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
@@ -121,7 +124,7 @@ public class PlayerShipMovement : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        ManageThrustVolume(0.001f);
+        
         ChangeCameraZoomVelocity();
     }
 
@@ -212,39 +215,7 @@ public class PlayerShipMovement : MonoBehaviour
 
     public void ManageThrustVolume(float interval)
     {
-        if (rb.velocity.magnitude >= 0.5f)
-        {
-            if (currentVol < 1)
-            {
-                currentVol += interval;
-            }
-            else
-            {
-                currentVol = 1;
-            }
-
-            if (currentVol > lastVol)
-            {
-                //Increasing
-                lastVol = currentVol;
-            }
-            else if (currentVol < lastVol)
-            {
-                //Decreasing
-                lastVol = currentVol;
-            }
-            else
-            {
-                //Same
-                lastVol = currentVol;
-            }
-        }
-        else
-        {
-            currentVol = 0;
-        }
-
-        src.volume = currentVol;
+        src.volume = thrusterSoundCurve.Evaluate(currentSpeed / maxSpeed);      
     }
 
     public void FoldInWings()

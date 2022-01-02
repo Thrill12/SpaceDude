@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Union Issued Pistol
   itemDescription: 
   itemIcon: {fileID: 0}
-  itemRarity: {fileID: 0}
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
   itemValue: 751
   itemStack: 1
   itemMaxStack: 1
