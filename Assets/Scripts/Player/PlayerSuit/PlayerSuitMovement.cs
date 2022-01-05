@@ -18,7 +18,9 @@ public class PlayerSuitMovement : MonoBehaviour
     private float inputY;
     //Movement variables.
     private Coroutine isDashing;
-    private bool isOverShip = true;
+    private bool isOverCockpit = true;
+    private bool isOverExit = false;
+    private bool isOverEntrance = false;
 
     //Ref to the player's rigid body component.
     private Rigidbody2D rb;
@@ -46,10 +48,24 @@ public class PlayerSuitMovement : MonoBehaviour
         //Make the player 'dash'.
         Dash();
 
-        if (isOverShip == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
+        if (isOverCockpit == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
         {
+            rb.velocity = Vector2.zero;
             playerObj.GetComponent<PlayersuitManager>().PlayerEnterCockpit(); //Player renters their ship.
         }
+
+        if (isOverExit == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
+        {
+            rb.velocity = Vector2.zero;
+            playerObj.GetComponent<PlayersuitManager>().PlayerExitShip(); //Player renters their ship.
+        }
+
+        if (isOverEntrance == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
+        {
+            rb.velocity = Vector2.zero;
+            playerObj.GetComponent<PlayersuitManager>().PlayerEnterShip(); //Player renters their ship.
+        }
+
         #endregion
     }
 
@@ -128,7 +144,16 @@ public class PlayerSuitMovement : MonoBehaviour
         //Checking to see if the player is over the ship entry point.
         if (collision.CompareTag("PlayerSuitSpawner"))
         {
-            isOverShip = true;
+            isOverCockpit = true;
+        }
+
+        if (collision.CompareTag("Ship Exit"))
+        {
+            isOverExit = true;
+        }
+        if (collision.CompareTag("Ship Entrance"))
+        {
+            isOverEntrance = true;
         }
     }
 
@@ -137,7 +162,16 @@ public class PlayerSuitMovement : MonoBehaviour
         //Checking to see if the player has left the ship entry point.
         if (collision.CompareTag("PlayerSuitSpawner"))
         {
-            isOverShip = false;
+            isOverCockpit = false;
+        }
+
+        if (collision.CompareTag("Ship Exit"))
+        {
+            isOverExit = false;
+        }
+        if (collision.CompareTag("Ship Entrance"))
+        {
+            isOverEntrance = false;
         }
     }
 

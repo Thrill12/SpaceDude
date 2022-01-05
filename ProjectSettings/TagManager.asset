@@ -26,6 +26,8 @@ TagManager:
   - Enemy
   - Friendly
   - Neutral
+  - Ship Exit
+  - Ship Entrance
   layers:
   - Default
   - TransparentFX
@@ -41,7 +43,7 @@ TagManager:
   - PlayerShipBullets
   - ExtremeUI
   - Ship
-  - 
+  - Ship Interior
   - 
   - 
   - 
@@ -75,6 +77,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Particles
+    uniqueID: 89850385
+    locked: 0
+  - name: Ship Interior
+    uniqueID: 3704131605
+    locked: 0
   - name: Player
     uniqueID: 158009873
     locked: 0
@@ -86,4 +94,7 @@ TagManager:
     locked: 0
   - name: ExtremeUI
     uniqueID: 1254453905
+    locked: 0
+  - name: Particles
+    uniqueID: 1793885691
     locked: 0

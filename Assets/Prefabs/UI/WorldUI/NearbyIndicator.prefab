@@ -83,7 +83,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1306387681
   m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!210 &4429683600151130650
@@ -95,7 +95,7 @@ SortingGroup:
   m_GameObject: {fileID: 3163290981164599597}
   m_Enabled: 1
   m_SortingLayerID: -882785735
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 5000
 --- !u!1 &3786755954323831257
 GameObject:

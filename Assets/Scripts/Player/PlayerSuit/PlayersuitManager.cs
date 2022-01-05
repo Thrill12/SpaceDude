@@ -24,6 +24,10 @@ public class PlayersuitManager : MonoBehaviour
     [HideInInspector]
     public PlayerShipMovement ship;
 
+    public Animator fadeAnimation;
+    public GameObject shipExt;
+    public GameObject shipInt;
+
     private void Start()
     {
         #region Make player character inactive.
@@ -31,7 +35,7 @@ public class PlayersuitManager : MonoBehaviour
         instantiatedPlayerSuit.SetActive(false);
         instantiatedPlayerSuitCam = Instantiate(playerSuitCamPrefab, transform.position, Quaternion.identity);
         instantiatedPlayerSuitCam.SetActive(false);
-        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = instantiatedPlayerSuit.transform;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = null;
         #endregion
 
         //Get the player ship.
@@ -40,28 +44,17 @@ public class PlayersuitManager : MonoBehaviour
 
     public void PlayerLeaveCockpit()
     {
-        //Move the player to the outside of the cockpit wihtin the ship.
-        instantiatedPlayerSuit.transform.position = cockpitExitSpawn.transform.position;
-        //Set the plater character objects to be active as the polayer is now going to control the player cahracter.
-        instantiatedPlayerSuit.SetActive(true);
-        instantiatedPlayerSuitCam.SetActive(true);
-        //Enable the player character post processing volume.
-        suitVolume.SetActive(true);
+        //Fade screen
+        fadeAnimation.SetTrigger("Fade");
 
-        #region Update Ship
-        ship.isPlayerPiloting = false;
-        //Make the following virtual camera for the ship inactive.
-        ship.followCam.gameObject.SetActive(false);
-        //Fold in the wings on the ship as the player has stopped piloting.
-        ship.FoldInWings();
-        //Think this is to make the ship stop??
-        ship.GetComponent<Rigidbody2D>().drag = ship.drag;
-        //Makes the engine thrusters inactive.
-        ship.thrusterParticleSpawnRate = 0;
-        //Turns the lights on the ship down.
-        ship.leftLight.intensity = 0;
-        ship.rightLight.intensity = 0;
-        #endregion
+        instantiatedPlayerSuitCam.SetActive(true);
+        //Set the vCam to follow the ship.
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = ship.gameObject.transform;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_LookAt = ship.gameObject.transform;
+
+        instantiatedPlayerSuit.transform.SetParent(shipInt.transform, false);
+
+        Invoke("LeaveCockpitTransition", .7f);
     }
 
     public void PlayerEnterCockpit()
@@ -72,11 +65,114 @@ public class PlayersuitManager : MonoBehaviour
         //Disable the player character post processing volume.
         suitVolume.SetActive(false);
 
-        //Update the ship.
-        ship.isPlayerPiloting = true;
         //Set the ship follow cam to active.
         ship.followCam.gameObject.SetActive(true);
+
+        //Fade screen
+        fadeAnimation.SetTrigger("Fade");
+
+        Invoke("EnterCockpitTransition", .7f);
+    }
+
+    public void PlayerExitShip()
+    {
+        //Fade screen
+        fadeAnimation.SetTrigger("Fade");
+
+        instantiatedPlayerSuit.transform.parent = null;
+
+        Invoke("ExitShipTransition", .7f);
+    }
+    public void PlayerEnterShip()
+    {
         //Fold out the player ship's wings as the player is now piloting.
         ship.FoldOutWings();
+
+        //Fade screen
+        fadeAnimation.SetTrigger("Fade");
+
+        instantiatedPlayerSuitCam.SetActive(true);
+        //Set the vCam to follow the ship.
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = shipInt.gameObject.transform;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_LookAt = shipInt.gameObject.transform;
+
+        Invoke("EntertShipTransition", .7f);
+    }
+
+    public void LeaveCockpitTransition()
+    {
+        //Play the transition to show the ship interior.
+
+        //Move the player to the outside of the cockpit wihtin the ship.
+        instantiatedPlayerSuit.transform.position = cockpitExitSpawn.transform.position;
+        //Set the plater character objects to be active as the polayer is now going to control the player cahracter.
+        instantiatedPlayerSuit.SetActive(true);
+        instantiatedPlayerSuitCam.SetActive(true);
+        //Enable the player character post processing volume.
+        suitVolume.SetActive(true);
+        //Set the vCam to follow the ship.
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = shipInt.gameObject.transform;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_XDamping = 0;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 0;
+
+        #region Update Ship
+        ship.isPlayerPiloting = false;
+        //Think this is to make the ship stop??
+        //ship.GetComponent<Rigidbody2D>().drag = ship.drag;
+        //Makes the engine thrusters inactive.
+        //ship.thrusterParticleSpawnRate = 0;
+        //Turns the lights on the ship down.
+        ship.leftLight.intensity = 0;
+        ship.rightLight.intensity = 0;
+        #endregion
+
+        shipInt.SetActive(true);
+        shipExt.SetActive(false);
+    }
+    public void EnterCockpitTransition()
+    {
+        //Play the transition to show the ship exterior.
+
+        //Set the vCam to follow the player.
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = ship.gameObject.transform;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_LookAt = null;
+
+        shipInt.SetActive(false);
+        shipExt.SetActive(true);
+
+        //Update the ship.
+        ship.isPlayerPiloting = true;
+    }
+
+    public void ExitShipTransition()
+    {
+        //Move the player to the outside of the cockpit wihtin the ship.
+        instantiatedPlayerSuit.transform.position = airLockExterior.transform.position;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = instantiatedPlayerSuit.transform;
+        shipInt.SetActive(false);
+        shipExt.SetActive(true);
+
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>().m_XDamping = 1;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>().m_YDamping = 1;
+
+        //Fold out the player ship's wings as the player is now piloting.
+        ship.FoldInWings();
+    }
+
+    public void EntertShipTransition()
+    {
+        //Move the player to the outside of the cockpit wihtin the ship.
+        instantiatedPlayerSuit.transform.position = airLockInterior.transform.position;
+        //Set the plater character objects to be active as the polayer is now going to control the player cahracter.
+        instantiatedPlayerSuit.SetActive(true);
+        instantiatedPlayerSuitCam.SetActive(true);
+        //Enable the player character post processing volume.
+        suitVolume.SetActive(true);
+        //Set the vCam to follow the ship.
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = shipInt.gameObject.transform;
+
+
+        shipInt.SetActive(true);
+        shipExt.SetActive(false);
     }
 }

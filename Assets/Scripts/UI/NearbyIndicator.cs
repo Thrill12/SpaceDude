@@ -94,8 +94,6 @@ public class NearbyIndicator : MonoBehaviour
 
         objRotatingTo = objToRotateTo;
 
-        Debug.Log(child.name);
-
         Vector3 dirToTarget = objRotatingTo.transform.position - playerObj.transform.position;
         dirToTarget = dirToTarget.normalized;
 

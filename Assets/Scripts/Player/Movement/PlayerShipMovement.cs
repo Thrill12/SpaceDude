@@ -111,6 +111,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            //if (currentSpeed / maxSpeed * 100 < 20)
             playerSuit.PlayerLeaveCockpit();
         }
 
