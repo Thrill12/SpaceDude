@@ -6,6 +6,9 @@ using UnityEngine;
 
 public static class IncomeDeficit
 {
+    //I think these pretty much do the same thing, but on different lists. Deficit is loss of item, profit is profit above loss.
+    // We need this to calculate trade routes and stuff.
+
     public static int CalculateProfit(Planet planet, BaseItem comm)
     {
         int profit = 0;

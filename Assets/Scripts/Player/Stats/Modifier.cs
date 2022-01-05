@@ -5,8 +5,11 @@ using UnityEngine;
 [System.Serializable]
 public class Modifier
 {
+    //Name of the stat to change - it has to be the exact same as the IN-CODE property name, eg maxHealth
+    [Tooltip("Name of the stat to change - it has to be the exact same as the IN-CODE property name, eg maxHealth")]
     public string statToModifyName;
     public float Value;
+    //The type of addition that the mod will do to the stat value
     public StatModType Type;
     [HideInInspector]
     public int Order;

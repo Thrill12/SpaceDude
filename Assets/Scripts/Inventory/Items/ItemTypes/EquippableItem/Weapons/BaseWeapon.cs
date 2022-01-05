@@ -17,5 +17,6 @@ public abstract class BaseWeapon : BaseEquippable
         itemType = ItemType.Weapon;
     }
 
+    //Abstract function that other weapons derived from here will need to use to attack
     public abstract void Attack(GameObject weaponObject);
 }

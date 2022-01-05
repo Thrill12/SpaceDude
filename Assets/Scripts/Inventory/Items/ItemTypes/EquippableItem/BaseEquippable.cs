@@ -5,9 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Items/Equippable Item"), System.Serializable]
 public class BaseEquippable : BaseItem
 {
+    [Tooltip("The name of the slot that the item will go into. Has to be the same as the name of the slot in the SO")]
     public string itemSlot;
 
-    [SerializeField]
+    [SerializeField, Tooltip("Current mods for this specific item")]
     public List<Modifier> itemMods;
 
     public int itemLevel = 1;
@@ -28,6 +29,7 @@ public class BaseEquippable : BaseItem
             foreach (Modifier mod in itemMods)
             {
                 mod.Source = this;
+                //Finding the stat for which its name is the same as the mod's stat it modifies
                 Stat s = (Stat)typeof(BaseEntity).GetField(mod.statToModifyName).GetValue(hostEntity);
                 s.AddModifier(mod);
             }

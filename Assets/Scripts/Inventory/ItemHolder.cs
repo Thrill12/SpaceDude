@@ -23,16 +23,21 @@ public class ItemHolder : MonoBehaviour
             GenerateMods();
         }
 
+
+        //Setting up the item holder on the floor, its light/color etc.
         GetComponentInChildren<Light2D>().color = itemHeld.itemRarity.rarityColor;
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = itemHeld.itemRarity.rarityColor;
         itemNameText = GetComponentInChildren<TMP_Text>();
         itemNameText.text = itemHeld.itemName;
+
         if (itemHeld.itemIcon != null)
         {
             spriteRenderer.sprite = itemHeld.itemIcon;
         }
 
+        //This checks if the item is equippable, and lets it know it's not currently equipped as it has just spawned on the floor, in case unequipping it for some reason
+        // doesn't clear its equipped flag.
         if (typeof(BaseEquippable).IsAssignableFrom(itemHeld.GetType()))
         {
             BaseEquippable equippable = (BaseEquippable)itemHeld;
@@ -40,6 +45,8 @@ public class ItemHolder : MonoBehaviour
         }        
     }
 
+    //Generates some basic, random mods for the item, depending on its rarity. Will include other factors later on
+    // and i might move this bit of items (generating) into an item factory for ease of access, but not sure yet
     public void GenerateMods()
     {
         if(itemHeld.itemRarity.rarityName == "Common")

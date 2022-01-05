@@ -109,6 +109,7 @@ public class Planet : MonoBehaviour
         }                   
     }
 
+    //This will find all the deficits of the planet so that it has enough for its population/needs
     public void FindAllDeficits()
     {
         foreach (var item in dependencies)
@@ -153,6 +154,8 @@ public class Planet : MonoBehaviour
         }           
     }
 
+    //This will be where the main population related stats will be calculated. Will need to
+    // Split this up in multiple functions for different things, but it's okay for now.
     public void HandlePopulationUsage()
     {
         List<BaseItem> foodItems = commoditiesInMarket.Where(x => x.itemType == ItemType.Food).ToList();
@@ -212,6 +215,7 @@ public class Planet : MonoBehaviour
         }
     }
 
+    //Looking for trade routes throughout all known planets, will need to modify when we get to including factions in the game
     public void TryForNewTradeRoutes(BaseItem comm, int amount)
     {
         Debug.Log(planetName + " is trying to find routes for " + Mathf.Abs(amount) + " " + comm.itemName.ToString() + ".");
@@ -233,6 +237,8 @@ public class Planet : MonoBehaviour
         }
     }
 
+    //Once the player has found a potential trade route, it needs to request it to the planet. Income Deficit is used to 
+    // Calculate stats for the other planet as well, and will return true or false for a few reasons.
     public bool RequestTradeRoute(Planet asker, Planet giver, ItemType type, float amountRequested)
     {
         Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + amountRequested + " " + type.ToString());
@@ -258,6 +264,8 @@ public class Planet : MonoBehaviour
         }
     }
 
+    //Once the player has found a potential trade route, it needs to request it to the planet. Income Deficit is used to 
+    // Calculate stats for the other planet as well, and will return true or false for a few reasons.
     public bool RequestTradeRoute(Planet asker, Planet giver, BaseItem comm, float amountRequested)
     {
         Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + Mathf.Abs(amountRequested) + " " + comm.itemName);
@@ -283,6 +291,8 @@ public class Planet : MonoBehaviour
         }
     }
 
+    //Once trade route is accepted, this function runs to set up and start the trade route.
+    // Currently, planets have no way of cancelling trade routes, so will need to do this too.
     public void SetUpTradeRoute(Planet asker, Planet giver, ItemType type, int amount)
     {
         if (asker == giver) return;
@@ -293,6 +303,8 @@ public class Planet : MonoBehaviour
         tmManager.AddNewRoute(route);
     }
 
+    //Once trade route is accepted, this function runs to set up and start the trade route.
+    // Currently, planets have no way of cancelling trade routes, so will need to do this too.
     public void SetUpTradeRoute(Planet asker, Planet giver, BaseItem comm, int amount)
     {
         if (asker == giver) return;
@@ -347,6 +359,7 @@ public class Planet : MonoBehaviour
         }
     }
 
+    //Used byu cargo ships to give the planets the commodities they are carrying.
     public void ReceiveCommodity(BaseItem comm)
     {
         if (commoditiesInMarket.Where(x => x.itemName == comm.itemName).Count() != 0)

@@ -9,21 +9,25 @@ public class NearbyIndicator : MonoBehaviour
     [Header("Colours and radii")]
 
     public Color enemyColour;
+    [Tooltip("Distance from the player object at which the arrow will float")]
     public float enemyRadius;
 
     [Space(5)]
 
     public Color playerColour;
+    [Tooltip("Distance from the player object at which the arrow will float")]
     public float playerRadius;
 
     [Space(5)]
 
     public Color friendlyColour;
+    [Tooltip("Distance from the player object at which the arrow will float")]
     public float friendlyRadius;
 
     [Space(5)]
 
     public Color neutralColour;
+    [Tooltip("Distance from the player object at which the arrow will float")]
     public float neutralRadius;
 
     [HideInInspector]
@@ -70,8 +74,7 @@ public class NearbyIndicator : MonoBehaviour
         {
             distanceBetweenPlayerAndTarget = Vector2.Distance(playerObj.transform.position, objRotatingTo.transform.position);
 
-            RotateToObject();
-            
+            RotateToObject();          
 
             if (distanceBetweenPlayerAndTarget > maxDistance)
             {
@@ -94,6 +97,7 @@ public class NearbyIndicator : MonoBehaviour
 
         objRotatingTo = objToRotateTo;
 
+        //Direction from the player object to the target.
         Vector3 dirToTarget = objRotatingTo.transform.position - playerObj.transform.position;
         dirToTarget = dirToTarget.normalized;
 
@@ -116,15 +120,18 @@ public class NearbyIndicator : MonoBehaviour
             radius = neutralRadius;
         }
 
+        //Will align the arrow between the player and the target, at a distance of radius from the player
         child.transform.position = playerObj.transform.position + (dirToTarget * radius);        
 
         CheckIndicatorColours(objToRotateTo);
 
+        //Rotating towards the object the arrow is targeting
         float angle = Mathf.Atan2(dirToTarget.y, dirToTarget.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle - 90, Vector3.forward);
         child.transform.rotation = q;
     }
 
+    //Function to change the arrow's colour based on who they are following
     private void CheckIndicatorColours(GameObject objToRotateTo)
     {
         if (objToRotateTo.CompareTag("Player"))
