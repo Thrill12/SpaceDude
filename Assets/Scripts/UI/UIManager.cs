@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
     private PlanetCheckerRaycast planetCheck;
     [HideInInspector]
     public List<Planet> allPlanets = new List<Planet>();
-    private Inventory inv;
+    public Inventory inv;
 
     public bool isInUI;
 
@@ -57,7 +57,6 @@ public class UIManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         planetCheck = player.GetComponent<PlanetCheckerRaycast>();
-        inv = player.GetComponent<Inventory>();
 
         foreach (var item in GameObject.FindGameObjectsWithTag("Planet"))
         {
@@ -241,7 +240,7 @@ public class UIManager : MonoBehaviour
                 BaseItem newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
                 newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
-                inv.AddItemToInventory(newCommToAdd);
+                inv.AddItem(newCommToAdd);
                 if(commSelectedInMarketWindow.itemStack == 0)
                 {
                     planetCheck.planetHoveredP.commoditiesInMarket.Remove(commSelectedInMarketWindow);
@@ -253,7 +252,7 @@ public class UIManager : MonoBehaviour
                 BaseItem newCommToAdd = ScriptableObject.Instantiate(commSelectedInMarketWindow);
                 newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
-                inv.AddItemToInventory(newCommToAdd);
+                inv.AddItem(newCommToAdd);
                 planetCheck.planetHoveredP.commoditiesInMarket.Remove(commSelectedInMarketWindow);
             }
             else
@@ -288,7 +287,7 @@ public class UIManager : MonoBehaviour
                 newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
                 planetCheck.planetHoveredP.ReceiveCommodity(newCommToAdd);
-                player.GetComponent<Inventory>().items.Remove(commSelectedInMarketWindow);
+                player.GetComponent<Inventory>().items.Remove(player.GetComponent<Inventory>().items.Where(x => x.item == commSelectedInMarketWindow).First());
             }
             else
             {
@@ -384,10 +383,10 @@ public class UIManager : MonoBehaviour
             Debug.Log("No children to remove");
         }
 
-        foreach (BaseItem item in player.GetComponent<Inventory>().items)
+        foreach (StoredItem item in player.GetComponent<Inventory>().items)
         {
             GameObject obj = Instantiate(pfManager.commodityMarketDisplayObject, planetMarketLayout.transform);
-            obj.GetComponent<CommodityInvHolder>().commodityHeld = item;
+            obj.GetComponent<CommodityInvHolder>().commodityHeld = item.item;
             try
             {
                 List<List<BaseItem>> commodities = allPlanets.Select(x => x.commoditiesInMarket).ToList();
@@ -400,8 +399,8 @@ public class UIManager : MonoBehaviour
                     }
                 }
 
-                List<BaseItem> matching = accCommodity.Where(x => x.itemName == item.itemName).ToList();
-                matching.Remove(item);
+                List<BaseItem> matching = accCommodity.Where(x => x.itemName == item.item.itemName).ToList();
+                matching.Remove(item.item);
                 float average = (float)matching.Average(x => x.itemValue);
 
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "$" + average;
@@ -411,10 +410,10 @@ public class UIManager : MonoBehaviour
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "Only sold here";
             }
 
-            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.itemIcon;
-            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.itemName;
-            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.itemValue;
-            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.itemStack + " units";
+            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.item.itemIcon;
+            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.item.itemName;
+            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.item.itemValue;
+            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.item.itemStack + " units";
         }
     }
 }

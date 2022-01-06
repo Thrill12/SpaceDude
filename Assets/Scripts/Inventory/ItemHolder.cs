@@ -12,17 +12,19 @@ public class ItemHolder : MonoBehaviour
     private TMP_Text itemNameText;
     private SpriteRenderer spriteRenderer;
     private PrefabManager prefabManager;
+    private Inventory playerInventory;
 
     private void Start()
     {
         prefabManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         itemHeld = ScriptableObject.Instantiate(itemHeld);
+        playerInventory = GameObject.FindGameObjectWithTag("Inventory").
+            GetComponent<MultipleInventoryView>().inventories.Find(x => x.inventory.inventoryName == "Player inventory").inventory;
 
         if (generateStats)
         {
             GenerateMods();
         }
-
 
         //Setting up the item holder on the floor, its light/color etc.
         GetComponentInChildren<Light2D>().color = itemHeld.itemRarity.rarityColor;
@@ -126,9 +128,8 @@ public class ItemHolder : MonoBehaviour
 
     public void ClickedOn(GameObject player)
     {
-        if (player.GetComponent<Inventory>().items.Count < 30)
+        if (playerInventory.AddItem(itemHeld))
         {
-            player.GetComponent<Inventory>().AddItemToInventory(itemHeld);
             Destroy(gameObject);
         }
         else

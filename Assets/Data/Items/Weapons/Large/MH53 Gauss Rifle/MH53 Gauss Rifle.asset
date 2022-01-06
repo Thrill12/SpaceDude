@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: MH53 Gauss Rifle
   itemDescription: 
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: -1719990381, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
   itemRarity: {fileID: 11400000, guid: 635ab1b99fa9814498f4746cda084f8d, type: 2}
+  itemGridSize:
+    x: 2
+    y: 5
   itemValue: 414
   itemStack: 1
   itemMaxStack: 1
