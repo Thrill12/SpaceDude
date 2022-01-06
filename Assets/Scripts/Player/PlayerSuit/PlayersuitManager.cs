@@ -153,8 +153,8 @@ public class PlayersuitManager : MonoBehaviour
         shipInt.SetActive(false);
         shipExt.SetActive(true);
 
-        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>().m_XDamping = 1;
-        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>().m_YDamping = 1;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_XDamping = 1;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 1;
 
         //Fold out the player ship's wings as the player is now piloting.
         ship.FoldInWings();
