@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de31f084c2ee74549add375075b03207, type: 3}
-  m_Name: Legendary
+  m_Name: Royal
   m_EditorClassIdentifier: 
-  rarityName: Legendary
-  rarityColor: {r: 0.735849, g: 0.38720098, b: 0, a: 1}
+  rarityName: Royal
+  rarityColor: {r: 0.6117647, g: 0.53333336, b: 1, a: 1}
   rarityWeightChance: 5

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Common
   m_EditorClassIdentifier: 
   rarityName: Common
-  rarityColor: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
+  rarityColor: {r: 0.49803922, g: 0.56078434, b: 0.6509804, a: 1}
   rarityWeightChance: 5

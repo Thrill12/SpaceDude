@@ -14,6 +14,15 @@ public class UIManager : MonoBehaviour
 
     [Space(5)]
 
+    [Header("Station Display")]
+
+    public TMP_Text stationNameDisplay;
+    public TMP_Text difficultyDisplay;
+
+    public GameObject mainStationDisplay;
+
+    [Space(5)]
+
     [Header("Planet UI")]
   
     public TMP_Text planetName;

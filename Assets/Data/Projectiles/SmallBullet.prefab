@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4258480797235374360}
   - component: {fileID: 3357979445998724478}
   - component: {fileID: 6574923143383367708}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SmallBullet
   m_TagString: Projectile
   m_Icon: {fileID: 0}

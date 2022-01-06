@@ -1,0 +1,12 @@
+Orbital
+Station
+Base
+Outpost
+Space Base
+Depot
+Site
+Terminal
+Office
+Frontier
+Platform
+Spaceport
