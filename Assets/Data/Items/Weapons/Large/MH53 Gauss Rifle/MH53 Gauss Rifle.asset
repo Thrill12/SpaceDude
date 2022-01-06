@@ -52,7 +52,7 @@ MonoBehaviour:
     statModifiers: []
     isDirty: 1
   large: 1
-  attackSound: {fileID: 8300000, guid: f3be60e9a22932e46bb8c244f160e43f, type: 3}
+  attackSound: {fileID: 8300000, guid: ba839be2c32ef7249893ebe6345399e3, type: 3}
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
     BaseValue: 500

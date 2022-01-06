@@ -87,7 +87,7 @@ public class PlayersuitManager : MonoBehaviour
     public void PlayerEnterShip()
     {
         //Fold out the player ship's wings as the player is now piloting.
-        ship.FoldOutWings();
+        ship.ToggleWings();
 
         //Fade screen
         fadeAnimation.SetTrigger("Fade");
@@ -157,7 +157,7 @@ public class PlayersuitManager : MonoBehaviour
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 1;
 
         //Fold out the player ship's wings as the player is now piloting.
-        ship.FoldInWings();
+        ship.ToggleWings();
     }
 
     public void EntertShipTransition()

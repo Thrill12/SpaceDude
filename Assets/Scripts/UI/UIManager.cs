@@ -60,6 +60,12 @@ public class UIManager : MonoBehaviour
 
     public bool isInUI;
 
+    [Space(5)]
+
+    public AudioSource audioSource;
+    public AudioClip typingClip;
+    public float letterTypingPause;
+
     private void Start()
     {
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShipMovement>();
@@ -71,6 +77,8 @@ public class UIManager : MonoBehaviour
         {
             allPlanets.Add(item.GetComponent<Planet>());
         }
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -119,6 +127,34 @@ public class UIManager : MonoBehaviour
         #endregion
     }
 
+    public void TypePlanetDescription(Planet planet, TMP_Text description)
+    {
+        StopAllCoroutines();
+        description.text = "";
+        StartCoroutine(TypeText(planet, description));
+    }
+
+    IEnumerator TypeText(Planet planetToType, TMP_Text descriptionText)
+    {
+        descriptionText.text = "";
+
+        for (int i = 0; i < planetToType.planetDescription.Length; i++)
+        {
+            char item = planetToType.planetDescription[i];
+
+            descriptionText.text += item;
+
+            i++;
+
+            item = planetToType.planetDescription[i];
+
+            descriptionText.text += item;
+
+            audioSource.PlayOneShot(typingClip);
+            yield return new WaitForSecondsRealtime(letterTypingPause);
+        }
+    }
+
     public void CloseAllUI()
     {
         if (planetUI.activeInHierarchy)
@@ -137,6 +173,8 @@ public class UIManager : MonoBehaviour
         }
 
         isInUI = false;
+
+        StopAllCoroutines();
     }
 
     public void PlanetDescription()
@@ -160,14 +198,15 @@ public class UIManager : MonoBehaviour
         if(Time.timeScale == 0)
         {
             Time.timeScale = 1;
+            StopAllCoroutines();
         }
         else
         {
             Time.timeScale = 0;
+            TypePlanetDescription(planetCheck.planetHoveredP, planetDescription);
         }        
 
-        planetName.text = planetCheck.planetHoveredP.planetName;
-        planetDescription.text = planetCheck.planetHoveredP.planetDescription;
+        planetName.text = planetCheck.planetHoveredP.planetName;      
         planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
         populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
 

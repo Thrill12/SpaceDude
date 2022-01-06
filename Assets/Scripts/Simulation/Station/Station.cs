@@ -42,17 +42,15 @@ public class Station : MonoBehaviour
 
         if(toggleBool == true)
         {
+            LeanTween.cancel(canv.gameObject);
             LeanTween.alphaCanvas(canv, 1, 1);
+            LeanTween.alphaCanvas(canv, 0, 1).setDelay(5f);
         }
         else if(toggleBool == false)
         {
+            LeanTween.cancel(canv.gameObject);
             LeanTween.alphaCanvas(canv, 0, 1).setDelay(1f);
         }            
-    }
-
-    void UpdateStationDisplayAlpha(Color val)
-    {
-        ui.stationNameDisplay.color = val;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

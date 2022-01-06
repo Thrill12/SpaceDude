@@ -15,10 +15,12 @@ public class BackgroundImage : MonoBehaviour
     public float minStarSize = 250;
     public float minAsteroidSize = 5;
     public float minOtherSize = 50;
+    public float minNebulaeSize = 5;
 
     public List<Sprite> stars;
     public List<Sprite> asteroids;
     public List<Sprite> other;
+    public List<Sprite> nebulae;
 
     public TypeOfBackground type;
 
@@ -26,7 +28,8 @@ public class BackgroundImage : MonoBehaviour
     {
         Star,
         Asteroid,
-        Other
+        Other,
+        Nebula
     }
 
     private void Start()
@@ -50,6 +53,12 @@ public class BackgroundImage : MonoBehaviour
         {
             rend.sprite = other[Random.Range(0, other.Count)];
             var size = Random.Range(minOtherSize, minOtherSize * 3);
+            transform.localScale = new Vector2(size, size);
+        }
+        else if(type == TypeOfBackground.Nebula)
+        {
+            rend.sprite = nebulae[Random.Range(0, nebulae.Count)];
+            var size = Random.Range(minNebulaeSize, minNebulaeSize * 3);
             transform.localScale = new Vector2(size, size);
         }
 

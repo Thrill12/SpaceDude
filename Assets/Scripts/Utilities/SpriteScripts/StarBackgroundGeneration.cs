@@ -25,6 +25,11 @@ public class StarBackgroundGeneration : MonoBehaviour
 
     [Space(5)]
 
+    public float minPosZNebulae = 500;
+    public float maxPosZNebulae = 1000;
+
+    [Space(5)]
+
     public float size = 500;
 
     [Space(5)]
@@ -32,6 +37,7 @@ public class StarBackgroundGeneration : MonoBehaviour
     public int numOfStars = 10;
     public int numOfAsteroids = 500;
     public int numOfOther = 10;
+    public int numOfNebulae = 50;
 
     private void Start()
     {
@@ -71,6 +77,22 @@ public class StarBackgroundGeneration : MonoBehaviour
 
             star.GetComponent<BackgroundImage>().type = BackgroundImage.TypeOfBackground.Other;
             star.transform.parent = transform;
+        }
+
+        for (int i = 0; i < numOfNebulae; i++)
+        {
+            var z = Random.Range(minPosZNebulae, maxPosZNebulae);
+
+            GameObject nebula = Instantiate(backImage, new Vector3(0, 0, z), Quaternion.identity);
+
+            nebula.transform.position = Random.insideUnitCircle * size;
+            nebula.transform.position = new Vector3(nebula.transform.position.x, nebula.transform.position.y, z);
+
+            nebula.GetComponent<BackgroundImage>().type = BackgroundImage.TypeOfBackground.Nebula;
+            Color col = nebula.GetComponent<SpriteRenderer>().color;
+            col.a = 0.6f;
+            nebula.GetComponent<SpriteRenderer>().color = col;
+            nebula.transform.parent = transform;
         }
     }
 }
