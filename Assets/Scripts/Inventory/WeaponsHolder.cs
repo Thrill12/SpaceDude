@@ -8,7 +8,7 @@ public class WeaponsHolder : MonoBehaviour
     public BaseWeapon mainWeapon;
     public BaseWeapon secondaryWeapon;
 
-    public PlayerInventory playerInventory;
+    private Inventory inventory;
 
     public BaseWeapon currentlyEquippedWeapon;
     public Transform weaponObjectPosition;
@@ -48,7 +48,7 @@ public class WeaponsHolder : MonoBehaviour
     {
         if (currentlyEquippedWeapon == null) return;
 
-
+        Debug.Log(weaponObject.name);
 
         audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
         currentlyEquippedWeapon.Attack(weaponObject);
@@ -80,7 +80,7 @@ public class WeaponsHolder : MonoBehaviour
 
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
 
-
+        Debug.Log("Current gun is " + currentlyEquippedWeapon.itemName);
         weaponAttackSource = GameObject.FindGameObjectWithTag("PlayerAttackSource");
     }
 
@@ -103,7 +103,7 @@ public class WeaponsHolder : MonoBehaviour
             }
             else if (mainWeapon != null)
             {
-                playerInventory.UnequipItem(mainWeapon);
+                inventory.UnequipItem(mainWeapon);
                 mainWeapon = weapon;
             }
         }
@@ -115,7 +115,7 @@ public class WeaponsHolder : MonoBehaviour
             }
             else
             {
-                playerInventory.UnequipItem(secondaryWeapon);
+                inventory.UnequipItem(secondaryWeapon);
                 secondaryWeapon = weapon;
             }
         }

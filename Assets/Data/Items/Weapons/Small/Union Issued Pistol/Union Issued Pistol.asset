@@ -14,11 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Union Issued Pistol
   itemDescription: 
-  itemIcon: {fileID: -2067977180, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
+  itemIcon: {fileID: 0}
   itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
-  itemGridSize:
-    x: 2
-    y: 2
   itemValue: 751
   itemStack: 1
   itemMaxStack: 1

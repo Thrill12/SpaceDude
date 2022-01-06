@@ -19,7 +19,7 @@ public class Projectile : MonoBehaviour
         if (collision.gameObject.GetComponent<BaseEntity>() && collision.GetComponent<BaseEntity>() != entityShotFrom)
         {
             collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage);
-
+            Debug.Log(collision.gameObject.name);
             Destroy(gameObject);
         }
         else
