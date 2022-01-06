@@ -274,7 +274,8 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
-  energy:
+  energy: 0
+  maxEnergy:
     BaseValue: 0
     _value: 0
     statModifiers: []
@@ -290,8 +291,10 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 5d06246f41a4cc045af6b8e7ec9f35ab, type: 2}
     weight: 100
   - item: {fileID: 11400000, guid: 4410b2826db5b0344b0949e04e95889b, type: 2}
-    weight: 5
+    weight: 500
   - item: {fileID: 0}
+    weight: 500
+  - item: {fileID: 11400000, guid: 376055ab71b23ea45b3691974d90b9b0, type: 2}
     weight: 500
   healthBarYOffset: 0.5
 --- !u!61 &7283469730192501926
