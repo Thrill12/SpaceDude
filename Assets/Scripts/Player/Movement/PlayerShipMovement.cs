@@ -37,7 +37,7 @@ public class PlayerShipMovement : MonoBehaviour
     private Rigidbody2D rb;
 
     private Vector2 posOfMouseOnWorld;
-   
+
     public bool dampeners = true;
     private float inputX;
     private float inputY;
@@ -51,8 +51,8 @@ public class PlayerShipMovement : MonoBehaviour
     public Light2D leftLight;
     public Light2D rightLight;
 
-    public AudioSource src;
-    public AudioSource wingsSource;
+    private AudioSource src;
+    public AudioSource wingsAudioSource;
     public AudioClip wingsFoldSound;
     private float lastVol = 0;
     private float currentVol = 0;
@@ -61,21 +61,19 @@ public class PlayerShipMovement : MonoBehaviour
     [HideInInspector]
     public int thrusterParticleSpawnRate = 0;
 
-    private bool areWingsFoldedOut = true;
-    private bool isMovingWings;
-
     private void Start()
     {
         isPlayerPiloting = true;
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed;
+        src = GetComponent<AudioSource>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         playerSuit = GetComponent<PlayersuitManager>();
     }
 
     private void Update()
-    {       
-        if (ui.isInUI) return;        
+    {
+        if (ui.isInUI) return;
 
         inputX = Input.GetAxisRaw("Horizontal");
         inputY = Input.GetAxisRaw("Vertical");
@@ -105,11 +103,6 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (!isPlayerPiloting) return;
 
-        if (Input.GetKeyDown(KeyCode.V) && isMovingWings == false)
-        {
-            ToggleWings();
-        }
-
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
 
         if (Input.GetMouseButton(0))
@@ -133,7 +126,8 @@ public class PlayerShipMovement : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        
+
+
         ChangeCameraZoomVelocity();
     }
 
@@ -142,28 +136,28 @@ public class PlayerShipMovement : MonoBehaviour
         if (isPlayerPiloting)
         {
             MoveAndTurn();
-        }       
+        }
     }
 
     public void ChangeCameraZoomVelocity()
     {
         float newSize = camSizeCurve.Evaluate(rb.velocity.magnitude / 100);
-        followCam.m_Lens.OrthographicSize = newSize;   
+        followCam.m_Lens.OrthographicSize = newSize;
     }
 
     public void MoveAndTurn()
-    {    
+    {
         rb.AddForce(-transform.up * moveSpeed * inputY);
 
         //Turning left and right
-        if(rb.angularVelocity < 0)
+        if (rb.angularVelocity < 0)
         {
             if (rb.angularVelocity > -maxAngVel)
             {
                 rb.AddTorque(-inputX * rotationSpeed);
             }
         }
-        else if(rb.angularVelocity > 0)
+        else if (rb.angularVelocity > 0)
         {
             if (rb.angularVelocity < maxAngVel)
             {
@@ -192,7 +186,7 @@ public class PlayerShipMovement : MonoBehaviour
             rb.drag = 0;
         }
 
-        if(inputX != 0)
+        if (inputX != 0)
         {
             rb.angularDrag = 0;
         }
@@ -211,12 +205,12 @@ public class PlayerShipMovement : MonoBehaviour
         else
         {
             moveSpeed = baseMoveSpeed;
-        }      
+        }
 
         if (currentSpeed > maxSpeed)
         {
             rb.velocity = rb.velocity.normalized * maxSpeed;
-        }        
+        }
     }
 
     public void ChangeParticleThrustRate(int rate)
@@ -227,48 +221,20 @@ public class PlayerShipMovement : MonoBehaviour
 
     public void ManageThrustVolume(float interval)
     {
-        src.volume = thrusterSoundCurve.Evaluate(currentSpeed / maxSpeed);      
-    }
-
-    public void ToggleWings()
-    {
-        isMovingWings = true;
-
-        Debug.Log("Trying to toggle wings");
-
-        if (areWingsFoldedOut)
-        {
-            FoldInWings();
-            Debug.Log("Folding in");
-        }
-        else
-        {
-            FoldOutWings();
-            Debug.Log("Folding out");
-        }
-
-        StartCoroutine(SetMovingWingsBool(false, 3));
-    }
-
-    private IEnumerator SetMovingWingsBool(bool boolToUse, float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        isMovingWings = boolToUse;
+        src.volume = thrusterSoundCurve.Evaluate(currentSpeed / maxSpeed);
     }
 
     public void FoldInWings()
     {
-        //wingsSource.PlayOneShot(wingsFoldSound);
         rightWing.GetComponent<Animator>().SetTrigger("FoldIn");
         leftWing.GetComponent<Animator>().SetTrigger("FoldIn");
-        areWingsFoldedOut = false;
+        wingsAudioSource.PlayOneShot(wingsFoldSound);
     }
 
     public void FoldOutWings()
     {
-        //wingsSource.PlayOneShot(wingsFoldSound);      
         rightWing.GetComponent<Animator>().SetTrigger("FoldOut");
         leftWing.GetComponent<Animator>().SetTrigger("FoldOut");
-        areWingsFoldedOut = true;
+        wingsAudioSource.PlayOneShot(wingsFoldSound);
     }
 }

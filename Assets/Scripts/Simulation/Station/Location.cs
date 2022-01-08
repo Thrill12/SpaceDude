@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Globalization;
+using TMPro;
+using MyBox;
 
-public class Station : MonoBehaviour
+public class Location : MonoBehaviour
 {
-    public string stationName;
+    public string locationName;
     public float difficultyValue;
-    public UIManager ui;
-    public TextAsset stationNames;
-    public TextAsset stationPrefixes;
+    private UIManager ui;
+    public bool shouldGeneateRandomly = true;
+    [ConditionalField("shouldGenerateRandomly")]public TextAsset stationNames;
+    [ConditionalField("shouldGenerateRandomly")] public TextAsset stationPrefixes;
 
     public void GenerateName()
     {
+        
         string allNames = stationNames.text;
         List<string> splitNames = allNames.Split("\n").ToList();
         string nameChosen = splitNames[Random.Range(0, splitNames.Count)];
@@ -26,40 +30,26 @@ public class Station : MonoBehaviour
 
         nameChosen = txtInfo.ToTitleCase(nameChosen.ToLower());
 
-        stationName = nameChosen.Trim() + " " + prefixChosen.Trim();
+        locationName = nameChosen.Trim() + " " + prefixChosen.Trim();
     }
 
     private void Start()
     {
-        GenerateName();
-    }
-
-    private void ToggleStationDisplay(bool toggleBool)
-    {
-        ui.stationNameDisplay.text = stationName;
-
-        CanvasGroup canv = ui.mainStationDisplay.GetComponent<CanvasGroup>();
-
-        if(toggleBool == true)
+        ui = UIManager.instance;
+        if (shouldGeneateRandomly)
         {
-            LeanTween.cancel(canv.gameObject);
-            LeanTween.alphaCanvas(canv, 1, 1);
-            LeanTween.alphaCanvas(canv, 0, 1).setDelay(5f);
-        }
-        else if(toggleBool == false)
-        {
-            LeanTween.cancel(canv.gameObject);
-            LeanTween.alphaCanvas(canv, 0, 1).setDelay(1f);
-        }            
-    }
+            GenerateName();
+        }       
+    }    
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        ToggleStationDisplay(true);
+        UIManager.instance.ToggleLocationNameDisplay(true, locationName);
+        GameEvents.instance.OnLocationEntered(this);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        ToggleStationDisplay(false);
+        UIManager.instance.ToggleLocationNameDisplay(false, locationName);
     }
 }

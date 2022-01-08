@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class BaseEntity : MonoBehaviour
 {
+    public int ID;
     public string entityName;
 
     public float health;
@@ -74,6 +76,7 @@ public class BaseEntity : MonoBehaviour
 
     public virtual void Die()
     {
+        GameEvents.instance.OnEntityKilled(this);
         Destroy(gameObject);
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 //Manages the player suit, and sits on the ship as the player suit gets deactivated.
 public class PlayersuitManager : MonoBehaviour
 {
-    [Header("Player Character")] 
+    [Header("Player Character")]
     public GameObject instantiatedPlayerSuit;
     public GameObject playerSuitCamPrefab;
     [Tooltip("The global volume for post processing which is enabled when controlling the player character.")]
@@ -19,7 +19,7 @@ public class PlayersuitManager : MonoBehaviour
     public GameObject airLockExterior;
     [Tooltip("The internal location of the player when they enter the airlock.")]
     public GameObject airLockInterior;
-    
+
     [HideInInspector]
     public GameObject instantiatedPlayerSuitCam;
     [HideInInspector]
@@ -87,7 +87,7 @@ public class PlayersuitManager : MonoBehaviour
     public void PlayerEnterShip()
     {
         //Fold out the player ship's wings as the player is now piloting.
-        ship.ToggleWings();
+        ship.FoldOutWings();
 
         //Fade screen
         fadeAnimation.SetTrigger("Fade");
@@ -157,7 +157,7 @@ public class PlayersuitManager : MonoBehaviour
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 1;
 
         //Fold out the player ship's wings as the player is now piloting.
-        ship.ToggleWings();
+        ship.FoldInWings();
     }
 
     public void EntertShipTransition()
