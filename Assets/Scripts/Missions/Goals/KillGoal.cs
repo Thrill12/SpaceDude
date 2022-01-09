@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName ="Quests/Goals/Kill Goal")]
 public class KillGoal : Goal
 {
-    public int EnemyId { get; set; }
+    public int EnemyId;
 
     public KillGoal(Quest quest, int EnemyId, string description, bool completed, int currentAmount, int requiredAmount)
     {
@@ -16,9 +17,9 @@ public class KillGoal : Goal
         this.GoalRequiredAmount = requiredAmount;
     }
 
-    public override void Init()
+    public override void Init(Quest quest)
     {
-        base.Init();
+        base.Init(quest);
         GameEvents.instance.onEntityKilled += EnemyDied;
     }
 

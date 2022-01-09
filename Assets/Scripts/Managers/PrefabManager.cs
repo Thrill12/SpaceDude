@@ -20,6 +20,11 @@ public class PrefabManager : MonoBehaviour
 
     [Space(5)]
 
+    public GameObject questDisplay;
+    public GameObject questGoalDisplay;
+
+    [Space(5)]
+
     public GameObject healthBarObject;
 
     [Space(5)]

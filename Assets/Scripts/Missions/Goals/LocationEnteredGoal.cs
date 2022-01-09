@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName ="Quests/Goals/Location Goal")]
 public class LocationEnteredGoal : Goal
 {
     public string locationToEnterName;
@@ -14,9 +15,9 @@ public class LocationEnteredGoal : Goal
         this.locationToEnterName = locationName;
     }
 
-    public override void Init()
+    public override void Init(Quest quest)
     {
-        base.Init();
+        base.Init(quest);
         GameEvents.instance.onLocationEntered += EnteredLocation;
     }
 

@@ -1,56 +1,78 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class QuestGiver : NPC
 {
-    public bool AssignedQuests { get; set; } = false;
-    public bool Helped { get; set; } = false;
+    public bool AssignedQuest { get; set; } = false;
 
-    [SerializeField]
-    private GameObject quests;
+    public List<Quest> availableQuests;
 
-    [SerializeField]
-    private string questType;
+    public Quest activeQuest;
 
-    private Quest Quest { get; set; }
+    private void Start()
+    {
+        for (int i = 0; i < availableQuests.Count; i++)
+        {
+            availableQuests[i] = ScriptableObject.Instantiate(availableQuests[i]);
+            QuestManager.instance.AddQuestToOverallPool(availableQuests[i]);
+        }
+    }
 
     public override void Interact()
     {
         base.Interact();
-        if(!AssignedQuests && !Helped)
+        if(!AssignedQuest)
         {
             AssignQuest();
-            UIManager.instance.DisplayDialogue(new List<string> { "Howdy partner! Thanks for lending me a hand.", "Ill be sure to reward you with a nice debug log." }, npcName);
-        }
-        else if (AssignedQuests && !Helped)
-        {
-            CheckQuestCompletion();
         }
         else
         {
-            UIManager.instance.DisplayDialogue(new List<string> { "Bruv, you've already finished the quest and Andrei hasn't done it so i can give you multiple quests.", "Come back after hes done that!" }, npcName);
+            CheckQuestCompletion(activeQuest);
         }
     }
 
     void AssignQuest()
-    {
-        AssignedQuests = true;
-        Quest = (Quest)quests.AddComponent(System.Type.GetType(questType));
-    }
+    {     
+        List<Quest> possibleQuests = new List<Quest>();
 
-    void CheckQuestCompletion()
-    {
-        if (Quest.Completed)
+        foreach (var item in availableQuests)
         {
-            Quest.GiveReward();
-            Helped = true;
-            AssignedQuests = false;
-            UIManager.instance.DisplayDialogue("YEAHHHH U DID THE THING AND NOW YOU GOT THE THING FROM ME THANKS BABES", npcName);
+            if(item.CheckRequirements() == true)
+            {
+                Debug.Log("Came out true with " + item);
+                possibleQuests.Add(item);
+            }
+        }
+
+        if(possibleQuests.Count > 0)
+        {    
+            AssignedQuest = true;
+            activeQuest = possibleQuests[0];
+            availableQuests.Remove(activeQuest);
+            Debug.Log(activeQuest.QuestName);
+            QuestManager.instance.AddQuest(activeQuest);
+            UIManager.instance.DisplayDialogue(activeQuest.questAssignedDialogue, npcName);
         }
         else
         {
-            UIManager.instance.DisplayDialogue("Oi oi, u haven't completed me quest m8. Get gooder", npcName);
+            UIManager.instance.DisplayDialogue("Hey uh, sorry m8 I haven't any quests for you today. Maybe come back later?", npcName);
+        }
+    }
+
+    void CheckQuestCompletion(Quest questToCheck)
+    {
+        if (questToCheck.Completed)
+        {
+            questToCheck.GiveReward(gameObject);
+            AssignedQuest = false;
+            UIManager.instance.DisplayDialogue(activeQuest.questCompletedDialogue, npcName);
+            activeQuest = null;
+        }
+        else
+        {
+            UIManager.instance.DisplayDialogue(activeQuest.questInProgressDialogue, npcName);
         }
     }
 }

@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public Image dampenersImage;
 
     public GameObject dialogueDisplay;
+    public GameObject activeMissionsLog;
     private Vector3 originalDialogueDisplayPosition;
 
     [Space(5)]
@@ -158,8 +159,6 @@ public class UIManager : MonoBehaviour
         }
 
         isInUI = false;
-
-        StopAllCoroutines();
     }
 
     public void PlanetDescription()
@@ -255,6 +254,21 @@ public class UIManager : MonoBehaviour
             isInUI = false;
         }
     }
+
+    public void DrawQuest(Quest quest)
+    {
+        GameObject questDisplay = Instantiate(PrefabManager.instance.questDisplay, activeMissionsLog.transform);
+        questDisplay.GetComponent<QuestDisplayHolder>().questHeld = quest;    
+    }
+
+    public void RemoveQuest(Quest quest)
+    {
+        List<QuestDisplayHolder> list = activeMissionsLog.GetComponentsInChildren<QuestDisplayHolder>().Where(x => x.questHeld.id == quest.id).ToList();
+        for (int i = 0; i < list.Count; i++)
+        {
+            Destroy(list[i].gameObject);
+        }
+    }
     #endregion
 
     #region AnimatedUI
@@ -294,7 +308,7 @@ public class UIManager : MonoBehaviour
     {
         writingBox.text = "";
 
-        for (int i = 0; i < stringToType.Length; i++)
+        for (int i = 0; i < stringToType.Length - 1; i++)
         {
             char item = stringToType[i];
 
@@ -333,7 +347,7 @@ public class UIManager : MonoBehaviour
         Debug.Log("After finishing in coroutine");
 
         LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
-        yield return new WaitForSeconds(0);
+        yield return new WaitForSecondsRealtime(0);
     }
 
     //List overload for previous functions in order to have multiple pages of dialogue
@@ -359,7 +373,7 @@ public class UIManager : MonoBehaviour
         }
         Debug.Log("After finishing in coroutine");
         LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
-        yield return new WaitForSeconds(0);
+        yield return new WaitForSecondsRealtime(0);
     }
 
     #endregion
