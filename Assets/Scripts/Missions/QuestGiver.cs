@@ -20,6 +20,7 @@ public class QuestGiver : NPC
         }
     }
 
+    //If there is no assigned quest from this npc, assign a quest, otherwise check for completion of current quest
     public override void Interact()
     {
         base.Interact();
@@ -33,25 +34,29 @@ public class QuestGiver : NPC
         }
     }
 
+    //Will check through available quests from this npc, and will return any possible quests.
+    //If returns multiple, it returns the first one, so we could have quests in order
     void AssignQuest()
     {     
+        //Pool of available quests to give to the player
         List<Quest> possibleQuests = new List<Quest>();
 
         foreach (var item in availableQuests)
         {
+            //Checks if the quest's requirements are completed, and if so id adds the quest to the pool of quests
             if(item.CheckRequirements() == true)
             {
-                Debug.Log("Came out true with " + item);
                 possibleQuests.Add(item);
             }
         }
 
+        //If there are any quests in the pool, it picks the first one. Likely, quests will be placed in the story order in the inspector,
+        //so i chose to pick the first element of the list, but we can change that if need be
         if(possibleQuests.Count > 0)
         {    
             AssignedQuest = true;
             activeQuest = possibleQuests[0];
             availableQuests.Remove(activeQuest);
-            Debug.Log(activeQuest.QuestName);
             QuestManager.instance.AddQuest(activeQuest);
             UIManager.instance.DisplayDialogue(activeQuest.questAssignedDialogue, npcName);
         }
@@ -61,6 +66,8 @@ public class QuestGiver : NPC
         }
     }
 
+    //Checks completion, if it is completed, completed dialogue plays and reward is given.
+    //If it is not complete, in progress dialogue is played
     void CheckQuestCompletion(Quest questToCheck)
     {
         if (questToCheck.Completed)

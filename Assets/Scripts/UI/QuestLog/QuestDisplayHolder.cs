@@ -9,7 +9,6 @@ public class QuestDisplayHolder : MonoBehaviour
 
     private bool hasMovedToBottom;
 
-    // Start is called before the first frame update
     void Start()
     {
         GetComponentInChildren<TMP_Text>().text = questHeld.QuestName;
@@ -29,6 +28,7 @@ public class QuestDisplayHolder : MonoBehaviour
         }
     }
 
+    //Once quest is completed, we move it to the bottom of the list so player will see the uncompleted ones first
     private void Update()
     {
         if (questHeld.Completed && !hasMovedToBottom)
