@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 //Manages the player suit, and sits on the ship as the player suit gets deactivated.
 public class PlayersuitManager : MonoBehaviour
 {
-    [Header("Player Character")] 
+    [Header("Player Character")]
     public GameObject instantiatedPlayerSuit;
     public GameObject playerSuitCamPrefab;
     [Tooltip("The global volume for post processing which is enabled when controlling the player character.")]
@@ -19,7 +19,7 @@ public class PlayersuitManager : MonoBehaviour
     public GameObject airLockExterior;
     [Tooltip("The internal location of the player when they enter the airlock.")]
     public GameObject airLockInterior;
-    
+
     [HideInInspector]
     public GameObject instantiatedPlayerSuitCam;
     [HideInInspector]

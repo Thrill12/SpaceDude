@@ -29,14 +29,14 @@ public class TradeRoutesManager : MonoBehaviour
 
     public void SpawnNewShip(Planet sender, Planet receiver, TradeRoute route)
     {
-        if(route.itemToTransport != null)
-        {
-            Debug.Log(route.sender + " -> " + route.receiver + " | " + route.itemToTransport.itemName + " |");
-        }
-        else
-        {
-            Debug.Log(route.sender + " -> " + route.receiver + " | " + route.itemTypeToTransport.ToString() + " |");
-        }
+        //if(route.itemToTransport != null)
+        //{
+        //    Debug.Log(route.sender + " -> " + route.receiver + " | " + route.itemToTransport.itemName + " |");
+        //}
+        //else
+        //{
+        //    Debug.Log(route.sender + " -> " + route.receiver + " | " + route.itemTypeToTransport.ToString() + " |");
+        //}
 
         GameObject ship = Instantiate(pf.cargoShip, sender.gameObject.transform.position, Quaternion.identity);
         

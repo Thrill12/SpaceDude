@@ -258,3 +258,9 @@
 /Assets/LeanTween/Examples/Scenes/PathSplineTrack.unity filter=lfs diff=lfs merge=lfs -text
 /Assets/LeanTween/Framework/LeanTween.cs filter=lfs diff=lfs merge=lfs -text
 /Assets/Font/Quantico-Regular[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/ChargingShot.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/DeepBassyShot.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/ExtremelyDeepBassyWaveSound.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/LoopedLabSounds.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/WavesFoldingInOut.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/WaveyAirySmack.wav filter=lfs diff=lfs merge=lfs -text

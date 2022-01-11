@@ -233,7 +233,7 @@ public class MultipleInventoryView : MultiSOObserver
         {
             StoredItem potentialItem = GetItemAtMouse(invWithGrid);
 
-            if (potentialItem != null)
+            if (potentialItem != null && potentialItem != movingItem)
             {
                 Debug.Log(potentialItem);
 
@@ -254,26 +254,37 @@ public class MultipleInventoryView : MultiSOObserver
         {
             if (itemToSwap.inventory.IsPositionValid(movingItem.item, itemToSwap.position.x, itemToSwap.position.y, itemToSwap))
             {
+                IntPair itemToSwapPosition;
                 if (movingItem.inventory != itemToSwap.inventory)
                 {
+                    Debug.Log(movingItem.item.itemName + " is in " + movingItem.inventory.inventoryName + " (movingItem)");
+                    Debug.Log(itemToSwap.item.itemName + " is in " + itemToSwap.inventory.inventoryName + " (itemToSwap)");
+
                     Inventory temp = movingItem.inventory;
+
+                    movingItem.inventory.RemoveItem(movingItem);
                     movingItem.inventory = itemToSwap.inventory;
+                    movingItem.inventory.AddItem(movingItem.item);
+
+                    itemToSwapPosition = itemToSwap.position;
+
+                    itemToSwap.inventory.RemoveItem(itemToSwap);
                     itemToSwap.inventory = temp;
+                    itemToSwap.inventory.AddItem(itemToSwap.item);
+
+                    Debug.Log(movingItem.item.itemName + " is in " + movingItem.inventory.inventoryName + " (movingItem)");
+                    Debug.Log(itemToSwap.item.itemName + " is in " + itemToSwap.inventory.inventoryName + " (itemToSwap)");                                   
+                }
+                else
+                {
+                    itemToSwapPosition = itemToSwap.position;
                 }
 
                 IntPair tempPos = movingItemOrigPos;
-                movingItem.position = itemToSwap.position;
+                movingItem.position = itemToSwapPosition;
                 itemToSwap.position = tempPos;
             }
-            else
-            {
-
-            }
-        }
-        else
-        {
-
-        }           
+        }         
 
         DrawAll();
     }

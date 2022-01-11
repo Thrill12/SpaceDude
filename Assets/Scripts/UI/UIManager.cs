@@ -7,10 +7,17 @@ using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager instance;
+
     [Header("In-Game UI")]
 
     public TMP_Text speedIndicator;
+
     public Image dampenersImage;
+
+    public GameObject dialogueDisplay;
+    public GameObject activeMissionsLog;
+    private Vector3 originalDialogueDisplayPosition;
 
     [Space(5)]
 
@@ -60,6 +67,17 @@ public class UIManager : MonoBehaviour
 
     public bool isInUI;
 
+    [Space(5)]
+
+    public AudioSource audioSource;
+    public AudioClip typingClip;
+    public float letterTypingPause;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShipMovement>();
@@ -71,6 +89,9 @@ public class UIManager : MonoBehaviour
         {
             allPlanets.Add(item.GetComponent<Planet>());
         }
+
+        audioSource = GetComponent<AudioSource>();
+        originalDialogueDisplayPosition = dialogueDisplay.transform.position;
     }
 
     private void Update()
@@ -117,8 +138,9 @@ public class UIManager : MonoBehaviour
         }
 
         #endregion
-    }
+    }   
 
+    #region NormalUI
     public void CloseAllUI()
     {
         if (planetUI.activeInHierarchy)
@@ -160,14 +182,15 @@ public class UIManager : MonoBehaviour
         if(Time.timeScale == 0)
         {
             Time.timeScale = 1;
+            StopAllCoroutines();
         }
         else
         {
             Time.timeScale = 0;
+            TypePlanetDescription(planetCheck.planetHoveredP, planetDescription);
         }        
 
-        planetName.text = planetCheck.planetHoveredP.planetName;
-        planetDescription.text = planetCheck.planetHoveredP.planetDescription;
+        planetName.text = planetCheck.planetHoveredP.planetName;      
         planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
         populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
 
@@ -232,6 +255,130 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void DrawQuest(Quest quest)
+    {
+        GameObject questDisplay = Instantiate(PrefabManager.instance.questDisplay, activeMissionsLog.transform);
+        questDisplay.GetComponent<QuestDisplayHolder>().questHeld = quest;    
+    }
+
+    public void RemoveQuest(Quest quest)
+    {
+        List<QuestDisplayHolder> list = activeMissionsLog.GetComponentsInChildren<QuestDisplayHolder>().Where(x => x.questHeld.id == quest.id).ToList();
+        for (int i = 0; i < list.Count; i++)
+        {
+            Destroy(list[i].gameObject);
+        }
+    }
+    #endregion
+
+    #region AnimatedUI
+    public void ToggleLocationNameDisplay(bool toggleBool, string locationName)
+    {         
+        CanvasGroup canv = mainStationDisplay.GetComponent<CanvasGroup>();
+        LeanTween.cancel(canv.gameObject);
+
+        if (toggleBool == true)
+        {
+            stationNameDisplay.text = "Entering " + locationName;
+            LeanTween.cancel(canv.gameObject);
+            LeanTween.alphaCanvas(canv, 1, 1);
+            LeanTween.alphaCanvas(canv, 0, 1).setDelay(5f);
+        }
+        else if (toggleBool == false)
+        {
+            stationNameDisplay.text = "Leaving " + locationName;
+            LeanTween.cancel(canv.gameObject);
+            LeanTween.alphaCanvas(canv, 1, 1);
+            LeanTween.alphaCanvas(canv, 0, 1).setDelay(1f);
+        }
+    }
+    public void TypePlanetDescription(Planet planet, TMP_Text description)
+    {
+        StopAllCoroutines();
+        description.text = "";
+        StartCoroutine(TypeText(planet.planetDescription, description));
+    }
+
+    public void AnimateTyping(string stringToType, TMP_Text textToWriteIn)
+    {       
+        StartCoroutine(TypeText(stringToType, textToWriteIn));
+    }
+
+    IEnumerator TypeText(string stringToType, TMP_Text writingBox)
+    {
+        writingBox.text = "";
+
+        for (int i = 0; i < stringToType.Length - 1; i++)
+        {
+            char item = stringToType[i];
+
+            writingBox.text += item;
+
+            i++;
+
+            item = stringToType[i];
+
+            writingBox.text += item;
+
+            audioSource.PlayOneShot(typingClip);
+            yield return new WaitForSecondsRealtime(letterTypingPause);
+        }
+    }
+
+    //Dialogue pages is the string you want it to display in the dialogue box, dialogue source is the place from where the dialogue came from
+    public void DisplayDialogue(string dialoguePages, string dialogueSource)
+    {
+        StopAllCoroutines();
+        Debug.Log("Writing page");
+        dialogueDisplay.SetActive(true);
+        dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
+        LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
+        
+        StartCoroutine(WriteDialogue(dialoguePages));
+        Debug.Log("After starting");
+        
+    }
+
+    IEnumerator WriteDialogue(string dialoguePages)
+    {
+        AnimateTyping(dialoguePages, dialogueDisplay.GetComponentInChildren<TMP_Text>());
+
+        yield return new WaitForSecondsRealtime(letterTypingPause * dialoguePages.Length);
+        Debug.Log("After finishing in coroutine");
+
+        LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
+        yield return new WaitForSecondsRealtime(0);
+    }
+
+    //List overload for previous functions in order to have multiple pages of dialogue
+    public void DisplayDialogue(List<string> dialoguePages, string dialogueSource)
+    {
+        StopAllCoroutines();
+        Debug.Log("Writing pages");
+        dialogueDisplay.SetActive(true);
+        dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
+        LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
+
+        StartCoroutine(WriteDialogue(dialoguePages));
+        Debug.Log("After starting");
+    }
+
+    IEnumerator WriteDialogue(List<string> dialoguePages)
+    {
+        foreach (var item in dialoguePages)
+        {
+            AnimateTyping(item, dialogueDisplay.GetComponentInChildren<TMP_Text>());
+
+            yield return new WaitForSecondsRealtime(letterTypingPause * item.Length);
+        }
+        Debug.Log("After finishing in coroutine");
+        LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
+        yield return new WaitForSecondsRealtime(0);
+    }
+
+    #endregion
+
+    #region Marketstuff
     public void MarketSelectCommodityInMarketWindow(BaseItem comm)
     {
         commSelectedInMarketWindow = comm;
@@ -425,4 +572,5 @@ public class UIManager : MonoBehaviour
             obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.item.itemStack + " units";
         }
     }
+    #endregion
 }

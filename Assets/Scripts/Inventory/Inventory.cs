@@ -45,7 +45,6 @@ public class Inventory : ObservableSO
         }
     }
 
-
     public virtual bool AddItem(BaseItem item)
     {
         int totalSize = item.itemGridSize.x * item.itemGridSize.y;

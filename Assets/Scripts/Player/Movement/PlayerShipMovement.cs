@@ -37,7 +37,7 @@ public class PlayerShipMovement : MonoBehaviour
     private Rigidbody2D rb;
 
     private Vector2 posOfMouseOnWorld;
-   
+
     public bool dampeners = true;
     private float inputX;
     private float inputY;
@@ -52,6 +52,8 @@ public class PlayerShipMovement : MonoBehaviour
     public Light2D rightLight;
 
     private AudioSource src;
+    public AudioSource wingsAudioSource;
+    public AudioClip wingsFoldSound;
     private float lastVol = 0;
     private float currentVol = 0;
     [HideInInspector]
@@ -70,8 +72,8 @@ public class PlayerShipMovement : MonoBehaviour
     }
 
     private void Update()
-    {       
-        if (ui.isInUI) return;        
+    {
+        if (ui.isInUI) return;
 
         inputX = Input.GetAxisRaw("Horizontal");
         inputY = Input.GetAxisRaw("Vertical");
@@ -125,7 +127,7 @@ public class PlayerShipMovement : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        
+
         ChangeCameraZoomVelocity();
     }
 
@@ -134,28 +136,28 @@ public class PlayerShipMovement : MonoBehaviour
         if (isPlayerPiloting)
         {
             MoveAndTurn();
-        }       
+        }
     }
 
     public void ChangeCameraZoomVelocity()
     {
         float newSize = camSizeCurve.Evaluate(rb.velocity.magnitude / 100);
-        followCam.m_Lens.OrthographicSize = newSize;   
+        followCam.m_Lens.OrthographicSize = newSize;
     }
 
     public void MoveAndTurn()
-    {    
+    {
         rb.AddForce(-transform.up * moveSpeed * inputY);
 
         //Turning left and right
-        if(rb.angularVelocity < 0)
+        if (rb.angularVelocity < 0)
         {
             if (rb.angularVelocity > -maxAngVel)
             {
                 rb.AddTorque(-inputX * rotationSpeed);
             }
         }
-        else if(rb.angularVelocity > 0)
+        else if (rb.angularVelocity > 0)
         {
             if (rb.angularVelocity < maxAngVel)
             {
@@ -184,7 +186,7 @@ public class PlayerShipMovement : MonoBehaviour
             rb.drag = 0;
         }
 
-        if(inputX != 0)
+        if (inputX != 0)
         {
             rb.angularDrag = 0;
         }
@@ -203,12 +205,12 @@ public class PlayerShipMovement : MonoBehaviour
         else
         {
             moveSpeed = baseMoveSpeed;
-        }      
+        }
 
         if (currentSpeed > maxSpeed)
         {
             rb.velocity = rb.velocity.normalized * maxSpeed;
-        }        
+        }
     }
 
     public void ChangeParticleThrustRate(int rate)
@@ -219,18 +221,20 @@ public class PlayerShipMovement : MonoBehaviour
 
     public void ManageThrustVolume(float interval)
     {
-        src.volume = thrusterSoundCurve.Evaluate(currentSpeed / maxSpeed);      
+        src.volume = thrusterSoundCurve.Evaluate(currentSpeed / maxSpeed);
     }
 
     public void FoldInWings()
     {
         rightWing.GetComponent<Animator>().SetTrigger("FoldIn");
         leftWing.GetComponent<Animator>().SetTrigger("FoldIn");
+        wingsAudioSource.PlayOneShot(wingsFoldSound);
     }
 
     public void FoldOutWings()
     {
         rightWing.GetComponent<Animator>().SetTrigger("FoldOut");
         leftWing.GetComponent<Animator>().SetTrigger("FoldOut");
+        wingsAudioSource.PlayOneShot(wingsFoldSound);
     }
 }

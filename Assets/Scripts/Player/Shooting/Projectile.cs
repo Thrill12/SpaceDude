@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
     private void Start()
     {
         damage = weaponShotFrom.damage.Value * entityShotFrom.damageMultiplier.Value;
+        Destroy(gameObject, 3);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -20,10 +21,6 @@ public class Projectile : MonoBehaviour
         {
             collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage);
 
-            Destroy(gameObject);
-        }
-        else
-        {
             Destroy(gameObject);
         }
     }

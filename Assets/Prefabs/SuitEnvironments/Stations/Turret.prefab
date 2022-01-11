@@ -239,7 +239,7 @@ MonoBehaviour:
   - {x: -0.07486631, y: 0.09008035, z: 0}
   m_ShapePathHash: 849515421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 143430
+  m_InstanceId: 96084
 --- !u!114 &8422777376399373941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44315e48b83d4e644b3c6703e15a1d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 1
   entityName: Turret
   health: 0
   maxHealth:
@@ -274,7 +275,8 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
-  energy:
+  energy: 0
+  maxEnergy:
     BaseValue: 0
     _value: 0
     statModifiers: []

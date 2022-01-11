@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0aa5c1ee61b41e409361fd0d9b520b3, type: 3}
+  m_Name: Timmy's Acid Trip
+  m_EditorClassIdentifier: 
+  QuestName: Timmy's Acid Trip
+  QuestDescription: Timmy asked me to check out if they're playing "The Blue Panther?"
+    What even is that? And why does he care if a hospital plays it?
+  Goals:
+  - {fileID: 11400000, guid: e7c3e6483fad4394ca8c1ff60f584773, type: 2}
+  ExperienceReward: 0
+  FactionInfluenceReward: 0
+  ItemReward: {fileID: 0}
+  Completed: 0
+  questAssignedDialogue:
+  - Hey there! Thanks for helping me. All you have to do is go to the mental institute
+    and come back.
+  - I only want you to take a sneeky peak anyway, no detail needed.
+  questCompletedDialogue:
+  - I am eternally grateful. Thank you, my lord.
+  questInProgressDialogue:
+  - Look man, if you don't want to help me that's okay.
+  - But don't waste time - at least do something productive.
+  questRequirements: []
+  HandedIn: 0
