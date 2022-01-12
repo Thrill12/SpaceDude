@@ -19,8 +19,9 @@ public class PlayerShipMovement : MonoBehaviour
     public Volume postProcessingVolume;
     public VisualEffect shipWarpEffectParticles;
     public float warpAcceleration = 1;
-    public int maxWarpEffectRate = 500;
     public float maxWarpSpeed;
+    public float warpNavTurnSpeed = 1;
+    public int maxWarpEffectRate = 500;
     public bool inWarp = false;
     public bool isChargingWarp = false;
     public AudioClip warpInSound;
@@ -112,6 +113,8 @@ public class PlayerShipMovement : MonoBehaviour
 
         currentSpeed = rb.velocity.magnitude;
 
+        thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
+
         if (thrusterParticleSpawnRate > 5 && !inWarp)
         {
             leftLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250));
@@ -140,9 +143,7 @@ public class PlayerShipMovement : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.G) && inWarp && !isChargingWarp)
         {
             DropOutWarp();
-        }
-
-        thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
+        }        
 
         if (Input.GetMouseButton(0))
         {
@@ -150,7 +151,7 @@ public class PlayerShipMovement : MonoBehaviour
         }
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !inWarp && !isChargingWarp)
         {
             //if (currentSpeed / maxSpeed * 100 < 20)
             playerSuit.PlayerLeaveCockpit();
@@ -169,12 +170,20 @@ public class PlayerShipMovement : MonoBehaviour
         ChangeCameraZoomVelocity();
     }
 
+    private void TurnToObjective(Vector3 positionToNavigateTo)
+    {
+        float angle = Mathf.Atan2(positionToNavigateTo.y - transform.position.y, positionToNavigateTo.x - transform.position.x) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, warpNavTurnSpeed);
+    }
+
     private void ActivateWarp()
     {
         rb.freezeRotation = true;
         shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), maxWarpEffectRate / 2);
         isChargingWarp = true;
         warpSource.PlayOneShot(warpInSound);
+        GetComponent<CinemachineImpulseSource>().GenerateImpulse();
         Invoke("DropInWarp", 1.6f);
     }
 
@@ -183,6 +192,8 @@ public class PlayerShipMovement : MonoBehaviour
         isChargingWarp = false;
         inWarp = true;
         warpCamera.Priority = 1000;
+
+        
 
         foreach (var item in GetComponents<Collider2D>().Where(x => x.isTrigger != true))
         {
