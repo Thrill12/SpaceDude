@@ -270,3 +270,11 @@
 /Assets/Sounds/Music/Theme.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Sounds/WarpInSound.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Sounds/WarpOutSound.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Font/Quantico-Bold[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
+/Assets/Font/Quantico-Italic[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
+/Assets/Sprites/Background/Space/Galaxies/744664119.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Sprites/Background/Space/Galaxies/744664119.png.meta filter=lfs diff=lfs merge=lfs -text
+/Assets/Sprites/Background/Space/Galaxies/BlueGalaxyAnim.anim filter=lfs diff=lfs merge=lfs -text
+/Assets/Sprites/Background/Space/PixelPlanetsWindows.exe filter=lfs diff=lfs merge=lfs -text
+/Assets/TextMesh[[:space:]]Pro/Examples[[:space:]]&[[:space:]]Extras/Resources/Fonts[[:space:]]&[[:space:]]Materials/Anton[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text
+/Assets/TextMesh[[:space:]]Pro/Examples[[:space:]]&[[:space:]]Extras/Resources/Fonts[[:space:]]&[[:space:]]Materials/Bangers[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text

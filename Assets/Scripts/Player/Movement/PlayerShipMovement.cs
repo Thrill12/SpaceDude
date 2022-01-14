@@ -19,9 +19,11 @@ public class PlayerShipMovement : MonoBehaviour
     public Volume postProcessingVolume;
     public VisualEffect shipWarpEffectParticles;
     public float warpAcceleration = 1;
+    public float minSpeedForWarp = 200;
     public float maxWarpSpeed;
     public float warpNavTurnSpeed = 1;
     public int maxWarpEffectRate = 500;
+    public bool canWarp;
     public bool inWarp = false;
     public bool isChargingWarp = false;
     public AudioClip warpInSound;
@@ -115,6 +117,15 @@ public class PlayerShipMovement : MonoBehaviour
 
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
 
+        if(currentSpeed > minSpeedForWarp)
+        {
+            canWarp = true;
+        }
+        else
+        {
+            canWarp = false;
+        }
+
         if (thrusterParticleSpawnRate > 5 && !inWarp)
         {
             leftLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250));
@@ -136,7 +147,9 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (!isPlayerPiloting) return;
 
-        if (Input.GetKeyDown(KeyCode.G) && !inWarp && !isChargingWarp)
+        GetComponent<CinemachineImpulseSource>().GenerateImpulseWithForce(currentSpeed / (maxWarpSpeed * 100));
+
+        if (Input.GetKeyDown(KeyCode.G) && !inWarp && !isChargingWarp && canWarp)
         {
             ActivateWarp();
         }        
@@ -191,11 +204,9 @@ public class PlayerShipMovement : MonoBehaviour
     {
         isChargingWarp = false;
         inWarp = true;
-        warpCamera.Priority = 1000;
+        warpCamera.Priority = 1000;        
 
-        
-
-        foreach (var item in GetComponents<Collider2D>().Where(x => x.isTrigger != true))
+        foreach (var item in GetComponentsInChildren<Collider2D>().Where(x => x.isTrigger != true))
         {
             item.enabled = false;
         }
@@ -212,7 +223,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), 0);
 
-        foreach (var item in GetComponents<Collider2D>().Where(x => x.isTrigger != true))
+        foreach (var item in GetComponentsInChildren<Collider2D>().Where(x => x.isTrigger != true))
         {
             item.enabled = true;
         }
@@ -252,7 +263,7 @@ public class PlayerShipMovement : MonoBehaviour
     {      
         while (inWarp && currentSpeed < maxWarpSpeed)
         {
-            rb.velocity = -transform.up * warpAcceleration * rb.velocity.magnitude;
+            rb.velocity = -transform.up * warpAcceleration * (rb.velocity.magnitude + 1);
             yield return new WaitForSeconds(0.01f);
         }   
     }

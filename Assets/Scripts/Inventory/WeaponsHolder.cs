@@ -5,10 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class WeaponsHolder : MonoBehaviour
 {
+    public static WeaponsHolder instance;
+
     public BaseWeapon mainWeapon;
     public BaseWeapon secondaryWeapon;
 
-    public PlayerInventory playerInventory;
+    private Inventory inventory;
 
     public BaseWeapon currentlyEquippedWeapon;
     public Transform weaponObjectPosition;
@@ -18,8 +20,14 @@ public class WeaponsHolder : MonoBehaviour
     private float nextFire;
     private AudioSource audioSource;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
+        inventory = Inventory.instance;
         SwapWeapons();
         audioSource = GetComponent<AudioSource>();
     }
@@ -47,8 +55,6 @@ public class WeaponsHolder : MonoBehaviour
     public void Attack()
     {
         if (currentlyEquippedWeapon == null) return;
-
-
 
         audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
         currentlyEquippedWeapon.Attack(weaponObject);
@@ -95,6 +101,8 @@ public class WeaponsHolder : MonoBehaviour
 
     public void EquipWeapon(BaseWeapon weapon)
     {
+        Debug.Log(weapon.itemName);
+
         if (weapon.large)
         {
             if (mainWeapon == null)
@@ -103,7 +111,7 @@ public class WeaponsHolder : MonoBehaviour
             }
             else if (mainWeapon != null)
             {
-                playerInventory.UnequipItem(mainWeapon);
+                inventory.UnequipItem(mainWeapon);
                 mainWeapon = weapon;
             }
         }
@@ -115,7 +123,7 @@ public class WeaponsHolder : MonoBehaviour
             }
             else
             {
-                playerInventory.UnequipItem(secondaryWeapon);
+                inventory.UnequipItem(secondaryWeapon);
                 secondaryWeapon = weapon;
             }
         }

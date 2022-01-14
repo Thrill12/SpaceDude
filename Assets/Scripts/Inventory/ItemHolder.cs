@@ -18,8 +18,7 @@ public class ItemHolder : MonoBehaviour
     {
         prefabManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         itemHeld = ScriptableObject.Instantiate(itemHeld);
-        playerInventory = GameObject.FindGameObjectWithTag("Inventory").
-            GetComponent<MultipleInventoryView>().inventories.Find(x => x.inventory.inventoryName == "Player inventory").inventory;
+        playerInventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<Inventory>();
 
         if (generateStats)
         {

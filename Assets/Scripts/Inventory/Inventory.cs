@@ -1,116 +1,201 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Inventory/Inventory"), System.Serializable]
-public class Inventory : ObservableSO
+public class Inventory : MonoBehaviour
 {
-    public string inventoryName;
-    public IntPair size;
-    public List<StoredItem> items;    
+    public static Inventory instance;
 
-    public bool IsPositionValid(BaseItem item, int row, int col, StoredItem ignoreWith = null)
+    
+    public BaseEntity player;
+    
+    public WeaponsHolder weaponHolder;
+
+    public GameObject itemInventoryDisplay;
+    public GameObject uiItemHolder;
+    public GameObject worldItemHolder;
+    public GameObject slotsParent;
+
+    [Space(10)]
+
+    public List<ItemSlot> slots = new List<ItemSlot>();
+
+    [Space(10)]
+
+    public List<BaseItem> items = new List<BaseItem>();
+
+    [Space(10)]
+
+    public List<BaseItem> itemsEquipped = new List<BaseItem>();
+
+    [HideInInspector]
+    public List<UIItemHolder> uiItemHolders = new List<UIItemHolder>();
+
+    public int maxItemCount = 30;
+
+    private void Awake()
     {
-        return InBounds(item.itemGridSize, row, col) && !IsColliding(item.itemGridSize, row, col, ignoreWith);
+        instance = this;
     }
 
-    //Finds the next valid position for the item in the grid
-    public IntPair FindValidPosition(BaseItem item)
+    //Update used to detect when the user clicks on an item holder in the game world
+    private void Update()
     {
-        for (int i = 0; i < size.x; i++)
+        if (Input.GetMouseButtonDown(0))
         {
-            for (int j = 0; j < size.y; j++)
+            Vector3 mousePoss = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePoss2D = new Vector2(mousePoss.x, mousePoss.y);
+
+            RaycastHit2D hitt = Physics2D.Raycast(mousePoss2D, Vector2.zero);
+
+            if (hitt != false)
             {
-                if(IsPositionValid(item, i, j))
+                if (hitt.collider.CompareTag("Item"))
                 {
-                    return new IntPair(i, j);
+                    hitt.collider.gameObject.GetComponent<ItemHolder>().ClickedOn(gameObject);
                 }
             }
         }
-
-        return null;
     }
 
-    public bool MoveItem(StoredItem toMove, IntPair newPos)
+    public void SpawnDroppedItem(BaseItem itemDropped)
     {
-        if (IsPositionValid(toMove.item, newPos.x, newPos.y, toMove))
+        RemoveItemFromInventory(itemDropped);
+        GameObject i = Instantiate(worldItemHolder, transform.position, Quaternion.identity);
+        i.GetComponent<ItemHolder>().itemHeld = itemDropped;
+    }
+
+    public bool AddItem(BaseItem itemToAdd)
+    {
+        if (items.Count < maxItemCount)
         {
-            toMove.position = newPos;
-            Notify();
+            if (!typeof(BaseEquippable).IsAssignableFrom(itemToAdd.GetType()))
+            {
+                if (items.Where(x => x.itemName == itemToAdd.itemName).Count() > 0)
+                {
+                    GeneralItem item = (GeneralItem)items.Where(x => x.itemName == itemToAdd.itemName).First();
+                    GeneralItem genItemToAdd = (GeneralItem)itemToAdd;
+                    item.itemStack += genItemToAdd.itemStack;
+                }
+                else
+                {
+                    items.Add(itemToAdd);
+                    GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
+                    uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
+                    uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
+                }
+            }
+            else
+            {
+                items.Add(itemToAdd);
+                GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
+                uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
+                uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
+            }
+
             return true;
         }
         else
         {
+            Debug.Log("Inventory Full");
             return false;
         }
     }
 
-    public virtual bool AddItem(BaseItem item)
+    public void RemoveItemFromInventory(BaseItem itemToRemove)
     {
-        int totalSize = item.itemGridSize.x * item.itemGridSize.y;
-        if(FreeSlotsCount() >= totalSize)
+        //If we are trying to drop an equipped item, we need to also unequip it first so it
+        //doesn't mess up with other stuff
+        if (typeof(BaseEquippable).IsAssignableFrom(itemToRemove.GetType()))
         {
-            IntPair position = FindValidPosition(item);
-            if(position != null)
+            BaseEquippable equippable = (BaseEquippable)itemToRemove;
+            if (equippable.isEquipped)
             {
-                items.Add(new StoredItem(item, position));
-                Notify();
-                return true;
+                UnequipItem(equippable);
             }
         }
 
-        return false;
+        items.Remove(itemToRemove);
+        uiItemHolders.Remove(uiItemHolders.Where(x => x.itemHeld == itemToRemove).First());
     }
 
-    //Checks if item to be moved of the size in that position fits into the box
-    public bool InBounds(IntPair itemSize, int row, int col)
+    //These 2 functions handle equipping and unequipping items, excluding weapons which are handled below.
+    public void EquipItem(BaseEquippable itemToEquip)
     {
-        return row >= 0 && row <= size.x && 
-            row + itemSize.x <= size.x && 
-            col >= 0 && col <= size.y &&
-            col + itemSize.y <= size.y;
-    }
+        Debug.Log("Equipping item");
 
-    public void RemoveItem(StoredItem item)
-    {
-        items.Remove(item);
-        Notify();
-    }
+        itemToEquip.OnEquip(player);
+        itemsEquipped.Add(itemToEquip);
+        items.Remove(itemToEquip);
 
-    //Counts total number of tiles available to skip past a load of other checks later on
-    private int FreeSlotsCount()
-    {
-        int occupied = 0;
-        foreach (var item in items)
+        ItemSlot slot = slots.Where(x => x.slotName == itemToEquip.itemSlot).First();
+
+        if (slot.itemInSlot != null)
         {
-            occupied += item.item.itemGridSize.x * item.item.itemGridSize.y;
-        }
+            UnequipItem(slot.itemInSlot);
 
-        return size.x * size.y - occupied;
-    }
-
-    //Checking if an item is colliding with another
-    public bool IsColliding(IntPair itemSize, int row, int col, StoredItem ignoreWith = null)
-    {
-        foreach (var item in items)
-        {
-            if(ABBintersectsABB(item.position.y, item.position.x, item.item.itemGridSize.y, 
-                item.item.itemGridSize.x, col, row, itemSize.y, itemSize.x) && 
-                item != ignoreWith)
+            //Checks if the item is a weapon
+            if (typeof(BaseWeapon).IsAssignableFrom(itemToEquip.GetType()))
             {
-                return true;
+                weaponHolder.UnequipWeapon((BaseWeapon)slot.itemInSlot);
             }
         }
 
-        return false;
+        slot.itemInSlot = itemToEquip;
+
+        Debug.Log("Placed in slot " + slot.slotName);
+
+        //Checks if the item is a weapon
+        if (typeof(BaseWeapon).IsAssignableFrom(itemToEquip.GetType()))
+        {
+            BaseWeapon weap = (BaseWeapon)itemToEquip;
+            weaponHolder.EquipWeapon(weap);
+            weaponHolder.SwapWeapons();
+        }
+
+        //Don't delete this "if loop" becasue i dont know why it doesnt work without it
+        if (slot.itemInSlot == itemToEquip)
+        {
+
+        }
+        else
+        {
+            EquipItem(itemToEquip);
+        }
+        itemToEquip.isEquipped = true;
+        itemToEquip.hostEntity = player;
+
+        Debug.Log("Reached the end");
     }
 
-    private bool ABBintersectsABB(int ax, int ay, float aw, float ah, int bx, int by, float bw, float bh)
+    public void UnequipItem(BaseEquippable itemToUnequip)
     {
-        //Box to box collision test apparently, have no clue how this works but yeah :) - basically comparing the corners
-        return (ax < bx + bw &&
-            ax + aw > bx &&
-            ay < by + bh &&
-            ah + ay > by);
+        Debug.Log("Unequipping");
+        itemToUnequip.OnUnequip();
+        itemsEquipped.Remove(itemToUnequip);
+        items.Add(itemToUnequip);
+
+        ItemSlot slot = slots.Where(x => x.slotName == itemToUnequip.itemSlot).First();
+        slot.itemInSlot = null;
+
+        if (typeof(BaseWeapon).IsAssignableFrom(itemToUnequip.GetType()))
+        {
+            weaponHolder.UnequipWeapon((BaseWeapon)itemToUnequip);
+            weaponHolder.StowWeaponWhenUnequipping((BaseWeapon)itemToUnequip);
+        }
+
+        //Don't delete this "if loop" becasue i dont know why it doesnt work without it
+        if (slot.itemInSlot == null)
+        {
+
+        }
+        else
+        {
+            UnequipItem(itemToUnequip);
+        }
+
+        itemToUnequip.isEquipped = false;
+        Debug.Log(itemToUnequip.isEquipped);
     }
 }

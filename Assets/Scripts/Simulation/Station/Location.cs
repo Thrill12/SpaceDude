@@ -12,10 +12,11 @@ public class Location : MonoBehaviour
     public float difficultyValue;
     private UIManager ui;
     public bool shouldGeneateRandomly = true;
-    [ConditionalField("shouldGenerateRandomly")]public TextAsset stationNames;
-    [ConditionalField("shouldGenerateRandomly")] public TextAsset stationPrefixes;
+    [ConditionalField(nameof(shouldGeneateRandomly))] public LocationType locType = LocationType.Station;
+    [ConditionalField(nameof(locType), false, LocationType.Station)]public TextAsset stationNames;
+    [ConditionalField(nameof(locType), false, LocationType.Station)] public TextAsset stationPrefixes;
 
-    public void GenerateName()
+    public void GenerateNameWithPersonNamesAndPrefixes()
     {       
         string allNames = stationNames.text;
         List<string> splitNames = allNames.Split("\n").ToList();
@@ -32,12 +33,33 @@ public class Location : MonoBehaviour
         locationName = nameChosen.Trim() + " " + prefixChosen.Trim();
     }
 
+    public void GenerateNamesBasedOffPosition()
+    {
+        string fullName = "";
+
+        string alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+        string firstHalf = alphabet[Random.Range(0, alphabet.Length)] + Mathf.RoundToInt(transform.position.x).ToString();
+        string secondHalf = alphabet[Random.Range(0, alphabet.Length)] + Mathf.RoundToInt(transform.position.y).ToString();
+
+        fullName = firstHalf.ToUpper() + "-" + secondHalf.ToUpper();
+
+        locationName = fullName;
+    }
+
     private void Start()
     {
         ui = UIManager.instance;
         if (shouldGeneateRandomly)
         {
-            GenerateName();
+            if(locType == LocationType.Station)
+            {
+                GenerateNameWithPersonNamesAndPrefixes();
+            }
+            else if(locType == LocationType.AsteroidField)
+            {
+                GenerateNamesBasedOffPosition();
+            }          
         }       
     }    
 
@@ -58,4 +80,10 @@ public class Location : MonoBehaviour
             UIManager.instance.ToggleLocationNameDisplay(false, locationName);
         }       
     }
+}
+
+public enum LocationType
+{
+    Station,
+    AsteroidField
 }
