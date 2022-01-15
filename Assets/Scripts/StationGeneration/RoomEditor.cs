@@ -17,10 +17,17 @@ public class RoomEditor : Editor
         if (GUILayout.Button("Generate Room Data"))
         {   //Runs when the button is pressed:
             Debug.Log("Generating Room Data.");
+
+            //Create the directory for this room.
+            string dir = "Assets/Data/Rooms/" + room.name + "/";
+
+            AssetDatabase.CreateFolder("Assets/Data/Rooms", room.name);
+
             //Get the room component to generate the room data. 
-            RoomData data = room.GenerateRoomData();
+            RoomData data = room.GenerateRoomData(dir);
+
             //Take the room data and save that to the rooms folder, if a room data obj already exists with the same name its overwritten.
-            AssetDatabase.CreateAsset(data, "Assets/Data/Rooms/" + room.name + ".asset");
+            AssetDatabase.CreateAsset(data, dir + room.name + ".asset");
         }
 
         //Displays the varaibles visible to the inspector underneath the button.

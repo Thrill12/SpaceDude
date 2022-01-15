@@ -33,12 +33,30 @@ public class Generator
 
         //Create the tile grid which the x and y size are the grid size: e.g. 50x50.
         grid = new TileData[profile.gridSize, profile.gridSize];
+
+        for (int x = 0; x < profile.gridSize; x++)
+        {
+            for (int y = 0; y < profile.gridSize; y++)
+            {
+                grid[x, y] = ScriptableObject.CreateInstance<TileData>();
+            }
+        }
+
         //Create a list of placed room data which will hold the placed rooms - bascially noraml room data minus the tiles. 
         placedRooms = new List<PlacedRoom>();
 
         //Initialise the random number generator with the seed;
         //allows for the same ship/station to generate from the same seed.
         Random.InitState(seed);
+    }
+
+    public Texture2D GenerateWithDebugTexture()
+    {
+        GenerateRooms();
+
+        Texture2D texture = DebugTexture();
+
+        return texture;
     }
 
     public void GenerateStation()
@@ -105,6 +123,8 @@ public class Generator
             {
                 //Commit this room to the grid.
                 AddRoomToGrid(room, pos);
+                Debug.Log("Room placed");
+                return true;
             }
         }
 
@@ -115,30 +135,33 @@ public class Generator
     //Checks the room placement - returns true if it is valid, false when invalid.
     private bool IsRoomPlacementValid(RoomData room, Vector2Int pos)
     {
-        //Checks against all other placed rooms if they overlap at all.
-        foreach (PlacedRoom placed in placedRooms)
+        if (placedRooms.Count > 0)
         {
-            #region Rectangle Overlap Check
-
-            //Rectangle 1 - the placed room.
-            int r1x1 = placed.position.x;
-            int r1y1 = placed.position.y;
-            int r1x2 = placed.position.x + placed.roomWidth;
-            int r1y2 = placed.position.y + placed.roomHeight;
-
-            //Rectange 2 - the room we're checking placement of. 
-            int r2x1 = pos.x;
-            int r2y1 = pos.y;
-            int r2x2 = pos.x + room.roomWidth;
-            int r2y2 = pos.y + room.roomHeight;
-
-            //Complete the check. If all conditions are met then there's and overlap.
-            if (r1x1 < r2x2 && r1x2 > r2x1 && r1y1 > r2y2 && r1y2 < r2y1)
+            //Checks against all other placed rooms if they overlap at all.
+            foreach (PlacedRoom placed in placedRooms)
             {
-                //The rooms overlap and the placement is invalid.
-                return false;
+                #region Rectangle Overlap Check
+
+                //Rectangle 1 - the placed room.
+                int r1x1 = placed.position.x;
+                int r1y1 = placed.position.y + placed.roomHeight;
+                int r1x2 = placed.position.x + placed.roomWidth;
+                int r1y2 = placed.position.y;
+
+                //Rectange 2 - the room we're checking placement of. 
+                int r2x1 = pos.x;
+                int r2y1 = pos.y + room.roomHeight;
+                int r2x2 = pos.x + room.roomWidth;
+                int r2y2 = pos.y;
+
+                //Complete the check. If all conditions are met then there's and overlap.
+                if (r1x1 < r2x2 && r1x2 > r2x1 && r1y1 > r2y2 && r1y2 < r2y1)
+                {
+                    //The rooms overlap and the placement is invalid.
+                    return false;
+                }
+                #endregion
             }
-            #endregion
         }
 
         //The room placement is valid as room doesn't overlap any placed rooms.
@@ -154,6 +177,9 @@ public class Generator
         //Loop over the tiles of the room and set the tiles on the grid.
         foreach(TileData tile in room.roomTileData)
         {
+            Debug.Log(tile);
+            Debug.Log(pos);
+
             //Get the craft grid position this tile should be on .
             Vector2Int gridPos = tile.position + pos;
             //Update the grid with the tile.
@@ -174,5 +200,40 @@ public class Generator
     {
 
     }
+    #endregion
+
+    #region Debugging 
+
+    Texture2D DebugTexture()
+    {
+        Texture2D tex = new Texture2D(profile.gridSize, profile.gridSize, TextureFormat.ARGB32, false);
+
+        for (int x = 0; x < profile.gridSize; x++)
+        {
+            for (int y = 0; y < profile.gridSize; y++)
+            {
+                if (grid[x,y] != null)
+                {
+                    switch (grid[x, y].type)
+                    {
+                        case TileType.empty:
+                            tex.SetPixel(x, y, Color.black);
+                            break;
+                        case TileType.floor:
+                            tex.SetPixel(x, y, Color.white);
+                            break;
+                        case TileType.wall:
+                            tex.SetPixel(x, y, Color.blue);
+                            break;
+                        default:
+                            break;
+                    }
+                }  
+            }
+        }
+        tex.Apply();
+        return tex;
+    }
+
     #endregion
 }

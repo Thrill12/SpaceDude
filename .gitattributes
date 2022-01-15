@@ -264,3 +264,4 @@
 /Assets/Sounds/LoopedLabSounds.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Sounds/WavesFoldingInOut.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Sounds/WaveyAirySmack.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Generation[[:space:]]Prefabs/Rooms/L-Shape.prefab filter=lfs diff=lfs merge=lfs -text

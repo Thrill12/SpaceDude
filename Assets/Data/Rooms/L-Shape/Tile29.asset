@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 821aab807a7d8e64b8c8394bbff30053, type: 3}
-  m_Name: New Generator Profile
+  m_Script: {fileID: 11500000, guid: 8f60897d14bf1bc43a943a2f56f3b124, type: 3}
+  m_Name: Tile29
   m_EditorClassIdentifier: 
-  craftType: 1
-  gridSize: 0
-  minNumRooms: 0
-  maxNumRooms: 0
-  rooms: []
+  position: {x: 2, y: 7}
+  type: 1
+  hasObject: 0
