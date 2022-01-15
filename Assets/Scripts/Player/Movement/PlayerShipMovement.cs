@@ -1,8 +1,10 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
@@ -13,14 +15,34 @@ public class PlayerShipMovement : MonoBehaviour
 
     [Space(5)]
 
+    [Header("Warp settings")]
+    public Volume postProcessingVolume;
+    public VisualEffect shipWarpEffectParticles;
+    public float warpAcceleration = 1;
+    public float maxWarpSpeed;
+    public float warpNavTurnSpeed = 1;
+    public int maxWarpEffectRate = 500;
+    public bool inWarp = false;
+    public bool isChargingWarp = false;
+    public AudioClip warpInSound;
+    public AudioClip warpOutSound;
+    public AudioSource warpSource;
+
+    [Space(5)]
+
     [Header("Camera Settings")]
     public CinemachineVirtualCamera followCam;
-    public AnimationCurve camSizeCurve;
+    public AnimationCurve normalCamSizeCurve;
+    public CinemachineVirtualCamera warpCamera;
 
     [Header("Movement Settings")]
+
     public float moveSpeed;
     private float baseMoveSpeed;
+    public float baseAcceleration;
+    [HideInInspector]
     public float accelAcceleration;
+    
     public float maxSpeed = 1000;
     public float maxAngVel = 100;
     public float drag = 5;
@@ -42,8 +64,10 @@ public class PlayerShipMovement : MonoBehaviour
     private float inputX;
     private float inputY;
     private Vector2 mousePos;
+
     [HideInInspector]
     public float currentSpeed;
+
     private PlayersuitManager playerSuit;
 
     public GameObject leftThrust;
@@ -54,15 +78,22 @@ public class PlayerShipMovement : MonoBehaviour
     private AudioSource src;
     public AudioSource wingsAudioSource;
     public AudioClip wingsFoldSound;
+
     private float lastVol = 0;
     private float currentVol = 0;
+
     [HideInInspector]
     public UIManager ui;
     [HideInInspector]
     public int thrusterParticleSpawnRate = 0;
 
+    private bool isTweening = false;
+    private bool isUISpeedNumberRandom = false;
+
     private void Start()
     {
+        accelAcceleration = baseAcceleration;
+        shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), 0);
         isPlayerPiloting = true;
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed;
@@ -82,10 +113,12 @@ public class PlayerShipMovement : MonoBehaviour
 
         currentSpeed = rb.velocity.magnitude;
 
-        if (thrusterParticleSpawnRate > 5)
+        thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
+
+        if (thrusterParticleSpawnRate > 5 && !inWarp)
         {
-            leftLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250)) * 2;
-            rightLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250)) * 2;
+            leftLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250));
+            rightLight.intensity = 0.5f + (thrusterParticleSpawnRate / (maxSpeed * 250));
         }
         else
         {
@@ -103,7 +136,14 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (!isPlayerPiloting) return;
 
-        thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
+        if (Input.GetKeyDown(KeyCode.G) && !inWarp && !isChargingWarp)
+        {
+            ActivateWarp();
+        }        
+        else if(Input.GetKeyDown(KeyCode.G) && inWarp && !isChargingWarp)
+        {
+            DropOutWarp();
+        }        
 
         if (Input.GetMouseButton(0))
         {
@@ -111,7 +151,7 @@ public class PlayerShipMovement : MonoBehaviour
         }
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !inWarp && !isChargingWarp)
         {
             //if (currentSpeed / maxSpeed * 100 < 20)
             playerSuit.PlayerLeaveCockpit();
@@ -127,8 +167,94 @@ public class PlayerShipMovement : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-
         ChangeCameraZoomVelocity();
+    }
+
+    private void TurnToObjective(Vector3 positionToNavigateTo)
+    {
+        float angle = Mathf.Atan2(positionToNavigateTo.y - transform.position.y, positionToNavigateTo.x - transform.position.x) * Mathf.Rad2Deg;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, warpNavTurnSpeed);
+    }
+
+    private void ActivateWarp()
+    {
+        rb.freezeRotation = true;
+        shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), maxWarpEffectRate / 2);
+        isChargingWarp = true;
+        warpSource.PlayOneShot(warpInSound);
+        GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+        Invoke("DropInWarp", 1.6f);
+    }
+
+    private void DropInWarp()
+    {
+        isChargingWarp = false;
+        inWarp = true;
+        warpCamera.Priority = 1000;
+
+        
+
+        foreach (var item in GetComponents<Collider2D>().Where(x => x.isTrigger != true))
+        {
+            item.enabled = false;
+        }
+
+        StartCoroutine(IncreaseSpeedInWarp());
+        StartCoroutine(IncreaseBlurAmount());
+        StartCoroutine(IncreaseWarpEffectParticleRate());     
+    }
+
+    private void DropOutWarp()
+    {
+        inWarp = false;
+        warpCamera.Priority = 0;
+
+        shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), 0);
+
+        foreach (var item in GetComponents<Collider2D>().Where(x => x.isTrigger != true))
+        {
+            item.enabled = true;
+        }
+
+        MotionBlur blur = null;
+        postProcessingVolume.profile.TryGet<MotionBlur>(out blur);
+        blur.intensity.value = 0;
+
+        warpSource.PlayOneShot(warpOutSound);
+        rb.freezeRotation = false;
+    }
+
+    IEnumerator IncreaseWarpEffectParticleRate()
+    {
+        while(shipWarpEffectParticles.GetInt(Shader.PropertyToID("Spawn Rate")) < maxWarpEffectRate && inWarp)
+        {
+            shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), shipWarpEffectParticles.GetInt(Shader.PropertyToID("Spawn Rate")) + 1);
+
+            yield return new WaitForSeconds(0.005f);
+        }
+    }
+
+    IEnumerator IncreaseBlurAmount()
+    {
+        MotionBlur blur = null;
+
+        postProcessingVolume.profile.TryGet<MotionBlur>(out blur);
+
+        while (blur.intensity.value < 0.15f && inWarp)
+        {
+            blur.intensity.value += 0.001f;
+            yield return new WaitForSeconds(0.001f);
+        }
+    }
+
+    IEnumerator IncreaseSpeedInWarp()
+    {      
+        while (inWarp && currentSpeed < maxWarpSpeed)
+        {
+            rb.velocity = -transform.up * warpAcceleration * rb.velocity.magnitude;
+            yield return new WaitForSeconds(0.01f);
+        }   
     }
 
     private void FixedUpdate()
@@ -141,76 +267,99 @@ public class PlayerShipMovement : MonoBehaviour
 
     public void ChangeCameraZoomVelocity()
     {
-        float newSize = camSizeCurve.Evaluate(rb.velocity.magnitude / 100);
+        float newSize = 25;
+
+        if (!inWarp || isChargingWarp)
+        {
+            newSize = normalCamSizeCurve.Evaluate(currentSpeed / maxSpeed);
+        }
+        else
+        {
+            newSize = normalCamSizeCurve.Evaluate(currentSpeed / maxWarpSpeed);
+        }
+
         followCam.m_Lens.OrthographicSize = newSize;
     }
 
     public void MoveAndTurn()
     {
-        rb.AddForce(-transform.up * moveSpeed * inputY);
+        if (!inWarp && !isChargingWarp)
+        {
+            rb.AddForce(-transform.up * moveSpeed * inputY);
+        }       
 
-        //Turning left and right
-        if (rb.angularVelocity < 0)
+        if (!inWarp && !isChargingWarp)
         {
-            if (rb.angularVelocity > -maxAngVel)
+            //Turning left and right
+            if (rb.angularVelocity < 0)
             {
-                rb.AddTorque(-inputX * rotationSpeed);
+                if (rb.angularVelocity > -maxAngVel)
+                {
+                    rb.AddTorque(-inputX * rotationSpeed);
+                }
             }
-        }
-        else if (rb.angularVelocity > 0)
-        {
-            if (rb.angularVelocity < maxAngVel)
+            else if (rb.angularVelocity > 0)
             {
-                rb.AddTorque(-inputX * rotationSpeed);
-            }
-        }
-        else
-        {
-            rb.AddTorque(-inputX * rotationSpeed);
-        }
-
-        #region Dampeners and drag
-        if (dampeners)
-        {
-            if (inputY != 0)
-            {
-                rb.drag = 0;
+                if (rb.angularVelocity < maxAngVel)
+                {
+                    rb.AddTorque(-inputX * rotationSpeed);
+                }
             }
             else
             {
-                rb.drag = drag;
+                rb.AddTorque(-inputX * rotationSpeed);
             }
         }
-        else
-        {
-            rb.drag = 0;
-        }
 
-        if (inputX != 0)
+        if (!inWarp && !isChargingWarp)
         {
-            rb.angularDrag = 0;
-        }
-        else
-        {
-            rb.angularDrag = angularDrag;
+            #region Dampeners and drag
+            if (dampeners)
+            {
+                if (inputY != 0)
+                {
+                    rb.drag = 0;
+                }
+                else
+                {
+                    rb.drag = drag;
+                }
+            }
+            else
+            {
+                rb.drag = 0;
+            }
+
+
+            if (inputX != 0)
+            {
+                rb.angularDrag = 0;
+            }
+            else
+            {
+                rb.angularDrag = angularDrag;
+            }
         }
         #endregion
 
-        //Making the ship actually accelerate faster so it's not always stuck at a slow speed, but 
-        // also limits the player from just jumping into their ship and escaping, as they start quite slow
-        if (inputY > 0)
+        if(!inWarp && !isChargingWarp)
         {
-            moveSpeed += accelAcceleration;
-        }
-        else
-        {
-            moveSpeed = baseMoveSpeed;
-        }
+            //Making the ship actually accelerate faster so it's not always stuck at a slow speed, but 
+            // also limits the player from just jumping into their ship and escaping, as they start quite slow
+            if (inputY > 0)
+            {
+                moveSpeed += accelAcceleration;
+            }
+            else
+            {
+                moveSpeed = baseMoveSpeed;
+            }
 
-        if (currentSpeed > maxSpeed)
-        {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
-        }
+            if (currentSpeed > maxSpeed)
+            {
+                rb.velocity = rb.velocity.normalized * maxSpeed;
+            }
+        }       
     }
 
     public void ChangeParticleThrustRate(int rate)

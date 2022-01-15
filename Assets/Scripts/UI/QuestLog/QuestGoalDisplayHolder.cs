@@ -10,7 +10,7 @@ public class QuestGoalDisplayHolder : MonoBehaviour
 
     private bool hasRunTween = false;
 
-    // Update is called once per frame
+    // This will make sure that once we finish a goal, it updates correctly in the quest log with the tick box
     void Update()
     {
         if (goalHeld.GoalCompleted && !hasRunTween)

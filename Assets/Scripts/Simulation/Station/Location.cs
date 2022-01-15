@@ -16,8 +16,7 @@ public class Location : MonoBehaviour
     [ConditionalField("shouldGenerateRandomly")] public TextAsset stationPrefixes;
 
     public void GenerateName()
-    {
-        
+    {       
         string allNames = stationNames.text;
         List<string> splitNames = allNames.Split("\n").ToList();
         string nameChosen = splitNames[Random.Range(0, splitNames.Count)];
@@ -44,12 +43,19 @@ public class Location : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        UIManager.instance.ToggleLocationNameDisplay(true, locationName);
-        GameEvents.instance.OnLocationEntered(this);
+        if(collision.CompareTag("Player") || collision.CompareTag("PlayerSuit"))
+        {
+            UIManager.instance.ToggleLocationNameDisplay(true, locationName);
+            GameEvents.instance.OnLocationEntered(this);
+        }
+        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        UIManager.instance.ToggleLocationNameDisplay(false, locationName);
+        if(collision.CompareTag("Player") || collision.CompareTag("PlayerSuit"))
+        {
+            UIManager.instance.ToggleLocationNameDisplay(false, locationName);
+        }       
     }
 }

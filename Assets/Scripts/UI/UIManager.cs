@@ -96,14 +96,28 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if(playerMovement.currentSpeed < playerMovement.maxSpeed)
+        if(playerMovement.inWarp == false)
         {
-            speedIndicator.text = Mathf.RoundToInt(playerMovement.currentSpeed * 10) + " m/s";
+            if (playerMovement.currentSpeed < playerMovement.maxSpeed)
+            {
+                speedIndicator.text = Mathf.RoundToInt(playerMovement.currentSpeed * 10) + " m/s";
+            }
+            else
+            {
+                speedIndicator.text = Mathf.RoundToInt(playerMovement.maxSpeed * 10) + " m/s";
+            }
         }
         else
         {
-            speedIndicator.text = Mathf.RoundToInt(playerMovement.maxSpeed * 10) + " m/s";
-        }
+            if(Random.Range(0, 2) == 0)
+            {
+                speedIndicator.text = int.Parse(Random.Range(1000, 10000000).ToString("X"), System.Globalization.NumberStyles.HexNumber) + " m/s";
+            }
+            else
+            {
+                speedIndicator.text = Random.Range(1000, 10000000)+ " m/s";
+            }           
+        }       
 
         if (playerMovement.dampeners)
         {
@@ -292,6 +306,7 @@ public class UIManager : MonoBehaviour
             LeanTween.alphaCanvas(canv, 0, 1).setDelay(1f);
         }
     }
+
     public void TypePlanetDescription(Planet planet, TMP_Text description)
     {
         StopAllCoroutines();
@@ -299,11 +314,18 @@ public class UIManager : MonoBehaviour
         StartCoroutine(TypeText(planet.planetDescription, description));
     }
 
+    /// <summary>
+    /// Animating typing to a specific text mesh pro component. Use UIManager.instance.DisplayDialogue() to 
+    /// display to dialogue box instead.
+    /// </summary>
+    /// <param name="stringToType"></param>
+    /// <param name="textToWriteIn"></param>
     public void AnimateTyping(string stringToType, TMP_Text textToWriteIn)
     {       
         StartCoroutine(TypeText(stringToType, textToWriteIn));
     }
 
+    //Coroutine for animating the moving text in any text mesh pro writing box
     IEnumerator TypeText(string stringToType, TMP_Text writingBox)
     {
         writingBox.text = "";
@@ -329,40 +351,44 @@ public class UIManager : MonoBehaviour
     public void DisplayDialogue(string dialoguePages, string dialogueSource)
     {
         StopAllCoroutines();
-        Debug.Log("Writing page");
         dialogueDisplay.SetActive(true);
         dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
         LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
         
-        StartCoroutine(WriteDialogue(dialoguePages));
-        Debug.Log("After starting");
-        
+        StartCoroutine(WriteDialogue(dialoguePages));        
     }
 
+    //Coroutine for actually animating the writing of text in the dialogue box
     IEnumerator WriteDialogue(string dialoguePages)
     {
         AnimateTyping(dialoguePages, dialogueDisplay.GetComponentInChildren<TMP_Text>());
 
         yield return new WaitForSecondsRealtime(letterTypingPause * dialoguePages.Length);
-        Debug.Log("After finishing in coroutine");
 
         LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
         yield return new WaitForSecondsRealtime(0);
     }
 
     //List overload for previous functions in order to have multiple pages of dialogue
+
+    /// <summary>
+    /// It displays dialogue with the source of the second argument in the dialogue page.
+    /// Each element of the list is treated as a separate page, and will be displayed
+    /// in the next iteration.
+    /// </summary>
+    /// <param name="dialoguePages"></param>
+    /// <param name="dialogueSource"></param>
     public void DisplayDialogue(List<string> dialoguePages, string dialogueSource)
     {
         StopAllCoroutines();
-        Debug.Log("Writing pages");
         dialogueDisplay.SetActive(true);
         dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
         LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
 
         StartCoroutine(WriteDialogue(dialoguePages));
-        Debug.Log("After starting");
     }
 
+    //Coroutine for actually animating the writing of text in the dialogue box
     IEnumerator WriteDialogue(List<string> dialoguePages)
     {
         foreach (var item in dialoguePages)
@@ -371,7 +397,6 @@ public class UIManager : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(letterTypingPause * item.Length);
         }
-        Debug.Log("After finishing in coroutine");
         LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
         yield return new WaitForSecondsRealtime(0);
     }

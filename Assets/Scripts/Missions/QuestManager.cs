@@ -16,11 +16,13 @@ public class QuestManager : MonoBehaviour
         instance = this;
     }
 
+    //Each quest giver will run this function at start up, having all the quests in one place will be useful later down the line
     public void AddQuestToOverallPool(Quest quest)
     {
         allQuests.Add(quest);
     }
 
+    //Ads a quest to the active quests list
     public void AddQuest(Quest questToAdd)
     {
         activeQuests.Add(questToAdd);
@@ -38,6 +40,7 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    //Removes a quest from active and places it in completed quests
     public void RemoveQuest(Quest questToRemove)
     {
         activeQuests.Remove(questToRemove);

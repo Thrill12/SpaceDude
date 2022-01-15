@@ -20,8 +20,11 @@ public class Quest : ScriptableObject
 
     [Space(10)]
 
+    [Tooltip("Dialogue displayed by the quest giver when the player first takes this quest.")]
     public List<string> questAssignedDialogue;
+    [Tooltip("Dialogue displayed when the player hands in the quest to its quest giver")]
     public List<string> questCompletedDialogue;
+    [Tooltip("Dialogue displayed when the player interacts with an NPC with an assigned quest")]
     public List<string> questInProgressDialogue;
 
     [Space(10)]
@@ -30,6 +33,7 @@ public class Quest : ScriptableObject
     [HideInInspector]
     public bool HandedIn;
 
+    //Spawns a clone of the goals, so that we don't modify the ones in the assets folder
     public void Init()
     {
         for (int i = 0; i < Goals.Count; i++)
@@ -78,7 +82,7 @@ public class Quest : ScriptableObject
             //returns true only if all reqs are completed and their own reqs are completed and pass reqs
             foreach (var item in questRequirements)
             {
-                if(QuestManager.instance.completedQuests.Any(x => x.id == item.id && x.Completed && x.CheckRequirements()))
+                if(QuestManager.instance.completedQuests.Any(x => x.id == item.id && x.Completed && x.CheckRequirements() && x.HandedIn))
                 {
                     return true;
                 }

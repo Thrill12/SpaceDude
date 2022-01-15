@@ -28,6 +28,7 @@ TagManager:
   - Neutral
   - Ship Exit
   - Ship Entrance
+  - Inventory
   layers:
   - Default
   - TransparentFX
@@ -88,6 +89,9 @@ TagManager:
     locked: 0
   - name: WorldUI
     uniqueID: 3412181561
+    locked: 0
+  - name: Effects
+    uniqueID: 2205850923
     locked: 0
   - name: UI
     uniqueID: 1306387681
