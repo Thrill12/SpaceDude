@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Room : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Room : MonoBehaviour
     public int height;
 
     //For use in editor - generates room data from the tiles child obejcts of a room object for generating ships and stations with.
-    public RoomData GenerateRoomData()
+    public RoomData GenerateRoomData(string dir)
     {
         //Check room width  and height values are valid.
         if (width == 0 || height == 0)
@@ -19,7 +20,7 @@ public class Room : MonoBehaviour
         }
 
         //Create the room data to be populated.
-        RoomData roomData = new RoomData(); 
+        RoomData roomData = ScriptableObject.CreateInstance<RoomData>(); 
 
         //Set the width and height values of the room data.
         roomData.roomHeight = height;
@@ -30,12 +31,20 @@ public class Room : MonoBehaviour
         //Get allt he Tile components in child objects which will be the tiles [floor and wall] that make up the room.
         Tile[] tiles = GetComponentsInChildren<Tile>();
 
+        Debug.Log(tiles.Length);
+
+        int counter = 0;
+
         //Loop over the tiles, create tile data foreach of the tiles and add them to the list of tile data.
         foreach (Tile tile in tiles)
         {
-            TileData data = new TileData();
+            TileData data = ScriptableObject.CreateInstance<TileData>();
             data.CreateDataFromTile(tile);
             tileData.Add(data);
+
+            AssetDatabase.CreateAsset(data, dir + "Tile" + counter + ".asset");
+
+            counter++;
         }
 
         //Set the room's tile data to the list of tile data created.

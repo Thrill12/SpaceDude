@@ -5,7 +5,8 @@ using UnityEngine;
 //The differem
 public enum TileType { empty, floor, wall }
 
-public class TileData 
+[System.Serializable]
+public class TileData : ScriptableObject
 {
     public Vector2Int position;
     public TileType type;
