@@ -11,10 +11,10 @@ public abstract class Interactable : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && canInteract)
-        {
-            Interact();
-        }
+        //if (Input.GetKeyDown(KeyCode.E) && canInteract)
+        //{
+        //    Interact();
+        //}
     }
 
     public virtual void Interact()

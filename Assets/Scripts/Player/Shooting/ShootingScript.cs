@@ -36,14 +36,14 @@ public class ShootingScript : MonoBehaviour
         if (movement.isPlayerPiloting == false) return;
         if (ui.isInUI) return;
 
-        if (nextFire <= 0)
-        {
-            if (Input.GetAxis("Fire1") != 0)
-            {
-                Shoot();
-                nextFire = cooldown;
-            }
-        }
+        //if (nextFire <= 0)
+        //{
+        //    if (Input.GetAxis("Fire1") != 0)
+        //    {
+        //        Shoot();
+        //        nextFire = cooldown;
+        //    }
+        //}
 
         nextFire -= Time.deltaTime;
     }

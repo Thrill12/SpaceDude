@@ -52,15 +52,6 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
 
-            if (isHoveredOn && Input.GetMouseButtonDown(1) && !eqItemHeld.isEquipped)
-            {
-                Equip(eqItemHeld.itemSlot);
-            }
-            else if (isHoveredOn && Input.GetMouseButtonDown(1) && eqItemHeld.isEquipped)
-            {
-                Unequip();
-            }
-
             Debug.Log(eqItemHeld.itemSlot);
             Debug.Log(inventory.slotsParent.transform.Find(eqItemHeld.itemSlot).gameObject.name);
 
@@ -74,11 +65,11 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
         }
 
-        if (isHoveredOn && Input.GetKeyDown(KeyCode.Z))
-        {
-            inventory.SpawnDroppedItem(itemHeld);
-            Destroy(gameObject);
-        }
+        //if (isHoveredOn && Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    inventory.SpawnDroppedItem(itemHeld);
+        //    Destroy(gameObject);
+        //}
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
@@ -95,6 +86,20 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         //Hide();
     }
 
+    public void ToggleEquipUnequip()
+    {
+        BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
+
+        if (eqItemHeld.isEquipped)
+        {
+            Unequip();
+        }
+        else
+        {
+            Equip(eqItemHeld.itemSlot);
+        }
+    }
+
     //We only use these functions when we are trying to equip an item, and we are already checking if item held is
     //equippable in update, no need to check here again.
     public void Equip(string slot)
@@ -103,6 +108,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         eqItemHeld.isEquipped = true;
         inventory.EquipItem(eqItemHeld);
         Debug.Log(itemHeld.itemName + " equipped");
+        UIManager.instance.SelectFirstItemHolder();
     }
 
     public void Unequip()

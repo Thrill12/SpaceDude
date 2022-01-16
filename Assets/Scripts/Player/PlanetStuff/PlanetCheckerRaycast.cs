@@ -20,13 +20,13 @@ public class PlanetCheckerRaycast : MonoBehaviour
     private Vector3 defaultPlanetBorderScale;
 
     private UIManager ui;
-    private ProgressHolderd progress;
+    private ProgressHolder progress;
 
     private void Start()
     {
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
-        progress = GameObject.FindGameObjectWithTag("Progress").GetComponent<ProgressHolderd>();
+        progress = GameObject.FindGameObjectWithTag("Progress").GetComponent<ProgressHolder>();
         shipMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShipMovement>();
         planetBorder = Instantiate(pfManager.planetBorder, transform.position, Quaternion.identity);
 
@@ -45,14 +45,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
             planetHoveredP = planetHovered.GetComponent<Planet>();
             planetBorder.transform.SetParent(planetHovered.transform);
             planetBorder.transform.position = planetHovered.transform.position;
-            planetBorder.transform.localScale = defaultPlanetBorderScale;
-
-            if (Input.GetButtonDown("Interact"))
-            {
-                ui.PlanetDescription();
-                progress.AddPlanet(planetHovered);
-            }
-            
+            planetBorder.transform.localScale = defaultPlanetBorderScale;            
         }
         else
         {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(AudioSource))]
 public class WeaponsHolder : MonoBehaviour
@@ -9,6 +10,8 @@ public class WeaponsHolder : MonoBehaviour
 
     public BaseWeapon mainWeapon;
     public BaseWeapon secondaryWeapon;
+
+    public PlayerInput playerInput;
 
     private Inventory inventory;
 
@@ -19,6 +22,7 @@ public class WeaponsHolder : MonoBehaviour
 
     private float nextFire;
     private AudioSource audioSource;
+    private bool firing = false;
 
     private void Awake()
     {
@@ -34,36 +38,75 @@ public class WeaponsHolder : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            SwapWeapons();
-        }
-
-        if (nextFire <= 0)
-        {
-            if (Input.GetMouseButton(0))
-            {
-                Attack();
-            }
-        }
-
         nextFire -= Time.deltaTime;
+
+        if(firing)
+        {
+            AttackVoid();
+        }
     }
 
     //Uses the abstract function in the weapon to attack. Passed in the weapon object to allow the gun to have
     // access to its attack source, and any other damage or stats it needs
-    public void Attack()
+    public void Attack(InputAction.CallbackContext context)
     {
-        if (currentlyEquippedWeapon == null) return;
+        if(context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
+        {
+            firing = true;
+        }
+        else
+        {
+            firing = false;
+        }
+        Debug.Log(firing);
+    }
 
-        audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
-        currentlyEquippedWeapon.Attack(weaponObject);
-        nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+    private void AttackVoid()
+    {
+        if(nextFire <= 0)
+        {
+            if (currentlyEquippedWeapon == null) return;
+
+            audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
+            currentlyEquippedWeapon.Attack(weaponObject, playerInput);
+            nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+        }       
     }
 
     //This swaps weapons when both are equipped, but is also called when the player picks up a weapon, so that they can immediately use the new one
-    public void SwapWeapons()
+    public void SwapWeapons(InputAction.CallbackContext context)
     {
+        if (context.phase == InputActionPhase.Started)
+        {
+            Destroy(weaponObject);
+
+            if (currentlyEquippedWeapon == mainWeapon)
+            {
+                currentlyEquippedWeapon = secondaryWeapon;
+            }
+            else if (currentlyEquippedWeapon == secondaryWeapon)
+            {
+                currentlyEquippedWeapon = mainWeapon;
+            }
+            else
+            {
+                currentlyEquippedWeapon = mainWeapon;
+            }
+
+            if (currentlyEquippedWeapon == null) return;
+
+            weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, transform.rotation);
+            weaponObject.transform.parent = transform;
+
+            nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+
+
+            weaponAttackSource = GameObject.FindGameObjectWithTag("PlayerAttackSource");
+        }      
+    }
+
+    public void SwapWeapons()
+    {        
         Destroy(weaponObject);
 
         if (currentlyEquippedWeapon == mainWeapon)

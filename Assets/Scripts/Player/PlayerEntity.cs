@@ -19,20 +19,20 @@ public class PlayerEntity : BaseEntity
         healthDisplay.fillAmount = health / maxHealth.Value;
         energyDisplay.fillAmount = energy / maxEnergy.Value;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePoss = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePoss2D = new Vector2(mousePoss.x, mousePoss.y);
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Vector3 mousePoss = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    Vector2 mousePoss2D = new Vector2(mousePoss.x, mousePoss.y);
 
-            RaycastHit2D hitt = Physics2D.Raycast(mousePoss2D, Vector2.zero);
+        //    RaycastHit2D hitt = Physics2D.Raycast(mousePoss2D, Vector2.zero);
 
-            if (hitt != false)
-            {
-                if (hitt.collider.CompareTag("Item"))
-                {
-                    hitt.collider.gameObject.GetComponent<ItemHolder>().ClickedOn(gameObject);
-                }
-            }
-        }
+        //    if (hitt != false)
+        //    {
+        //        if (hitt.collider.CompareTag("Item"))
+        //        {
+        //            hitt.collider.gameObject.GetComponent<ItemHolder>().ClickedOn(gameObject);
+        //        }
+        //    }
+        //}
     }
 }

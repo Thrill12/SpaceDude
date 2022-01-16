@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public abstract class BaseWeapon : BaseEquippable
 {
@@ -18,5 +19,5 @@ public abstract class BaseWeapon : BaseEquippable
     }
 
     //Abstract function that other weapons derived from here will need to use to attack
-    public abstract void Attack(GameObject weaponObject);
+    public abstract void Attack(GameObject weaponObject, PlayerInput playerInput);
 }
