@@ -17,5 +17,5 @@ MonoBehaviour:
   minNumRooms: 3
   maxNumRooms: 10
   rooms:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 7b2d5df073976014ca8b798c56fc1eb7, type: 2}
   - {fileID: 11400000, guid: 6e3a41dda0ba41a469d431dbb2c7a0e6, type: 2}
