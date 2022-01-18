@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
  struct PlacedRoom
 {
@@ -55,7 +56,7 @@ public class Generator
         GenerateRooms();
 
         Texture2D texture = DebugTexture();
-
+        
         return texture;
     }
 
