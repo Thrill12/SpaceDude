@@ -47,6 +47,7 @@ public class MainMenu : MonoBehaviour
     {
         if (optionsMenu.activeSelf)
         {
+            //Checks whether it should display the gamepad or keyboard rebinding icons/text
             if(playerInput.currentControlScheme == "GamePad")
             {
                 rebindingKeysGamePad.SetActive(true);
@@ -60,6 +61,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Turns on options
     public void Options()
     {
         mainMenu.SetActive(false);
@@ -67,6 +69,7 @@ public class MainMenu : MonoBehaviour
         optionsMenu.SetActive(true);
     }
 
+    //Comes back from options
     public void BackFromOptions()
     {
         mainMenu.SetActive(true);
@@ -75,18 +78,21 @@ public class MainMenu : MonoBehaviour
         optionsMenu.SetActive(false);
     }
 
+    //Selects the object to be selected for gamepad use
     private void SetSelectedObject(GameObject objectToSelect)
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(objectToSelect);
     }
 
+    //Switches to game scene
     public void GoToGame()
     {
         SaveSettings();
         GameManager.instance.LoadGame();
     }
 
+    //Loads settings from save file
     public void InitializeSettings()
     {
         OptionsSO options = GameManager.instance.options;
@@ -100,6 +106,7 @@ public class MainMenu : MonoBehaviour
         mixer.SetFloat("SFX", Mathf.Log10(sfxVolumeBar.GetComponent<Image>().fillAmount) * 20);
     }
 
+    //Save settings to save file, found in GameManager.cs
     public void SaveSettings()
     {
         OptionsSO options = GameManager.instance.options;
@@ -113,11 +120,13 @@ public class MainMenu : MonoBehaviour
         GameManager.instance.SaveOptions();
     }
 
+    //Saves settings on application quit in case people do ALT+F4
     private void OnApplicationQuit()
     {
         SaveSettings();
     }
 
+    //Quits the game normally
     public void QuitGame()
     {
         SaveSettings();

@@ -162,6 +162,8 @@ public class UIManager : MonoBehaviour
     }   
 
     #region NormalUI
+
+    //Makes sure all the active UI is closed
     public void CloseAllUI(InputAction.CallbackContext context)
     {
         if (planetUI.activeInHierarchy)
@@ -196,6 +198,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Turns on the planet interaction menu when the player is in the ship
     public void PlanetDescription(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
@@ -256,6 +259,7 @@ public class UIManager : MonoBehaviour
         }      
     }
 
+    //Turns on the journal menu for the player to keep track of their progress
     public void Journal(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;        
@@ -302,6 +306,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Turns on player inventory when the player is outside the ship
     public void Inventory(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
@@ -352,6 +357,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Turns on pause menu and pauses the game
     public void PauseMenu(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
@@ -399,6 +405,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Overloads for no context
     public void CloseAllUI()
     {
         if (planetUI.activeInHierarchy)
@@ -627,6 +634,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Function to return back to main menu
     public void GoToMainMenu()
     {
         Time.timeScale = 1;
@@ -634,6 +642,7 @@ public class UIManager : MonoBehaviour
         GameManager.instance.LoadMainMenu();
     }
 
+    //Selects the first item in the inventory for gamepad use
     public void SelectFirstItemHolder()
     {
         EventSystem.current.SetSelectedGameObject(null);
@@ -647,12 +656,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Displays active quest in the quest log
     public void DrawQuest(Quest quest)
     {
         GameObject questDisplay = Instantiate(PrefabManager.instance.questDisplay, activeMissionsLog.transform);
         questDisplay.GetComponent<QuestDisplayHolder>().questHeld = quest;    
     }
 
+    //Removes quest display from quest log
     public void RemoveQuest(Quest quest)
     {
         List<QuestDisplayHolder> list = activeMissionsLog.GetComponentsInChildren<QuestDisplayHolder>().Where(x => x.questHeld.id == quest.id).ToList();
@@ -664,6 +675,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region AnimatedUI
+    //Animates locaftion name display
     public void ToggleLocationNameDisplay(bool toggleBool, string locationName)
     {         
         CanvasGroup canv = mainStationDisplay.GetComponent<CanvasGroup>();
@@ -685,6 +697,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Types the planet description for the planet interaction screen
     public void TypePlanetDescription(Planet planet, TMP_Text description)
     {
         StopAllCoroutines();
@@ -785,6 +798,8 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region Marketstuff
+
+    //Selects the item to buy in the market window
     public void MarketSelectCommodityInMarketWindow(BaseItem comm)
     {
         commSelectedInMarketWindow = comm;
@@ -792,6 +807,7 @@ public class UIManager : MonoBehaviour
         marketUnitSelector.value = comm.itemStack;
     }
 
+    //Buys the commodity currently selected from the planet player interacted with.
     public void MarketBuyCommodity()
     {
         try
@@ -830,6 +846,7 @@ public class UIManager : MonoBehaviour
         MarketSwitchToMarketComms();
     }
 
+    //Sells the commodity currently selected from the planet player interacted with
     public void MarketSellCommodity()
     {
         try
@@ -864,6 +881,8 @@ public class UIManager : MonoBehaviour
         MarketSwitchToInventoryComms();
     }
 
+    //Run when the value in the slider of the planet interaction menu changes to change the display and select
+    //how many items are selected of the current stack
     public void MarketUnitSelectorSliderValueChanged()
     {
         try
@@ -877,6 +896,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Switches tab of planet interaction menu shop to market
     public void MarketSwitchToMarketComms()
     {
         marketBuyButton.SetActive(true);
@@ -928,6 +948,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Switches tab of planet interaction menu shop to inventory
     public void MarketSwitchToInventoryComms()
     {
         marketBuyButton.SetActive(false);

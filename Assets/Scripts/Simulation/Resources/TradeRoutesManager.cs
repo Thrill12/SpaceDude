@@ -11,6 +11,7 @@ public class TradeRoutesManager : MonoBehaviour
 
     public PrefabManager pf;
 
+    //Spawns a trade ship on each tick
     public void TickAllTradeRoutes()
     {
         foreach (var item in allRoutes)
@@ -19,6 +20,7 @@ public class TradeRoutesManager : MonoBehaviour
         }
     }
 
+    //Sets up and spawns ship for a new route from a given route created
     public void AddNewRoute(TradeRoute route)
     {
         allRoutes.Add(route);
@@ -27,6 +29,7 @@ public class TradeRoutesManager : MonoBehaviour
         SpawnNewShip(route.sender, route.receiver, route);
     }
 
+    //Spawn a new ship for trading between planets
     public void SpawnNewShip(Planet sender, Planet receiver, TradeRoute route)
     {
         //if(route.itemToTransport != null)

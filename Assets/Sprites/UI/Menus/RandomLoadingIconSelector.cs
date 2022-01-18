@@ -21,6 +21,7 @@ public class RandomLoadingIconSelector : MonoBehaviour
         StartCoroutine(StartIteratingThroughPictures(animationStep));
     }
 
+    //Iterates through each sprite in order for the planet to rotate
     IEnumerator StartIteratingThroughPictures(float timeStep)
     {
         int index = 0;
@@ -39,6 +40,7 @@ public class RandomLoadingIconSelector : MonoBehaviour
     }
 }
 
+//Class holding the sprites for each planet
 [System.Serializable]
 public class SmallPlanetSpriteList
 {

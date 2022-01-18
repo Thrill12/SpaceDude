@@ -61,6 +61,7 @@ public class WeaponsHolder : MonoBehaviour
         Debug.Log(firing);
     }
 
+    //Void for calling shoot from input system events
     private void AttackVoid()
     {
         if(nextFire <= 0)
@@ -105,6 +106,7 @@ public class WeaponsHolder : MonoBehaviour
         }      
     }
 
+    //Swaps weapon used between primary and secondary
     public void SwapWeapons()
     {        
         Destroy(weaponObject);
@@ -133,6 +135,7 @@ public class WeaponsHolder : MonoBehaviour
         weaponAttackSource = GameObject.FindGameObjectWithTag("PlayerAttackSource");
     }
 
+    //Turns off the currently selected weapon
     public void StowWeaponWhenUnequipping(BaseItem weaponToStow)
     {
         if (weaponToStow == currentlyEquippedWeapon)
@@ -142,6 +145,8 @@ public class WeaponsHolder : MonoBehaviour
         }
     }
 
+    //Equips weapon in the argument in its appropiate slot, and automatically
+    //unequips the item already in the slot, if there
     public void EquipWeapon(BaseWeapon weapon)
     {
         Debug.Log(weapon.itemName);
@@ -172,6 +177,7 @@ public class WeaponsHolder : MonoBehaviour
         }
     }
 
+    //Unequips weapon selected
     public void UnequipWeapon(BaseWeapon weapon)
     {
         if (mainWeapon == weapon)

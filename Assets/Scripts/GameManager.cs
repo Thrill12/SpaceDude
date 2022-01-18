@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Handles loading bar progress when loading scenes
     private void Update()
     {
         if (loadingScreen.activeSelf)
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     #region Scenes
 
+    //Loads the game scene from the main menu
     float timer, displayLoadingBarLoadingValue;
     List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
     public void LoadGame()
@@ -65,6 +67,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GetSceneLoadProgress());
     }
 
+    //Loads the main menu scene from anywhere else
     public void LoadMainMenu()
     {
         loadingScreen.SetActive(true);
@@ -74,6 +77,8 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GetSceneLoadProgress());
     }
 
+    //Calculates the progress of the scene loading - might need to change this later on as we generate more
+    //stuff in the galaxy.
     float totalSceneProgress;
     public IEnumerator GetSceneLoadProgress()
     {
@@ -114,6 +119,7 @@ public class GameManager : MonoBehaviour
     #endregion    
 }
 
+//Enum to hold all the scenes we need for easy reference to switch between them.
 public enum SceneIndexes
 {
     MANAGER = 0,

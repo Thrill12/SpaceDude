@@ -75,6 +75,7 @@ public class ItemHolder : MonoBehaviour
         }
     }
 
+    //Generates temporary mods - will need to come up with a better system for this
     public void GenerateMod()
     {
         int randomProperty = Random.Range(0, 2);
