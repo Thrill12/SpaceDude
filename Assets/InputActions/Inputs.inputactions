@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "LeaveCockpit",
+                    "name": "Leave Cockpit",
                     "type": "Button",
                     "id": "572fa735-652d-46b4-9b9f-03f5ac014778",
                     "expectedControlType": "Button",
@@ -51,9 +51,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PlanetInteraction",
+                    "name": "Planet Interaction",
                     "type": "Button",
                     "id": "18d8c0f2-bead-4f6d-bb5e-baa5a6f35430",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "cb2a60c5-8d82-450e-a8e8-7d2b2fcec54a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -244,7 +253,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard",
-                    "action": "LeaveCockpit",
+                    "action": "Leave Cockpit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -255,7 +264,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "GamePad",
-                    "action": "LeaveCockpit",
+                    "action": "Leave Cockpit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -266,7 +275,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard",
-                    "action": "PlanetInteraction",
+                    "action": "Planet Interaction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -277,7 +286,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "GamePad",
-                    "action": "PlanetInteraction",
+                    "action": "Planet Interaction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a278b628-e689-46f9-bd87-26b445aaa625",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "802205ea-e542-4eb5-8a42-7ab5d1fb6c6b",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -295,6 +326,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "6bd1834f-219b-4d93-8266-097b86294b5d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Turning",
@@ -333,7 +373,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SwapWeapons",
+                    "name": "Swap Weapons",
                     "type": "Button",
                     "id": "198b0ab2-cded-40ca-a7ab-cb11d3b87b65",
                     "expectedControlType": "Button",
@@ -610,7 +650,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard",
-                    "action": "SwapWeapons",
+                    "action": "Swap Weapons",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -621,7 +661,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "GamePad",
-                    "action": "SwapWeapons",
+                    "action": "Swap Weapons",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -666,6 +706,28 @@
                     "processors": "",
                     "groups": "GamePad",
                     "action": "Journal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "003cdd6b-43b6-4752-857c-2c356db17be5",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "37efb2ea-2c12-44c1-8bf2-0b96432fcc2b",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -818,6 +880,87 @@
                     "processors": "",
                     "groups": "GamePad",
                     "action": "Journal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "MainMenu",
+            "id": "7d1b98ed-1455-434d-bf42-14e0a9dbbabf",
+            "actions": [
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "7fee33a3-1bb4-4c54-a558-87aaed16df3b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Submit",
+                    "type": "Button",
+                    "id": "77ee80c7-410b-4b4f-907a-e9a3f82f0674",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d6204dd7-77f8-409a-a2b7-93e6e2747ac2",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "GamePad",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5830c75-e118-4ea5-96d7-63c65455a0e7",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6fa73635-49e4-4903-bad5-3dae16d91f62",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c128e31c-704f-4034-8d83-61b7b138c532",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ebcb4597-3325-4a73-8530-2a8f472522fd",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "GamePad",
+                    "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

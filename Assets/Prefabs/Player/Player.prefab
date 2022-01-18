@@ -396,6 +396,7 @@ MonoBehaviour:
   moveSpeed: 5
   dashSpeed: 25
   dashTime: 0.1
+  frontChecker: {fileID: 4047702826241862813}
   playerInput: {fileID: 0}
 --- !u!50 &48211329198415411
 Rigidbody2D:
@@ -417,7 +418,7 @@ Rigidbody2D:
   m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &48211329198415422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,6 +525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainWeapon: {fileID: 0}
   secondaryWeapon: {fileID: 0}
+  playerInput: {fileID: 0}
   currentlyEquippedWeapon: {fileID: 0}
   weaponObjectPosition: {fileID: 3060388201143529263}
   weaponAttackSource: {fileID: 0}
@@ -554,7 +556,7 @@ MonoBehaviour:
     statModifiers: []
     isDirty: 1
   damageMultiplier:
-    BaseValue: 0
+    BaseValue: 1
     _value: 0
     statModifiers: []
     isDirty: 1
@@ -586,7 +588,7 @@ AudioSource:
   m_GameObject: {fileID: 48211329198415412}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -4994504656237427855, guid: 155617425595cb74cb1fd85b9402a06d, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1

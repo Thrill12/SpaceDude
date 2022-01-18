@@ -39,7 +39,7 @@ public class TradeRoutesManager : MonoBehaviour
         //}
 
         GameObject ship = Instantiate(pf.cargoShip, sender.gameObject.transform.position, Quaternion.identity);
-        
+        ship.transform.SetParent(gameObject.transform);
 
         CargoShip s = ship.GetComponent<CargoShip>();
 

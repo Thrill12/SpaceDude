@@ -107,7 +107,7 @@ public class PlayerShipMovement : MonoBehaviour
         src = GetComponent<AudioSource>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         playerSuit = GetComponent<PlayersuitManager>();
-
+        postProcessingVolume = GameObject.FindGameObjectWithTag("Volume").GetComponent<Volume>();
         //Setting up input actions for the new input system
     }
 

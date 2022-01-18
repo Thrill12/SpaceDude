@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    public GameObject firstSelectedInPauseMenu;
     public PlayerInput playerInput;
     public AudioListener audioListener;
 
@@ -58,15 +59,16 @@ public class UIManager : MonoBehaviour
 
     public GameObject journalObject;
     public GameObject inventory;
+    public GameObject pauseMenu;
 
     [HideInInspector]
     public BaseItem commSelectedInMarketWindow;
     [HideInInspector]
     public int commSelectedInMarketWindowUnits;
 
-    private PlayerShipMovement playerMovement;
+    public PlayerShipMovement playerMovement;
     private PrefabManager pfManager;
-    private GameObject player;
+    public GameObject player;
     private PlanetCheckerRaycast planetCheck;
     [HideInInspector]
     public List<Planet> allPlanets = new List<Planet>();
@@ -87,8 +89,6 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShipMovement>();
-        player = GameObject.FindGameObjectWithTag("Player");
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         planetCheck = player.GetComponent<PlanetCheckerRaycast>();
 
@@ -99,10 +99,14 @@ public class UIManager : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         originalDialogueDisplayPosition = dialogueDisplay.transform.position;
+
+        playerInput.SwitchCurrentActionMap("PlayerShip");
     }
 
     private void Update()
     {
+        Debug.Log(playerInput.currentActionMap.name);
+
         if(playerInput.currentActionMap.name == "GamePad")
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -173,6 +177,11 @@ public class UIManager : MonoBehaviour
         if (inventory.activeInHierarchy)
         {
             Inventory(context);
+        }
+
+        if (pauseMenu.activeInHierarchy)
+        {
+            PauseMenu(context);
         }
 
         isInUI = false;
@@ -343,10 +352,299 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void PauseMenu(InputAction.CallbackContext context)
+    {
+        if (context.phase != InputActionPhase.Started) return;
+
+        if (pauseMenu.activeInHierarchy == false)
+        {
+            CloseAllUI(context);
+        }
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstSelectedInPauseMenu);
+
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+                pauseMenu.SetActive(false);
+                Time.timeScale = 1;
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+                pauseMenu.SetActive(false);
+                Time.timeScale = 1;
+            }
+
+
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0;
+        }
+
+        if (pauseMenu.activeSelf)
+        {
+            isInUI = true;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    public void CloseAllUI()
+    {
+        if (planetUI.activeInHierarchy)
+        {
+            PlanetDescription();
+        }
+
+        if (journalObject.activeInHierarchy)
+        {
+            Journal();
+        }
+
+        if (inventory.activeInHierarchy)
+        {
+            Inventory();
+        }
+
+        isInUI = false;
+
+        if (playerMovement.isPlayerPiloting)
+        {
+            playerInput.SwitchCurrentActionMap("PlayerShip");
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("PlayerSuit");
+        }
+    }
+
+    public void PlanetDescription()
+    {
+        if (planetCheck.planetHovered != null)
+        {
+            ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
+
+            if (planetUI.activeInHierarchy == false)
+            {
+                CloseAllUI();
+            }
+
+            if (playerInput.currentActionMap.name == "UI")
+            {
+                if (playerMovement.isPlayerPiloting)
+                {
+                    playerInput.SwitchCurrentActionMap("PlayerShip");
+                }
+                else
+                {
+                    playerInput.SwitchCurrentActionMap("PlayerSuit");
+                }
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("UI");
+            }
+
+            planetUI.SetActive(!planetUI.activeInHierarchy);
+
+            if (planetUI.activeInHierarchy)
+            {
+                isInUI = true;
+            }
+            else
+            {
+                isInUI = false;
+            }
+
+            if (Time.timeScale == 0)
+            {
+
+                Time.timeScale = 1;
+                StopAllCoroutines();
+            }
+            else
+            {
+                Time.timeScale = 0;
+                TypePlanetDescription(planetCheck.planetHoveredP, planetDescription);
+            }
+
+            planetName.text = planetCheck.planetHoveredP.planetName;
+            planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
+            populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
+
+            MarketSwitchToMarketComms();
+        }
+    }
+
+    public void Journal()
+    {
+        if (journalObject.activeInHierarchy == false)
+        {
+            CloseAllUI();
+        }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        journalObject.SetActive(!journalObject.activeInHierarchy);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+
+        if (journalObject.activeInHierarchy)
+        {
+            isInUI = true;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    public void Inventory()
+    {
+        if (inventory.activeInHierarchy == false)
+        {
+            CloseAllUI();
+        }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        SelectFirstItemHolder();
+
+        inventory.SetActive(!inventory.activeInHierarchy);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+
+        if (inventory.activeInHierarchy)
+        {
+            isInUI = true;
+            commSelectedInMarketWindow = null;
+            commSelectedInMarketWindowUnits = 0;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    public void PauseMenu()
+    {
+        if (pauseMenu.activeInHierarchy == false)
+        {
+            CloseAllUI();
+        }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        pauseMenu.SetActive(!pauseMenu.activeInHierarchy);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstSelectedInPauseMenu);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+            Debug.Log("Turned off ");
+        }
+        else
+        {
+            Time.timeScale = 0;
+            Debug.Log("Turned off ");
+        }
+
+        if (pauseMenu.activeInHierarchy)
+        {
+            isInUI = true;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1;
+        playerInput.SwitchCurrentActionMap("MainMenu");
+        GameManager.instance.LoadMainMenu();
+    }
+
     public void SelectFirstItemHolder()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
+        if(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
+        {
+            EventSystem.current.SetSelectedGameObject(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).First().gameObject);
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
+        }
     }
 
     public void DrawQuest(Quest quest)

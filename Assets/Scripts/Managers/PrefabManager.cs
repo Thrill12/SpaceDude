@@ -20,6 +20,13 @@ public class PrefabManager : MonoBehaviour
 
     [Space(5)]
 
+    public Sprite commonItemBorder;
+    public Sprite rareItemBorder;
+    public Sprite royalItemBorder;
+    public Sprite ascendedItemBorder;
+
+    [Space(5)]
+
     public GameObject questDisplay;
     public GameObject questGoalDisplay;
 

@@ -74,17 +74,23 @@ public class CargoShip : MonoBehaviour
 
                 Vector2 pos2D = new Vector2(transform.position.x, transform.position.y);
 
-                travelledDistance = Vector2.Distance(pos2D, origin.transform.position);
-                progressCount = travelledDistance / routeDistance;
-
-                StartMovingToPlanet(destination.GetComponent<Planet>());
-
-                if ((Vector2.Distance(pos2D, dest2D) < 3) && !hasDroppedCargo)
+                if(origin != null)
                 {
-                    rb.velocity *= 0;
-                    flightState = FlightState.Landing;
-                    gameObject.layer = LayerMask.NameToLayer(perspectiveMask);
+                    travelledDistance = Vector2.Distance(pos2D, origin.transform.position);
+                    progressCount = travelledDistance / routeDistance;
+                }               
+
+                if(destination != null)
+                {
+                    if ((Vector2.Distance(pos2D, dest2D) < 3) && !hasDroppedCargo)
+                    {
+                        rb.velocity *= 0;
+                        flightState = FlightState.Landing;
+                        gameObject.layer = LayerMask.NameToLayer(perspectiveMask);
+                    }
                 }
+                StartMovingToPlanet(destination.GetComponent<Planet>());
+                
                 break;
 
             case FlightState.Landing:
