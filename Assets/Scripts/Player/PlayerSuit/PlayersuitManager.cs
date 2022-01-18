@@ -54,6 +54,7 @@ public class PlayersuitManager : MonoBehaviour
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_LookAt = ship.gameObject.transform;
 
         instantiatedPlayerSuit.transform.SetParent(shipInt.transform, false);
+        ship.newInput.SwitchCurrentActionMap("PlayerSuit");
 
         Invoke("LeaveCockpitTransition", .7f);
     }
@@ -71,6 +72,7 @@ public class PlayersuitManager : MonoBehaviour
 
         //Fade screen
         fadeAnimation.SetTrigger("Fade");
+        ship.newInput.SwitchCurrentActionMap("PlayerShip");
 
         Invoke("EnterCockpitTransition", .7f);
     }

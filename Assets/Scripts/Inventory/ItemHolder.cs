@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
 public class ItemHolder : MonoBehaviour
@@ -18,8 +19,7 @@ public class ItemHolder : MonoBehaviour
     {
         prefabManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         itemHeld = ScriptableObject.Instantiate(itemHeld);
-        playerInventory = GameObject.FindGameObjectWithTag("Inventory").
-            GetComponent<MultipleInventoryView>().inventories.Find(x => x.inventory.inventoryName == "Player inventory").inventory;
+        playerInventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<Inventory>();
 
         if (generateStats)
         {
@@ -44,7 +44,8 @@ public class ItemHolder : MonoBehaviour
         {
             BaseEquippable equippable = (BaseEquippable)itemHeld;
             equippable.isEquipped = false;
-        }        
+        }
+        itemNameText.gameObject.SetActive(false);
     }
 
     //Generates some basic, random mods for the item, depending on its rarity. Will include other factors later on
@@ -110,31 +111,24 @@ public class ItemHolder : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void ClickedOn(GameObject player)
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+        Destroy(gameObject);
+    }
 
-        RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-        if (hit.collider == gameObject.GetComponent<Collider2D>())
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.CompareTag("PlayerSuit"))
         {
             itemNameText.gameObject.SetActive(true);
         }
-        else
-        {
-            itemNameText.gameObject.SetActive(false);
-        }
     }
 
-    public void ClickedOn(GameObject player)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (playerInventory.AddItem(itemHeld))
+        if (collision.transform.CompareTag("PlayerSuit"))
         {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Debug.Log("Inventory full");
+            itemNameText.gameObject.SetActive(false);
         }
     }
 }

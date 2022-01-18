@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerSuitMovement : MonoBehaviour
 {
@@ -10,12 +13,19 @@ public class PlayerSuitMovement : MonoBehaviour
     public float dashSpeed = 5;
     public float dashTime = 1;
 
+    [Tooltip("Invisible object in scene to take the item in front of the player to interact with them.")]
+    public GameObject frontChecker;
+
     //Get the overarching player object.
     private GameObject playerObj;
+    public PlayerInput playerInput;
 
     //Input variables
     private float inputX;
     private float inputY;
+    private Vector2 rotationInput;
+    private Quaternion lastRotation;
+    private Vector2 mousePosition;
     //Movement variables.
     private Coroutine isDashing;
     private bool isOverCockpit = true;
@@ -37,36 +47,7 @@ public class PlayerSuitMovement : MonoBehaviour
     // Update is called once per frame - updates input and applies vitals.
     void Update()
     {
-        #region Input 
-        //Capture the player 'walk' inputs which will be applied in the fixed update.
-        inputX = Input.GetAxisRaw("Horizontal");
-        inputY = Input.GetAxisRaw("Vertical");
-
-        //Rotate the player to the mouse cursor.
-        RotatePlayerToMouse();
-
-        //Make the player 'dash'.
-        Dash();
-
-        if (isOverCockpit == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
-        {
-            rb.velocity = Vector2.zero;
-            playerObj.GetComponent<PlayersuitManager>().PlayerEnterCockpit(); //Player renters their ship.
-        }
-
-        if (isOverExit == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
-        {
-            rb.velocity = Vector2.zero;
-            playerObj.GetComponent<PlayersuitManager>().PlayerExitShip(); //Player renters their ship.
-        }
-
-        if (isOverEntrance == true && Input.GetKeyDown(KeyCode.F)) //Check if the player is trying to reenter ship.
-        {
-            rb.velocity = Vector2.zero;
-            playerObj.GetComponent<PlayersuitManager>().PlayerEnterShip(); //Player renters their ship.
-        }
-
-        #endregion
+        lastRotation = transform.rotation;
     }
 
     //Called every n of a second. Use for physics updating.
@@ -76,39 +57,159 @@ public class PlayerSuitMovement : MonoBehaviour
         MovePlayer();
     }
 
+    public void InteractWithShipEntrance()
+    {
+        if (isOverCockpit == true) //Check if the player is trying to reenter ship.
+        {
+            rb.velocity = Vector2.zero;
+            playerObj.GetComponent<PlayersuitManager>().PlayerEnterCockpit(); //Player renters their ship.
+        }
+
+        if (isOverExit == true) //Check if the player is trying to reenter ship.
+        {
+            rb.velocity = Vector2.zero;
+            playerObj.GetComponent<PlayersuitManager>().PlayerExitShip(); //Player renters their ship.
+        }
+
+        if (isOverEntrance == true) //Check if the player is trying to reenter ship.
+        {
+            rb.velocity = Vector2.zero;
+            playerObj.GetComponent<PlayersuitManager>().PlayerEnterShip(); //Player renters their ship.
+        }
+    }
+
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if(context.phase == InputActionPhase.Started)
+        {
+            FindInteract();
+        }
+    }
+
+    private void FindInteract()
+    {
+        Debug.Log("Finding interactable");
+        List<GameObject> nearby = Physics2D.OverlapCircleAll(frontChecker.transform.position, 0.2f).Select(x => x.gameObject).Where(x => x.GetComponent<Interactable>() || x.GetComponent<ItemHolder>()).ToList();
+        if (nearby.Any())
+        {
+            if (nearby[0].GetComponent<ItemHolder>())
+            {
+                Debug.Log("Item");
+                PickUpItem(nearby[0]);
+                return;
+            }
+            else if (nearby[0].GetComponent<Interactable>())
+            {
+                Debug.Log("Interactable");
+                nearby[0].GetComponent<Interactable>().Interact();
+                return;
+            }
+        }
+
+        InteractWithShipEntrance();
+    }
+
+    private void PickUpItem(GameObject item)
+    {
+        if (Inventory.instance.AddItem(item.GetComponent<ItemHolder>().itemHeld))
+        {
+            item.GetComponent<ItemHolder>().ClickedOn(gameObject);
+        }
+        else
+        {
+            Debug.Log("Inventory full, couldn't pick up");
+        }
+    }
+
     #region Movement Functions
 
-    private void RotatePlayerToMouse()
+    public void HandleTurning(InputAction.CallbackContext context)
     {
-        //Get the mouse cursor's position.
-        Vector3 mousePos = Input.mousePosition;
-        //Set the z position.
-        mousePos.z = 5.23f;
+        if (playerInput.currentControlScheme == "GamePad")
+        {
+            RotatePlayerToGamepadStick(context);
+        }
+        else
+        {
+            RotatePlayerToMouse(context);
+        }
+    }
 
-        //Gets the player's position - which is world space - in screen space.
-        Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
+    private void RotatePlayerToMouse(InputAction.CallbackContext context)
+    {    
+        if(context.phase == InputActionPhase.Performed)
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
+            //Gets the player's position - which is world space - in screen space.
+            Vector3 objectPos = transform.position;
 
-        //Calcualte the difference between the mouse and player screen space positions.
-        mousePos.x = mousePos.x - objectPos.x;
-        mousePos.y = mousePos.y - objectPos.y;
+            Vector3 direction = new Vector3();
 
-        //Calcuate the angle the player needs to be rotated to.
-        float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+            //Calculate the difference between the mouse and player screen space positions.
+            direction.x = mousePos.x - objectPos.x;
+            direction.y = mousePos.y - objectPos.y;
 
-        //Apply the calculated angle to the player.
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
+            //Calculate the angle the player needs to be rotated to.
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            //Apply the calculated angle to the player.
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
+        }
+        
+    }
+
+    private void RotatePlayerToGamepadStick(InputAction.CallbackContext context)
+    {
+        if(playerInput.currentControlScheme == "GamePad")
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                rotationInput = context.ReadValue<Vector2>();
+
+                //Calcuate the angle the player needs to be rotated to.
+                float angle = Mathf.Atan2(rotationInput.x, rotationInput.y) * Mathf.Rad2Deg;
+
+                if(angle != 0)
+                {
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+                }             
+            }
+            else
+            {
+                transform.rotation = lastRotation;
+            }
+        }       
+    }
+
+    public void ChangeMovementInputs(InputAction.CallbackContext context)
+    {
+        //Reads the input if the button pressed is held
+        if (context.phase == InputActionPhase.Performed)
+        {
+            //Separates value given by the input in x and y components
+            inputX = context.ReadValue<Vector2>().x;
+            inputY = context.ReadValue<Vector2>().y;
+        }
+        else
+        {
+            inputX = 0;
+            inputY = 0;
+        }
     }
 
     #region Dashing
 
-    private void Dash()
+    public void Dash(InputAction.CallbackContext context)
     {
-        //Check for Dash input and that the player is not already dashing.
-        if (Input.GetKeyDown(KeyCode.LeftShift) && isDashing == null) 
+        if (context.phase == InputActionPhase.Started)
         {
-            //Starts the dashing co-routine.
-            isDashing = StartCoroutine(DodgeCoroutine());
-        }       
+            //Check for Dash input and that the player is not already dashing.
+            if (isDashing == null)
+            {
+                //Starts the dashing co-routine.
+                isDashing = StartCoroutine(DodgeCoroutine());
+            }
+        }        
     }
 
     //Co-routine which executes the player dash.

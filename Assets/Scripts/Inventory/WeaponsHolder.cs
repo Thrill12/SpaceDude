@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(AudioSource))]
 public class WeaponsHolder : MonoBehaviour
 {
+    public static WeaponsHolder instance;
+
     public BaseWeapon mainWeapon;
     public BaseWeapon secondaryWeapon;
 
-    public PlayerInventory playerInventory;
+    public PlayerInput playerInput;
+
+    private Inventory inventory;
 
     public BaseWeapon currentlyEquippedWeapon;
     public Transform weaponObjectPosition;
@@ -17,47 +22,91 @@ public class WeaponsHolder : MonoBehaviour
 
     private float nextFire;
     private AudioSource audioSource;
+    private bool firing = false;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
+        inventory = Inventory.instance;
         SwapWeapons();
         audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            SwapWeapons();
-        }
-
-        if (nextFire <= 0)
-        {
-            if (Input.GetMouseButton(0))
-            {
-                Attack();
-            }
-        }
-
         nextFire -= Time.deltaTime;
+
+        if(firing)
+        {
+            AttackVoid();
+        }
     }
 
     //Uses the abstract function in the weapon to attack. Passed in the weapon object to allow the gun to have
     // access to its attack source, and any other damage or stats it needs
-    public void Attack()
+    public void Attack(InputAction.CallbackContext context)
     {
-        if (currentlyEquippedWeapon == null) return;
+        if(context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
+        {
+            firing = true;
+        }
+        else
+        {
+            firing = false;
+        }
+        Debug.Log(firing);
+    }
 
+    private void AttackVoid()
+    {
+        if(nextFire <= 0)
+        {
+            if (currentlyEquippedWeapon == null) return;
 
-
-        audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
-        currentlyEquippedWeapon.Attack(weaponObject);
-        nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+            audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
+            currentlyEquippedWeapon.Attack(weaponObject, playerInput);
+            nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+        }       
     }
 
     //This swaps weapons when both are equipped, but is also called when the player picks up a weapon, so that they can immediately use the new one
-    public void SwapWeapons()
+    public void SwapWeapons(InputAction.CallbackContext context)
     {
+        if (context.phase == InputActionPhase.Started)
+        {
+            Destroy(weaponObject);
+
+            if (currentlyEquippedWeapon == mainWeapon)
+            {
+                currentlyEquippedWeapon = secondaryWeapon;
+            }
+            else if (currentlyEquippedWeapon == secondaryWeapon)
+            {
+                currentlyEquippedWeapon = mainWeapon;
+            }
+            else
+            {
+                currentlyEquippedWeapon = mainWeapon;
+            }
+
+            if (currentlyEquippedWeapon == null) return;
+
+            weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, transform.rotation);
+            weaponObject.transform.parent = transform;
+
+            nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+
+
+            weaponAttackSource = GameObject.FindGameObjectWithTag("PlayerAttackSource");
+        }      
+    }
+
+    public void SwapWeapons()
+    {        
         Destroy(weaponObject);
 
         if (currentlyEquippedWeapon == mainWeapon)
@@ -95,6 +144,8 @@ public class WeaponsHolder : MonoBehaviour
 
     public void EquipWeapon(BaseWeapon weapon)
     {
+        Debug.Log(weapon.itemName);
+
         if (weapon.large)
         {
             if (mainWeapon == null)
@@ -103,7 +154,7 @@ public class WeaponsHolder : MonoBehaviour
             }
             else if (mainWeapon != null)
             {
-                playerInventory.UnequipItem(mainWeapon);
+                inventory.UnequipItem(mainWeapon);
                 mainWeapon = weapon;
             }
         }
@@ -115,7 +166,7 @@ public class WeaponsHolder : MonoBehaviour
             }
             else
             {
-                playerInventory.UnequipItem(secondaryWeapon);
+                inventory.UnequipItem(secondaryWeapon);
                 secondaryWeapon = weapon;
             }
         }

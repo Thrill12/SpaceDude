@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -19,9 +20,11 @@ public class PlayerShipMovement : MonoBehaviour
     public Volume postProcessingVolume;
     public VisualEffect shipWarpEffectParticles;
     public float warpAcceleration = 1;
+    public float minSpeedForWarp = 200;
     public float maxWarpSpeed;
     public float warpNavTurnSpeed = 1;
     public int maxWarpEffectRate = 500;
+    public bool canWarp;
     public bool inWarp = false;
     public bool isChargingWarp = false;
     public AudioClip warpInSound;
@@ -55,6 +58,10 @@ public class PlayerShipMovement : MonoBehaviour
     [Space(10)]
     public GameObject rightWing;
     public GameObject leftWing;
+
+    [Space(5)]
+
+    public PlayerInput newInput;
 
     private Rigidbody2D rb;
 
@@ -100,20 +107,28 @@ public class PlayerShipMovement : MonoBehaviour
         src = GetComponent<AudioSource>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         playerSuit = GetComponent<PlayersuitManager>();
+
+        //Setting up input actions for the new input system
     }
 
     private void Update()
     {
         if (ui.isInUI) return;
 
-        inputX = Input.GetAxisRaw("Horizontal");
-        inputY = Input.GetAxisRaw("Vertical");
-
         ChangeParticleThrustRate(thrusterParticleSpawnRate);
 
         currentSpeed = rb.velocity.magnitude;
 
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
+
+        if(currentSpeed > minSpeedForWarp)
+        {
+            canWarp = true;
+        }
+        else
+        {
+            canWarp = false;
+        }
 
         if (thrusterParticleSpawnRate > 5 && !inWarp)
         {
@@ -136,39 +151,78 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (!isPlayerPiloting) return;
 
-        if (Input.GetKeyDown(KeyCode.G) && !inWarp && !isChargingWarp)
-        {
-            ActivateWarp();
-        }        
-        else if(Input.GetKeyDown(KeyCode.G) && inWarp && !isChargingWarp)
-        {
-            DropOutWarp();
-        }        
+        GetComponent<CinemachineImpulseSource>().GenerateImpulseWithForce(currentSpeed / (maxWarpSpeed * 100));              
 
-        if (Input.GetMouseButton(0))
-        {
-            posOfMouseOnWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        }
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        if (Input.GetKeyDown(KeyCode.F) && !inWarp && !isChargingWarp)
-        {
-            //if (currentSpeed / maxSpeed * 100 < 20)
-            playerSuit.PlayerLeaveCockpit();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            dampeners = !dampeners;
-        }
-
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
+        //if (Input.GetMouseButton(0))
+        //{
+        //    posOfMouseOnWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //}
+        //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);              
 
         ChangeCameraZoomVelocity();
     }
+
+    #region Inputs
+    public void ChangeMovementVector(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            inputY = context.ReadValue<float>();
+        }
+        else
+        {
+            inputY = 0;
+        }
+    }
+
+    public void ChangeTurning(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            inputX = context.ReadValue<float>();
+        }
+        else
+        {
+            inputX = 0;
+        }
+    }
+
+    public void LeaveCockpit(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            if (!inWarp && !isChargingWarp)
+            {
+                //if (currentSpeed / maxSpeed * 100 < 20)
+                playerSuit.PlayerLeaveCockpit();
+            }
+        }
+    }
+
+    public void CheckInputsForWarp(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            if (!inWarp && !isChargingWarp && canWarp)
+            {
+                ActivateWarp();
+            }
+            else if (inWarp && !isChargingWarp)
+            {
+                DropOutWarp();
+            }
+        }
+    }
+
+    public void ToggleDampeners(InputAction.CallbackContext context)
+    {
+        if(context.phase == InputActionPhase.Started)
+        {
+            dampeners = !dampeners;
+        }
+    }
+    #endregion
+
 
     private void TurnToObjective(Vector3 positionToNavigateTo)
     {
@@ -191,14 +245,14 @@ public class PlayerShipMovement : MonoBehaviour
     {
         isChargingWarp = false;
         inWarp = true;
-        warpCamera.Priority = 1000;
+        warpCamera.Priority = 1000;        
 
-        
-
-        foreach (var item in GetComponents<Collider2D>().Where(x => x.isTrigger != true))
+        foreach (var item in GetComponentsInChildren<Collider2D>().Where(x => x.isTrigger != true))
         {
             item.enabled = false;
         }
+
+        GetComponent<CinemachineImpulseSource>().GenerateImpulse();
 
         StartCoroutine(IncreaseSpeedInWarp());
         StartCoroutine(IncreaseBlurAmount());
@@ -212,7 +266,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), 0);
 
-        foreach (var item in GetComponents<Collider2D>().Where(x => x.isTrigger != true))
+        foreach (var item in GetComponentsInChildren<Collider2D>().Where(x => x.isTrigger != true))
         {
             item.enabled = true;
         }
@@ -252,7 +306,7 @@ public class PlayerShipMovement : MonoBehaviour
     {      
         while (inWarp && currentSpeed < maxWarpSpeed)
         {
-            rb.velocity = -transform.up * warpAcceleration * rb.velocity.magnitude;
+            rb.velocity = -transform.up * warpAcceleration * (rb.velocity.magnitude + 1);
             yield return new WaitForSeconds(0.01f);
         }   
     }
@@ -339,6 +393,10 @@ public class PlayerShipMovement : MonoBehaviour
             {
                 rb.angularDrag = angularDrag;
             }
+        }
+        else
+        {
+            rb.drag = 0;
         }
         #endregion
 

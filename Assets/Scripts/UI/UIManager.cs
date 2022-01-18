@@ -4,10 +4,15 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+
+    public PlayerInput playerInput;
+    public AudioListener audioListener;
 
     [Header("In-Game UI")]
 
@@ -16,6 +21,8 @@ public class UIManager : MonoBehaviour
     public Image dampenersImage;
 
     public GameObject dialogueDisplay;
+    public GameObject dialogueLocationEnabled;
+    public GameObject dialogueLocationDisabled;
     public GameObject activeMissionsLog;
     private Vector3 originalDialogueDisplayPosition;
 
@@ -96,6 +103,17 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if(playerInput.currentActionMap.name == "GamePad")
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         if(playerMovement.inWarp == false)
         {
             if (playerMovement.currentSpeed < playerMovement.maxSpeed)
@@ -128,21 +146,6 @@ public class UIManager : MonoBehaviour
             dampenersImage.enabled = false;
         }
 
-        if (Input.GetButtonDown("Cancel"))
-        {
-            CloseAllUI();
-        }
-
-        if (Input.GetButtonDown("Journal"))
-        {           
-            Journal();
-        }
-
-        if (Input.GetButtonDown("Inventory"))
-        {
-            Inventory();
-        }
-
         #region RandomCheckStuff
 
         if(commSelectedInMarketWindow == null)
@@ -155,67 +158,118 @@ public class UIManager : MonoBehaviour
     }   
 
     #region NormalUI
-    public void CloseAllUI()
+    public void CloseAllUI(InputAction.CallbackContext context)
     {
         if (planetUI.activeInHierarchy)
         {
-            PlanetDescription();
+            PlanetDescription(context);
         }
 
         if (journalObject.activeInHierarchy)
         {
-            Journal();
+            Journal(context);
         }
 
         if (inventory.activeInHierarchy)
         {
-            Inventory();
+            Inventory(context);
         }
 
         isInUI = false;
-    }
 
-    public void PlanetDescription()
-    {
-        if(planetUI.activeInHierarchy == false)
+        if (playerMovement.isPlayerPiloting)
         {
-            CloseAllUI();
-        }       
-
-        planetUI.SetActive(!planetUI.activeInHierarchy);
-
-        if (planetUI.activeInHierarchy)
-        {
-            isInUI = true;
+            playerInput.SwitchCurrentActionMap("PlayerShip");
         }
         else
         {
-            isInUI = false;
+            playerInput.SwitchCurrentActionMap("PlayerSuit");
         }
-
-        if(Time.timeScale == 0)
-        {
-            Time.timeScale = 1;
-            StopAllCoroutines();
-        }
-        else
-        {
-            Time.timeScale = 0;
-            TypePlanetDescription(planetCheck.planetHoveredP, planetDescription);
-        }        
-
-        planetName.text = planetCheck.planetHoveredP.planetName;      
-        planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
-        populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
-
-        MarketSwitchToMarketComms();
     }
 
-    public void Journal()
+    public void PlanetDescription(InputAction.CallbackContext context)
     {
+        if (context.phase != InputActionPhase.Started) return;
+
+        if(planetCheck.planetHovered != null)
+        {      
+            ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
+
+            if (planetUI.activeInHierarchy == false)
+            {
+                CloseAllUI(context);
+            }
+
+            if (playerInput.currentActionMap.name == "UI")
+            {
+                if (playerMovement.isPlayerPiloting)
+                {
+                    playerInput.SwitchCurrentActionMap("PlayerShip");
+                }
+                else
+                {
+                    playerInput.SwitchCurrentActionMap("PlayerSuit");
+                }
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("UI");
+            }
+
+            planetUI.SetActive(!planetUI.activeInHierarchy);
+
+            if (planetUI.activeInHierarchy)
+            {
+                isInUI = true;
+            }
+            else
+            {
+                isInUI = false;
+            }
+
+            if (Time.timeScale == 0)
+            {
+                
+                Time.timeScale = 1;
+                StopAllCoroutines();
+            }
+            else
+            {
+                Time.timeScale = 0;
+                TypePlanetDescription(planetCheck.planetHoveredP, planetDescription);
+            }
+
+            planetName.text = planetCheck.planetHoveredP.planetName;
+            planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
+            populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
+
+            MarketSwitchToMarketComms();
+        }      
+    }
+
+    public void Journal(InputAction.CallbackContext context)
+    {
+        if (context.phase != InputActionPhase.Started) return;        
+
         if (journalObject.activeInHierarchy == false)
         {
-            CloseAllUI();
+            CloseAllUI(context);
+        }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }           
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
         }
 
         journalObject.SetActive(!journalObject.activeInHierarchy);
@@ -239,12 +293,32 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Inventory()
+    public void Inventory(InputAction.CallbackContext context)
     {
+        if (context.phase != InputActionPhase.Started) return;
+
         if (inventory.activeInHierarchy == false)
         {
-            CloseAllUI();
+            CloseAllUI(context);
         }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        SelectFirstItemHolder();
 
         inventory.SetActive(!inventory.activeInHierarchy);
 
@@ -267,6 +341,12 @@ public class UIManager : MonoBehaviour
         {
             isInUI = false;
         }
+    }
+
+    public void SelectFirstItemHolder()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
     }
 
     public void DrawQuest(Quest quest)
@@ -353,7 +433,7 @@ public class UIManager : MonoBehaviour
         StopAllCoroutines();
         dialogueDisplay.SetActive(true);
         dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
-        LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
+        //LeanTween.moveLocalY(dialogueDisplay, -400, 0.4f).setEaseInQuad();
         
         StartCoroutine(WriteDialogue(dialoguePages));        
     }
@@ -365,7 +445,8 @@ public class UIManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(letterTypingPause * dialoguePages.Length);
 
-        LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
+        dialogueDisplay.SetActive(false);
+        //LeanTween.moveLocalY(dialogueDisplay, -800, 0.4f).setEaseInQuad();
         yield return new WaitForSecondsRealtime(0);
     }
 
@@ -383,7 +464,7 @@ public class UIManager : MonoBehaviour
         StopAllCoroutines();
         dialogueDisplay.SetActive(true);
         dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
-        LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
+        //LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
 
         StartCoroutine(WriteDialogue(dialoguePages));
     }
@@ -397,7 +478,9 @@ public class UIManager : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(letterTypingPause * item.Length);
         }
-        LeanTween.move(dialogueDisplay, originalDialogueDisplayPosition, 0.4f).setEaseInQuad();
+        dialogueDisplay.SetActive(false);
+
+        //LeanTween.moveLocalY(dialogueDisplay, 60, 0.4f).setEaseInQuad();
         yield return new WaitForSecondsRealtime(0);
     }
 
@@ -468,7 +551,7 @@ public class UIManager : MonoBehaviour
                 newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
                 planetCheck.planetHoveredP.ReceiveCommodity(newCommToAdd);
-                player.GetComponent<Inventory>().items.Remove(player.GetComponent<Inventory>().items.Where(x => x.item == commSelectedInMarketWindow).First());
+                player.GetComponent<Inventory>().items.Remove(player.GetComponent<Inventory>().items.Where(x => x == commSelectedInMarketWindow).First());
             }
             else
             {
@@ -564,10 +647,10 @@ public class UIManager : MonoBehaviour
             Debug.Log("No children to remove");
         }
 
-        foreach (StoredItem item in player.GetComponent<Inventory>().items)
+        foreach (BaseItem item in player.GetComponent<Inventory>().items)
         {
             GameObject obj = Instantiate(pfManager.commodityMarketDisplayObject, planetMarketLayout.transform);
-            obj.GetComponent<CommodityInvHolder>().commodityHeld = item.item;
+            obj.GetComponent<CommodityInvHolder>().commodityHeld = item;
             try
             {
                 List<List<BaseItem>> commodities = allPlanets.Select(x => x.commoditiesInMarket).ToList();
@@ -580,8 +663,8 @@ public class UIManager : MonoBehaviour
                     }
                 }
 
-                List<BaseItem> matching = accCommodity.Where(x => x.itemName == item.item.itemName).ToList();
-                matching.Remove(item.item);
+                List<BaseItem> matching = accCommodity.Where(x => x.itemName == item.itemName).ToList();
+                matching.Remove(item);
                 float average = (float)matching.Average(x => x.itemValue);
 
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "$" + average;
@@ -591,10 +674,10 @@ public class UIManager : MonoBehaviour
                 obj.transform.Find("Commodity Average Price").GetComponent<TMP_Text>().text = "Only sold here";
             }
 
-            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.item.itemIcon;
-            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.item.itemName;
-            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.item.itemValue;
-            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.item.itemStack + " units";
+            obj.transform.Find("Commodity Icon").GetComponent<Image>().sprite = item.itemIcon;
+            obj.transform.Find("Commodity Name").GetComponent<TMP_Text>().text = item.itemName;
+            obj.transform.Find("Commodity Price").GetComponent<TMP_Text>().text = "$" + item.itemValue;
+            obj.transform.Find("Commodity Units").GetComponent<TMP_Text>().text = item.itemStack + " units";
         }
     }
     #endregion
