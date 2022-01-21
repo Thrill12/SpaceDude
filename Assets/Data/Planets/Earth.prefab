@@ -30,6 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -73,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 458104105
-  m_SortingLayer: -1
+  m_SortingLayer: -3
   m_SortingOrder: 0
   m_Sprite: {fileID: 8621353641437828041, guid: 6d08afc4f51a64f4baaf1f6582f26183, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -88,7 +89,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &1161303656168184358
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -101,6 +102,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -117,31 +119,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47441fbf449e4f4d9222ccfa5d38487, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetName: Earth
-  planetDescription: Earth. Humanity's cradle. It was once a planet full of greatness
-    and potential, and even though it looks green now, it most certainly isn't on
-    the surface. Tourism companies across space keep advertising Earth as a green
-    paradise, whilst it's much more of a brown muck.
+  planetName: 
+  planetDescription: The most wonderful place in the world!
+  breathableAtmosphere: 1
+  isTakenOverByAliens: 0
+  planetClimate:
+    temperatureRange:
+      min: -5
+      max: 65
+    humidity: 47
+    precipitationPerMonth: 109
+    atmosphericPressureASL: 1
   totalInfluence: 0
-  population: 11
+  population: 2
   totalWealth: 0
-  allies: []
-  enemies: []
-  influenceModifier: 55
+  influenceModifier: 0
+  startingComms: []
   commoditiesInMarket: []
-  products:
-  - comProduced: {fileID: 11400000, guid: 6651c015026a40143b91b784dff8580e, type: 2}
-    comAmountPerTick: 50
-  - comProduced: {fileID: 11400000, guid: 734d31f4c14ade2469801cadbef3940d, type: 2}
-    comAmountPerTick: 250
-  - comProduced: {fileID: 11400000, guid: 916e0b2f34c57c04d90634f3989d7ac5, type: 2}
-    comAmountPerTick: 1500
-  - comProduced: {fileID: 11400000, guid: 3783e0f46ad19a34f8c28b93fe6eac19, type: 2}
-    comAmountPerTick: 25
-  dependencies:
-  - comProduced: {fileID: 11400000, guid: 31bfb4bbabf0f8d449968a8e8c773012, type: 2}
-    comAmountPerTick: -75
-  planetTick: 15
+  availableTradeRoutes: []
+  products: []
+  dependencies: []
+  foodPerBillion: 1
+  breathingPerBillion: 0
+  projectedFoodConsumptionNextTick: 0
+  totalFoodReserves: 0
 --- !u!65 &815992076947470174
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -8,6 +8,7 @@ public class Modifier
     //Name of the stat to change - it has to be the exact same as the IN-CODE property name, eg maxHealth
     [Tooltip("Name of the stat to change - it has to be the exact same as the IN-CODE property name, eg maxHealth")]
     public string statToModifyName;
+    public string statDisplayStringName;
     public float Value;
     //The type of addition that the mod will do to the stat value
     public StatModType Type;
@@ -22,7 +23,7 @@ public class Modifier
         Value = value;
         Type = type;
         Order = order;
-        Source = source; // Assign Source to our new input parameter
+        Source = source; // Assign Source to our new input parameter      
     }
 
     // Requires Stat, Value and Type. Calls the "Main" constructor and sets Order and Source to their default values: (int)type and null, respectively.

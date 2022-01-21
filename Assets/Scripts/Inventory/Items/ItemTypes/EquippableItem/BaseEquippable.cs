@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Items/Equippable Item"), System.Serializable]
 public class BaseEquippable : BaseItem
 {
+    public const int MAXMODLIMIT = 4;
+
     [Tooltip("The name of the slot that the item will go into. Has to be the same as the name of the slot in the SO")]
     public string itemSlot;
 
@@ -67,6 +69,36 @@ public class BaseEquippable : BaseItem
         xpBacklog = 0;
 
         itemCurrentXP = Mathf.Floor(itemCurrentXP);
+    }
+
+    public void AddMod(Modifier mod)
+    {
+        if (mod.statToModifyName == "maxHealth")
+        {
+            mod.statDisplayStringName = "Maximum Health";
+        }
+        else if (mod.statToModifyName == "armour")
+        {
+            mod.statDisplayStringName = "Armour";
+        }
+        else if (mod.statToModifyName == "damageMultiplier")
+        {
+            mod.statDisplayStringName = "Damage Multiplier";
+        }
+        else if (mod.statToModifyName == "healthRegeneration")
+        {
+            mod.statDisplayStringName = "Health Regeneration";
+        }
+        else if (mod.statToModifyName == "energyRegeneration")
+        {
+            mod.statDisplayStringName = "Energy Regeneration";
+        }
+        else if (mod.statToModifyName == "maxEnergy")
+        {
+            mod.statDisplayStringName = "Maximum Energy";
+        }
+
+        itemMods.Add(mod);
     }
 
     //That weird constant was chosen because it made req. XP for level 50 to be 500k, which was kinda perfect ;)

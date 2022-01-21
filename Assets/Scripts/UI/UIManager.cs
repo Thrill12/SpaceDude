@@ -61,6 +61,11 @@ public class UIManager : MonoBehaviour
     public GameObject inventory;
     public GameObject pauseMenu;
 
+    [Header("Inventory")]
+
+    public ItemStatDisplayer leftItemStatDisplay;
+    public ItemStatDisplayer rightItemStatDisplay;
+
     [HideInInspector]
     public BaseItem commSelectedInMarketWindow;
     [HideInInspector]
@@ -646,14 +651,18 @@ public class UIManager : MonoBehaviour
     public void SelectFirstItemHolder()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        if(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
+
+        if(inv.items.Count > 0)
         {
-            EventSystem.current.SetSelectedGameObject(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).First().gameObject);
-        }
-        else
-        {
-            EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
-        }
+            if (inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
+            {
+                EventSystem.current.SetSelectedGameObject(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).First().gameObject);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
+            }
+        }      
     }
 
     //Displays active quest in the quest log

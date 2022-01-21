@@ -139,7 +139,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityShotFrom: {fileID: 0}
   weaponShotFrom: {fileID: 0}
+  impactParticles: {fileID: 742857941148874622, guid: bca27231289725340a6d9ebc70d4bbea, type: 3}
   damage: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8449
 --- !u!58 &6574923143383367708
 CircleCollider2D:
   m_ObjectHideFlags: 0

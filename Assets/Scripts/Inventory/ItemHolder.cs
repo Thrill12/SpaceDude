@@ -17,14 +17,9 @@ public class ItemHolder : MonoBehaviour
 
     private void Start()
     {
-        prefabManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
+        prefabManager = PrefabManager.instance;
         itemHeld = ScriptableObject.Instantiate(itemHeld);
-        playerInventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<Inventory>();
-
-        if (generateStats)
-        {
-            GenerateMods();
-        }
+        playerInventory = Inventory.instance;       
 
         //Setting up the item holder on the floor, its light/color etc.
         GetComponentInChildren<Light2D>().color = itemHeld.itemRarity.rarityColor;
@@ -44,7 +39,13 @@ public class ItemHolder : MonoBehaviour
         {
             BaseEquippable equippable = (BaseEquippable)itemHeld;
             equippable.isEquipped = false;
+
+            if (generateStats)
+            {
+                GenerateMods();
+            }
         }
+
         itemNameText.gameObject.SetActive(false);
     }
 
@@ -54,21 +55,28 @@ public class ItemHolder : MonoBehaviour
     {
         if(itemHeld.itemRarity.rarityName == "Common")
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
                 GenerateMod();
             }
         }
         else if (itemHeld.itemRarity.rarityName == "Rare")
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 GenerateMod();
             }
         }
-        else if (itemHeld.itemRarity.rarityName == "Legendary")
+        else if (itemHeld.itemRarity.rarityName == "Royal")
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
+            {
+                GenerateMod();
+            }
+        }
+        else if (itemHeld.itemRarity.rarityName == "Ascended")
+        {
+            for (int i = 0; i < 4; i++)
             {
                 GenerateMod();
             }
@@ -88,6 +96,7 @@ public class ItemHolder : MonoBehaviour
             if (weapon.damage.statModifiers.Where(x => x.Source == this).Count() == 0)
             {
                 weapon.damage.AddModifier(mod);
+                weapon.AddMod(mod);
             }
         }
         else if (randomProperty == 1)
@@ -98,6 +107,7 @@ public class ItemHolder : MonoBehaviour
             if (weapon.attackCooldown.statModifiers.Where(x => x.Source == this).Count() == 0)
             {
                 weapon.attackCooldown.AddModifier(mod);
+                weapon.AddMod(mod);
             }
         }
         else if (randomProperty == 2 && typeof(StraightShootingGun).IsAssignableFrom(itemHeld.GetType()))
@@ -108,6 +118,7 @@ public class ItemHolder : MonoBehaviour
             if (weapon.projectileSpeed.statModifiers.Where(x => x.Source == this).Count() == 0)
             {
                 weapon.projectileSpeed.AddModifier(mod);
+                weapon.AddMod(mod);
             }
         }
     }

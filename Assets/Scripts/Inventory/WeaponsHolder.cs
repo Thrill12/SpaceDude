@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 [RequireComponent(typeof(AudioSource))]
 public class WeaponsHolder : MonoBehaviour
@@ -71,6 +72,7 @@ public class WeaponsHolder : MonoBehaviour
             audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
             currentlyEquippedWeapon.Attack(weaponObject, playerInput);
             nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+            ShakeCamera();
         }       
     }
 
@@ -188,5 +190,12 @@ public class WeaponsHolder : MonoBehaviour
         {
             secondaryWeapon = null;
         }
+    }
+
+    public void ShakeCamera()
+    {
+        CinemachineImpulseSource impSource = GetComponent<CinemachineImpulseSource>();
+
+        impSource.GenerateImpulse();
     }
 }

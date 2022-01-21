@@ -394,3 +394,4 @@
 /Assets/Sprites/Background/Space/Galaxies/BlueGalaxySpriteSheet.png.meta filter=lfs diff=lfs merge=lfs -text
 /Assets/Sprites/Background/Space/Other/BlackHoleSpritesheet.jpg filter=lfs diff=lfs merge=lfs -text
 /Assets/Sprites/Background/Space/Other/BlackHoleSpritesheet.jpg.meta filter=lfs diff=lfs merge=lfs -text
+/Assets/Data/Projectiles/BulletExplosion.prefab filter=lfs diff=lfs merge=lfs -text

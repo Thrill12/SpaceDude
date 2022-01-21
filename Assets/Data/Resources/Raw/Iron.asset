@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98fc64d9c19ef024c97407fc2464b027, type: 3}
+  m_Name: Iron
+  m_EditorClassIdentifier: 
+  itemName: Iron
+  itemDescription: One of the fundamental materials that changed humanity from its
+    first discovery
+  itemIcon: {fileID: 21300000, guid: c4c548a339b4d41a590928c0c98934a7, type: 3}
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemValue: 5
+  itemStack: 0
+  itemMaxStack: 999
+  itemType: 8
+  climateToGrow:
+    temperatureRange:
+      min: 0
+      max: 0
+    humidity: 0
+    precipitationPerMonth: 0
+    atmosphericPressureASL: 0
+    humidityVariation: 1000
+    precipitationVariation: 1000
+    atmosphericVariation: 1000
+  resourceSpawnWeight: 1

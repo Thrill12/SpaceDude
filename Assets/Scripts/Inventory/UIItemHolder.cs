@@ -81,11 +81,36 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
         }
 
-        //if (isHoveredOn && Input.GetKeyDown(KeyCode.Z))
-        //{
-        //    inventory.SpawnDroppedItem(itemHeld);
-        //    Destroy(gameObject);
-        //}
+        if(EventSystem.current.currentSelectedGameObject == gameObject)
+        {
+            isHoveredOn = true;
+        }
+        else
+        {
+            isHoveredOn = false;
+        }
+
+        //Turn on the item stats display menu
+        if (isHoveredOn)
+        {
+            if((itemHeld as BaseEquippable).isEquipped)
+            {
+                UIManager.instance.leftItemStatDisplay.gameObject.SetActive(true);
+                UIManager.instance.rightItemStatDisplay.gameObject.SetActive(false);
+                UIManager.instance.leftItemStatDisplay.ShowItem(itemHeld as BaseEquippable);                
+            }
+            else
+            {
+                UIManager.instance.leftItemStatDisplay.gameObject.SetActive(false);
+                UIManager.instance.rightItemStatDisplay.gameObject.SetActive(true);
+                UIManager.instance.rightItemStatDisplay.ShowItem(itemHeld as BaseEquippable);
+            }
+        }
+        else
+        {
+            UIManager.instance.leftItemStatDisplay.gameObject.SetActive(false);
+            UIManager.instance.leftItemStatDisplay.gameObject.SetActive(false);
+        }
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
@@ -100,6 +125,20 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         isHoveredOn = false;
         //Hide item stats here
         //Hide();
+    }
+
+    public void OnSelect(BaseEventData data)
+    {
+        isHoveredOn = true;
+
+        Debug.Log("Selected");
+    }
+
+    public void OnDeselect(BaseEventData data)
+    {
+        isHoveredOn = false;        
+
+        Debug.Log("Deselected");
     }
 
     public void ToggleEquipUnequip()

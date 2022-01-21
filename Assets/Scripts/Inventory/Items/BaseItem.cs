@@ -23,5 +23,6 @@ public enum ItemType
     Breathing,
     Waste,
     Weapon,
-    Ammo
+    Ammo,
+    Raw
 }
