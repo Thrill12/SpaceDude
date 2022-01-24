@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
@@ -10,6 +11,10 @@ public class PrefabManager : MonoBehaviour
     public GameObject planetBorder;
 
     [Header("UI")]
+
+    public Color white;
+    public Color orange;
+    public Color purple;
 
     [Space(5)]
 
@@ -33,6 +38,12 @@ public class PrefabManager : MonoBehaviour
     [Space(5)]
 
     public GameObject healthBarObject;
+
+    [Space(10)]
+
+    [Header("World UI")]
+
+    public GameObject numberPopup;
 
     [Space(5)]
 
@@ -71,5 +82,15 @@ public class PrefabManager : MonoBehaviour
     internal BaseRarity GetRandomRarity()
     {
         return rarityTable.GetRandomRarity();
+    }
+
+    //Spawns a number popup text in the world at desired location
+    internal void SpawnNumberPopup(float number, Color colorPopup, Vector2 spawnPos)
+    {
+        GameObject num = Instantiate(numberPopup, spawnPos, Quaternion.identity);
+        num.GetComponent<Canvas>().worldCamera = Camera.main;
+        num.GetComponentInChildren<TMP_Text>().text = number.ToString();
+        num.GetComponentInChildren<TMP_Text>().color = colorPopup;
+        Destroy(num, 5);
     }
 }

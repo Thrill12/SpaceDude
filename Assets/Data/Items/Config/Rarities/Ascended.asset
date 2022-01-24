@@ -15,3 +15,4 @@ MonoBehaviour:
   rarityName: Ascended
   rarityColor: {r: 0.9098039, g: 0.25490198, b: 0.09411765, a: 1}
   rarityWeightChance: 5
+  modAmount: 4

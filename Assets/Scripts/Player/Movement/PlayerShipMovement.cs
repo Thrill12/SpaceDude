@@ -376,7 +376,7 @@ public class PlayerShipMovement : MonoBehaviour
             #region Dampeners and drag
             if (dampeners)
             {
-                if (inputY != 0)
+                if(inputY != 0)
                 {
                     rb.drag = 0;
                 }
@@ -424,6 +424,13 @@ public class PlayerShipMovement : MonoBehaviour
                 rb.velocity = rb.velocity.normalized * maxSpeed;
             }
         }       
+    }
+
+    private void AddForceForSlowingDown()
+    {
+        float angleBetweenVelAndUp = Mathf.Atan2(rb.velocity.normalized.y - transform.up.y, rb.velocity.x - transform.up.x) * Mathf.Rad2Deg;
+        rb.AddForce(-rb.velocity / (1 / Mathf.Abs(angleBetweenVelAndUp)));
+        Debug.DrawLine(transform.position, -rb.velocity / (1 / Mathf.Abs(angleBetweenVelAndUp)));
     }
 
     public void ChangeParticleThrustRate(int rate)

@@ -65,6 +65,10 @@ public class UIManager : MonoBehaviour
 
     public ItemStatDisplayer leftItemStatDisplay;
     public ItemStatDisplayer rightItemStatDisplay;
+    public GameObject invisSelectButton;
+    public BaseItem currentlySelectedItemToDisplay;
+
+    [Space(15)]
 
     [HideInInspector]
     public BaseItem commSelectedInMarketWindow;
@@ -112,7 +116,81 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log(playerInput.currentActionMap.name);
 
-        if(playerInput.currentActionMap.name == "GamePad")
+        //Displaying the currently hovered on item in the inventory
+        if (playerInput.currentControlScheme == "GamePad")
+        {
+            //Displaying the current item selected in the inventory
+            if (currentlySelectedItemToDisplay != null && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<UIItemHolder>())
+            {
+                if (currentlySelectedItemToDisplay as BaseEquippable)
+                {
+                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                    if (equip.isEquipped)
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(false);
+                currentlySelectedItemToDisplay = null;
+            }
+        }
+        else
+        {
+            //Displaying the current item selected in the inventory
+            if (currentlySelectedItemToDisplay != null)
+            {
+                if (currentlySelectedItemToDisplay as BaseEquippable)
+                {
+                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                    if (equip.isEquipped)
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(false);
+                currentlySelectedItemToDisplay = null;
+            }
+        }
+
+        if(playerInput.currentControlScheme == "GamePad")
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -167,6 +245,18 @@ public class UIManager : MonoBehaviour
     }   
 
     #region NormalUI
+
+    //This selects the first item in the inventory when the player switches to a gamepad midgame
+    public void OnControlsChanged()
+    {
+        if (inventory.activeInHierarchy)
+        {
+            if (playerInput.currentControlScheme == "GamePad")
+            {
+                SelectFirstItemHolder();
+            }
+        }
+    }
 
     //Makes sure all the active UI is closed
     public void CloseAllUI(InputAction.CallbackContext context)
@@ -337,7 +427,11 @@ public class UIManager : MonoBehaviour
             playerInput.SwitchCurrentActionMap("UI");
         }
 
-        SelectFirstItemHolder();
+        if(playerInput.currentControlScheme == "GamePad")
+        {
+            Debug.Log("Selected");
+            SelectFirstItemHolder();
+        }
 
         inventory.SetActive(!inventory.activeInHierarchy);
 
@@ -657,12 +751,18 @@ public class UIManager : MonoBehaviour
             if (inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
             {
                 EventSystem.current.SetSelectedGameObject(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).First().gameObject);
+                Debug.Log("Currently selected is " + EventSystem.current.gameObject.name);
             }
             else
             {
                 EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
+                Debug.Log("Currently selected is " + EventSystem.current.gameObject.name);
             }
-        }      
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(invisSelectButton);
+        }
     }
 
     //Displays active quest in the quest log

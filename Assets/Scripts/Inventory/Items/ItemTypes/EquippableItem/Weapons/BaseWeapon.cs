@@ -18,6 +18,43 @@ public abstract class BaseWeapon : BaseEquippable
         itemType = ItemType.Weapon;
     }
 
+    //Currently, weapons will only affect their own stats and will not affect the player - thats
+    //the equipment's job
+
+    //public void ActivateModifiers()
+    //{
+    //    foreach (Modifier mod in itemMods)
+    //    {
+    //        mod.Source = this;
+    //        //Finding the stat for which its name is the same as the mod's stat it modifies
+    //        Stat s = (Stat)typeof(BaseWeapon).GetField(mod.statToModifyName).GetValue(this);
+    //        s.AddModifier(mod);
+    //        Debug.Log("Added modifier to " + mod.statToModifyName + " of " + s.Value);
+    //    }
+    //}
+
+    public override void OnEquip(BaseEntity entity)
+    {
+        Debug.Log("Equipping");
+        hostEntity = entity;
+        if (!isEquipped)
+        {
+            isEquipped = true;         
+        }
+    }    
+
+    public override void OnUnequip()
+    {
+        Debug.Log(hostEntity.entityName);
+        isEquipped = false;
+        hostEntity = null;
+    }
+
+    public override void AddMod(Modifier mod)
+    {       
+        itemMods.Add(mod);
+    }
+
     //Abstract function that other weapons derived from here will need to use to attack
     public abstract void Attack(GameObject weaponObject, PlayerInput playerInput);
 }

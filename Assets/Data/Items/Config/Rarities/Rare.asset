@@ -15,3 +15,4 @@ MonoBehaviour:
   rarityName: Rare
   rarityColor: {r: 0.9843137, g: 0.77254903, b: 0.19215687, a: 1}
   rarityWeightChance: 5
+  modAmount: 2

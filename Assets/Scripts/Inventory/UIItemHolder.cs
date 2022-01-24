@@ -81,64 +81,36 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
         }
 
-        if(EventSystem.current.currentSelectedGameObject == gameObject)
-        {
-            isHoveredOn = true;
-        }
-        else
-        {
-            isHoveredOn = false;
-        }
+        Debug.Log(isHoveredOn);
 
-        //Turn on the item stats display menu
-        if (isHoveredOn)
+        if(UIManager.instance.playerInput.currentControlScheme == "GamePad")
         {
-            if((itemHeld as BaseEquippable).isEquipped)
+            if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
-                UIManager.instance.leftItemStatDisplay.gameObject.SetActive(true);
-                UIManager.instance.rightItemStatDisplay.gameObject.SetActive(false);
-                UIManager.instance.leftItemStatDisplay.ShowItem(itemHeld as BaseEquippable);                
+                isHoveredOn = true;
+                UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
             }
             else
             {
-                UIManager.instance.leftItemStatDisplay.gameObject.SetActive(false);
-                UIManager.instance.rightItemStatDisplay.gameObject.SetActive(true);
-                UIManager.instance.rightItemStatDisplay.ShowItem(itemHeld as BaseEquippable);
+                isHoveredOn = false;
             }
         }
-        else
+
+        if (isHoveredOn)
         {
-            UIManager.instance.leftItemStatDisplay.gameObject.SetActive(false);
-            UIManager.instance.leftItemStatDisplay.gameObject.SetActive(false);
+            UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
         }
     }
 
-    public void OnPointerEnter(PointerEventData pointerEventData)
+    public void OnPointerEnter(PointerEventData data)
     {
         isHoveredOn = true;
-        //Display Item Stats here
-        //Show();
     }
 
-    public void OnPointerExit(PointerEventData pointerEventData)
+    public void OnPointerExit(PointerEventData data)
     {
         isHoveredOn = false;
-        //Hide item stats here
-        //Hide();
-    }
-
-    public void OnSelect(BaseEventData data)
-    {
-        isHoveredOn = true;
-
-        Debug.Log("Selected");
-    }
-
-    public void OnDeselect(BaseEventData data)
-    {
-        isHoveredOn = false;        
-
-        Debug.Log("Deselected");
+        UIManager.instance.currentlySelectedItemToDisplay = null;
     }
 
     public void ToggleEquipUnequip()

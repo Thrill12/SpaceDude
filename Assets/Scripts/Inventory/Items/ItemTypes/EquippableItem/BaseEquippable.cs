@@ -21,33 +21,29 @@ public class BaseEquippable : BaseItem
     public BaseEntity hostEntity;
     public bool isEquipped = false;
 
-    //Has to add a modifier to each stat that the item has mods for.
-    public void OnEquip(BaseEntity entity)
+    public virtual void OnEquip(BaseEntity hostEntity)
     {
-        hostEntity = entity;
-        if (!isEquipped)
-        {
-            isEquipped = true;
-            foreach (Modifier mod in itemMods)
-            {
-                mod.Source = this;
-                //Finding the stat for which its name is the same as the mod's stat it modifies
-                Stat s = (Stat)typeof(BaseEntity).GetField(mod.statToModifyName).GetValue(hostEntity);
-                s.AddModifier(mod);
-            }
-        }
+
     }
 
-    //Has to clean up its modifiers, removing its modifiers from any stats it affected
-    public void OnUnequip()
+    public virtual void OnUnequip()
     {
-        isEquipped = false;
-        foreach (Modifier mod in itemMods)
-        {
-            Stat s = (Stat)typeof(BaseEntity).GetField(mod.statToModifyName).GetValue(hostEntity);
-            s.RemoveAllModifiersFromSource(this);
-        }
-        hostEntity = null;
+
+    }
+
+    public virtual void AddMod(Modifier mod)
+    {
+        //Simply called when adding a mod, might come in useful for requirements or something
+    }
+
+    public void RemoveMod(Modifier mod)
+    {
+        mod.statAffecting.RemoveModifier(mod);
+    }
+
+    public virtual void GenerateMods()
+    {
+        //Each subclass of weapon will have its own stats that need generating, so all the generation is handled in that, this is just for ease of calling.
     }
 
     public void AddXP(float xp)
@@ -69,36 +65,6 @@ public class BaseEquippable : BaseItem
         xpBacklog = 0;
 
         itemCurrentXP = Mathf.Floor(itemCurrentXP);
-    }
-
-    public void AddMod(Modifier mod)
-    {
-        if (mod.statToModifyName == "maxHealth")
-        {
-            mod.statDisplayStringName = "Maximum Health";
-        }
-        else if (mod.statToModifyName == "armour")
-        {
-            mod.statDisplayStringName = "Armour";
-        }
-        else if (mod.statToModifyName == "damageMultiplier")
-        {
-            mod.statDisplayStringName = "Damage Multiplier";
-        }
-        else if (mod.statToModifyName == "healthRegeneration")
-        {
-            mod.statDisplayStringName = "Health Regeneration";
-        }
-        else if (mod.statToModifyName == "energyRegeneration")
-        {
-            mod.statDisplayStringName = "Energy Regeneration";
-        }
-        else if (mod.statToModifyName == "maxEnergy")
-        {
-            mod.statDisplayStringName = "Maximum Energy";
-        }
-
-        itemMods.Add(mod);
     }
 
     //That weird constant was chosen because it made req. XP for level 50 to be 500k, which was kinda perfect ;)
