@@ -28,6 +28,7 @@ public class GenDebugger : MonoBehaviour
         lr.positionCount = (graph.Count * 2);
         lr.SetPositions(pos.ToArray());
 
+
     }
 
     // Update is called once per frame
