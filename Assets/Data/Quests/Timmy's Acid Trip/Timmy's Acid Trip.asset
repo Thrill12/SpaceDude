@@ -16,20 +16,14 @@ MonoBehaviour:
   QuestName: Timmy's Acid Trip
   QuestDescription: Timmy asked me to check out if they're playing "The Blue Panther?"
     What even is that? And why does he care if a hospital plays it?
+  questAssignedDialogue: {fileID: 11400000, guid: 35b774d6ebf877e4ea532bbb186db91f, type: 2}
+  questCompletedDialogue: {fileID: 11400000, guid: d6dd90d52d773314c9dff4f901251138, type: 2}
+  questInProgressDialogue: {fileID: 11400000, guid: 8082f5ca87b422849a3131196f1a4f8a, type: 2}
   Goals:
   - {fileID: 11400000, guid: e7c3e6483fad4394ca8c1ff60f584773, type: 2}
   ExperienceReward: 0
   FactionInfluenceReward: 0
   ItemReward: {fileID: 11400000, guid: 4410b2826db5b0344b0949e04e95889b, type: 2}
   Completed: 0
-  questAssignedDialogue:
-  - Hey there! Thanks for helping me. All you have to do is go to the mental institute
-    and come back.
-  - I only want you to take a sneeky peak anyway, no detail needed.
-  questCompletedDialogue:
-  - I am eternally grateful. Thank you, my lord.
-  questInProgressDialogue:
-  - Look man, if you don't want to help me that's okay.
-  - But don't waste time - at least do something productive.
   questRequirements: []
   HandedIn: 0

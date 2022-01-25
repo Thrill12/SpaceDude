@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour
 
     public Image dampenersImage;
 
+    [HideInInspector]
+    public bool triggeredNextStep;
     public GameObject dialogueDisplay;
     public GameObject dialogueLocationEnabled;
     public GameObject dialogueLocationDisabled;
@@ -731,6 +733,11 @@ public class UIManager : MonoBehaviour
         {
             isInUI = false;
         }
+    }
+
+    public void TriggerNextDialogue()
+    {
+        triggeredNextStep = true;
     }
 
     //Function to return back to main menu

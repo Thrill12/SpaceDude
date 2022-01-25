@@ -9,6 +9,9 @@ public class Quest : ScriptableObject
     public int id;
     public string QuestName;
     public string QuestDescription;
+    public DialogueGraph questAssignedDialogue;
+    public DialogueGraph questCompletedDialogue;
+    public DialogueGraph questInProgressDialogue;
     public List<Goal> Goals = new List<Goal>();
 
     [Space(10)]
@@ -19,13 +22,6 @@ public class Quest : ScriptableObject
     public bool Completed;
 
     [Space(10)]
-
-    [Tooltip("Dialogue displayed by the quest giver when the player first takes this quest.")]
-    public List<string> questAssignedDialogue;
-    [Tooltip("Dialogue displayed when the player hands in the quest to its quest giver")]
-    public List<string> questCompletedDialogue;
-    [Tooltip("Dialogue displayed when the player interacts with an NPC with an assigned quest")]
-    public List<string> questInProgressDialogue;
 
     [Space(10)]
     public List<Quest> questRequirements;
@@ -50,7 +46,7 @@ public class Quest : ScriptableObject
 
         if (Completed)
         {
-            Debug.Log("Completed quest |" + QuestName + "| - go back to quest giver for reward");
+            Debug.Log("Completed quest '" + QuestName + "' - go back to quest giver for reward");
             QuestManager.instance.RemoveQuest(this);
         }
 
