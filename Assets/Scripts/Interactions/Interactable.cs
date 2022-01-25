@@ -9,14 +9,6 @@ public abstract class Interactable : MonoBehaviour
 
     public GameObject interactPromptObject;
 
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.E) && canInteract)
-        //{
-        //    Interact();
-        //}
-    }
-
     public virtual void Interact()
     {
         Debug.Log(gameObject.name + " interacted with");

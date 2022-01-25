@@ -13,12 +13,10 @@ MonoBehaviour:
   m_Name: MH53 Gauss Rifle
   m_EditorClassIdentifier: 
   itemName: MH53 Gauss Rifle
-  itemDescription: 
+  itemDescription: The first prescription rifle that was used for more than 200 years
+    in the Union's Special Ops gear
   itemIcon: {fileID: -1719990381, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
   itemRarity: {fileID: 11400000, guid: 635ab1b99fa9814498f4746cda084f8d, type: 2}
-  itemGridSize:
-    x: 2
-    y: 5
   itemValue: 414
   itemStack: 1
   itemMaxStack: 1

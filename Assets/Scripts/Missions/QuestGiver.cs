@@ -7,8 +7,9 @@ public class QuestGiver : NPC
 {
     public bool AssignedQuest { get; set; } = false;
 
-    public List<Quest> availableQuests;
+    public DialogueGraph noQuestsAvailableGraph;
 
+    public List<Quest> availableQuests;
     public Quest activeQuest;
 
     private void Start()
@@ -27,10 +28,12 @@ public class QuestGiver : NPC
         if(!AssignedQuest)
         {
             AssignQuest();
+            GetComponent<NodeParse>().StartDialogueGraph();
         }
         else
         {
             CheckQuestCompletion(activeQuest);
+            GetComponent<NodeParse>().StartDialogueGraph();
         }
     }
 
@@ -58,11 +61,11 @@ public class QuestGiver : NPC
             activeQuest = possibleQuests[0];
             availableQuests.Remove(activeQuest);
             QuestManager.instance.AddQuest(activeQuest);
-            UIManager.instance.DisplayDialogue(activeQuest.questAssignedDialogue, npcName);
+            GetComponent<NodeParse>().graph = activeQuest.questAssignedDialogue;           
         }
         else
         {
-            UIManager.instance.DisplayDialogue("Hey uh, sorry m8 I haven't any quests for you today. Maybe come back later?", npcName);
+            GetComponent<NodeParse>().graph = noQuestsAvailableGraph;
         }
     }
 
@@ -74,12 +77,12 @@ public class QuestGiver : NPC
         {
             questToCheck.GiveReward(gameObject);
             AssignedQuest = false;
-            UIManager.instance.DisplayDialogue(activeQuest.questCompletedDialogue, npcName);
+            GetComponent<NodeParse>().graph = activeQuest.questCompletedDialogue;
             activeQuest = null;
         }
         else
         {
-            UIManager.instance.DisplayDialogue(activeQuest.questInProgressDialogue, npcName);
+            GetComponent<NodeParse>().graph = activeQuest.questInProgressDialogue;
         }
     }
 }

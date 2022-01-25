@@ -29,6 +29,7 @@ TagManager:
   - Ship Exit
   - Ship Entrance
   - Inventory
+  - Volume
   layers:
   - Default
   - TransparentFX

@@ -46,6 +46,8 @@ public class Inventory : MonoBehaviour
         i.GetComponent<ItemHolder>().itemHeld = itemDropped;
     }
 
+    //Tries to add an item to the inventory - if inventory has item which can be stacked, it checks and adds to the
+    //stack of the item
     public bool AddItem(BaseItem itemToAdd)
     {
         if (items.Count < maxItemCount)
@@ -149,10 +151,9 @@ public class Inventory : MonoBehaviour
         Debug.Log("Reached the end");
     }
 
+    //Unequips item in the argument from the player
     public void UnequipItem(BaseEquippable itemToUnequip)
-    {
-        Debug.Log("Unequipping");
-        itemToUnequip.OnUnequip();
+    {     
         itemsEquipped.Remove(itemToUnequip);
         items.Add(itemToUnequip);
 
@@ -175,7 +176,7 @@ public class Inventory : MonoBehaviour
             UnequipItem(itemToUnequip);
         }
 
+        itemToUnequip.OnUnequip();
         itemToUnequip.isEquipped = false;
-        Debug.Log(itemToUnequip.isEquipped);
     }
 }

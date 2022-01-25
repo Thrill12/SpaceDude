@@ -13,12 +13,10 @@ MonoBehaviour:
   m_Name: Minigun
   m_EditorClassIdentifier: 
   itemName: Minigun
-  itemDescription: 
+  itemDescription: The favourite gun of hte frost tips, this ravage weapon can blast
+    through most things imaginable.
   itemIcon: {fileID: 1568506619, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
   itemRarity: {fileID: 11400000, guid: 832344019b921514faeab9a22f4c5cfb, type: 2}
-  itemGridSize:
-    x: 2
-    y: 5
   itemValue: 521
   itemStack: 1
   itemMaxStack: 1

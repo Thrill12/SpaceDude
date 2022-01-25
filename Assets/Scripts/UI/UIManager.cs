@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    public GameObject firstSelectedInPauseMenu;
     public PlayerInput playerInput;
     public AudioListener audioListener;
 
@@ -20,6 +21,8 @@ public class UIManager : MonoBehaviour
 
     public Image dampenersImage;
 
+    [HideInInspector]
+    public bool triggeredNextStep;
     public GameObject dialogueDisplay;
     public GameObject dialogueLocationEnabled;
     public GameObject dialogueLocationDisabled;
@@ -58,15 +61,25 @@ public class UIManager : MonoBehaviour
 
     public GameObject journalObject;
     public GameObject inventory;
+    public GameObject pauseMenu;
+
+    [Header("Inventory")]
+
+    public ItemStatDisplayer leftItemStatDisplay;
+    public ItemStatDisplayer rightItemStatDisplay;
+    public GameObject invisSelectButton;
+    public BaseItem currentlySelectedItemToDisplay;
+
+    [Space(15)]
 
     [HideInInspector]
     public BaseItem commSelectedInMarketWindow;
     [HideInInspector]
     public int commSelectedInMarketWindowUnits;
 
-    private PlayerShipMovement playerMovement;
+    public PlayerShipMovement playerMovement;
     private PrefabManager pfManager;
-    private GameObject player;
+    public GameObject player;
     private PlanetCheckerRaycast planetCheck;
     [HideInInspector]
     public List<Planet> allPlanets = new List<Planet>();
@@ -87,8 +100,6 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShipMovement>();
-        player = GameObject.FindGameObjectWithTag("Player");
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         planetCheck = player.GetComponent<PlanetCheckerRaycast>();
 
@@ -99,11 +110,89 @@ public class UIManager : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         originalDialogueDisplayPosition = dialogueDisplay.transform.position;
+
+        playerInput.SwitchCurrentActionMap("PlayerShip");
     }
 
     private void Update()
     {
-        if(playerInput.currentActionMap.name == "GamePad")
+        Debug.Log(playerInput.currentActionMap.name);
+
+        //Displaying the currently hovered on item in the inventory
+        if (playerInput.currentControlScheme == "GamePad")
+        {
+            //Displaying the current item selected in the inventory
+            if (currentlySelectedItemToDisplay != null && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<UIItemHolder>())
+            {
+                if (currentlySelectedItemToDisplay as BaseEquippable)
+                {
+                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                    if (equip.isEquipped)
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(false);
+                currentlySelectedItemToDisplay = null;
+            }
+        }
+        else
+        {
+            //Displaying the current item selected in the inventory
+            if (currentlySelectedItemToDisplay != null)
+            {
+                if (currentlySelectedItemToDisplay as BaseEquippable)
+                {
+                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                    if (equip.isEquipped)
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(false);
+                currentlySelectedItemToDisplay = null;
+            }
+        }
+
+        if(playerInput.currentControlScheme == "GamePad")
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -158,6 +247,20 @@ public class UIManager : MonoBehaviour
     }   
 
     #region NormalUI
+
+    //This selects the first item in the inventory when the player switches to a gamepad midgame
+    public void OnControlsChanged()
+    {
+        if (inventory.activeInHierarchy)
+        {
+            if (playerInput.currentControlScheme == "GamePad")
+            {
+                SelectFirstItemHolder();
+            }
+        }
+    }
+
+    //Makes sure all the active UI is closed
     public void CloseAllUI(InputAction.CallbackContext context)
     {
         if (planetUI.activeInHierarchy)
@@ -175,6 +278,11 @@ public class UIManager : MonoBehaviour
             Inventory(context);
         }
 
+        if (pauseMenu.activeInHierarchy)
+        {
+            PauseMenu(context);
+        }
+
         isInUI = false;
 
         if (playerMovement.isPlayerPiloting)
@@ -187,6 +295,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Turns on the planet interaction menu when the player is in the ship
     public void PlanetDescription(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
@@ -247,6 +356,7 @@ public class UIManager : MonoBehaviour
         }      
     }
 
+    //Turns on the journal menu for the player to keep track of their progress
     public void Journal(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;        
@@ -293,6 +403,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Turns on player inventory when the player is outside the ship
     public void Inventory(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
@@ -300,6 +411,238 @@ public class UIManager : MonoBehaviour
         if (inventory.activeInHierarchy == false)
         {
             CloseAllUI(context);
+        }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        if(playerInput.currentControlScheme == "GamePad")
+        {
+            Debug.Log("Selected");
+            SelectFirstItemHolder();
+        }
+
+        inventory.SetActive(!inventory.activeInHierarchy);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+
+        if (inventory.activeInHierarchy)
+        {
+            isInUI = true;
+            commSelectedInMarketWindow = null;
+            commSelectedInMarketWindowUnits = 0;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    //Turns on pause menu and pauses the game
+    public void PauseMenu(InputAction.CallbackContext context)
+    {
+        if (context.phase != InputActionPhase.Started) return;
+
+        if (pauseMenu.activeInHierarchy == false)
+        {
+            CloseAllUI(context);
+        }
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstSelectedInPauseMenu);
+
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+                pauseMenu.SetActive(false);
+                Time.timeScale = 1;
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+                pauseMenu.SetActive(false);
+                Time.timeScale = 1;
+            }
+
+
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0;
+        }
+
+        if (pauseMenu.activeSelf)
+        {
+            isInUI = true;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    //Overloads for no context
+    public void CloseAllUI()
+    {
+        if (planetUI.activeInHierarchy)
+        {
+            PlanetDescription();
+        }
+
+        if (journalObject.activeInHierarchy)
+        {
+            Journal();
+        }
+
+        if (inventory.activeInHierarchy)
+        {
+            Inventory();
+        }
+
+        isInUI = false;
+
+        if (playerMovement.isPlayerPiloting)
+        {
+            playerInput.SwitchCurrentActionMap("PlayerShip");
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("PlayerSuit");
+        }
+    }
+
+    public void PlanetDescription()
+    {
+        if (planetCheck.planetHovered != null)
+        {
+            ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
+
+            if (planetUI.activeInHierarchy == false)
+            {
+                CloseAllUI();
+            }
+
+            if (playerInput.currentActionMap.name == "UI")
+            {
+                if (playerMovement.isPlayerPiloting)
+                {
+                    playerInput.SwitchCurrentActionMap("PlayerShip");
+                }
+                else
+                {
+                    playerInput.SwitchCurrentActionMap("PlayerSuit");
+                }
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("UI");
+            }
+
+            planetUI.SetActive(!planetUI.activeInHierarchy);
+
+            if (planetUI.activeInHierarchy)
+            {
+                isInUI = true;
+            }
+            else
+            {
+                isInUI = false;
+            }
+
+            if (Time.timeScale == 0)
+            {
+
+                Time.timeScale = 1;
+                StopAllCoroutines();
+            }
+            else
+            {
+                Time.timeScale = 0;
+                TypePlanetDescription(planetCheck.planetHoveredP, planetDescription);
+            }
+
+            planetName.text = planetCheck.planetHoveredP.planetName;
+            planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
+            populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
+
+            MarketSwitchToMarketComms();
+        }
+    }
+
+    public void Journal()
+    {
+        if (journalObject.activeInHierarchy == false)
+        {
+            CloseAllUI();
+        }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        journalObject.SetActive(!journalObject.activeInHierarchy);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+
+        if (journalObject.activeInHierarchy)
+        {
+            isInUI = true;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    public void Inventory()
+    {
+        if (inventory.activeInHierarchy == false)
+        {
+            CloseAllUI();
         }
 
         if (playerInput.currentActionMap.name == "UI")
@@ -343,18 +686,100 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void PauseMenu()
+    {
+        if (pauseMenu.activeInHierarchy == false)
+        {
+            CloseAllUI();
+        }
+
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        pauseMenu.SetActive(!pauseMenu.activeInHierarchy);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstSelectedInPauseMenu);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+            Debug.Log("Turned off ");
+        }
+        else
+        {
+            Time.timeScale = 0;
+            Debug.Log("Turned off ");
+        }
+
+        if (pauseMenu.activeInHierarchy)
+        {
+            isInUI = true;
+        }
+        else
+        {
+            isInUI = false;
+        }
+    }
+
+    public void TriggerNextDialogue()
+    {
+        triggeredNextStep = true;
+    }
+
+    //Function to return back to main menu
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1;
+        playerInput.SwitchCurrentActionMap("MainMenu");
+        GameManager.instance.LoadMainMenu();
+    }
+
+    //Selects the first item in the inventory for gamepad use
     public void SelectFirstItemHolder()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
+
+        if(inv.items.Count > 0)
+        {
+            if (inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
+            {
+                EventSystem.current.SetSelectedGameObject(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).First().gameObject);
+                Debug.Log("Currently selected is " + EventSystem.current.gameObject.name);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
+                Debug.Log("Currently selected is " + EventSystem.current.gameObject.name);
+            }
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(invisSelectButton);
+        }
     }
 
+    //Displays active quest in the quest log
     public void DrawQuest(Quest quest)
     {
         GameObject questDisplay = Instantiate(PrefabManager.instance.questDisplay, activeMissionsLog.transform);
         questDisplay.GetComponent<QuestDisplayHolder>().questHeld = quest;    
     }
 
+    //Removes quest display from quest log
     public void RemoveQuest(Quest quest)
     {
         List<QuestDisplayHolder> list = activeMissionsLog.GetComponentsInChildren<QuestDisplayHolder>().Where(x => x.questHeld.id == quest.id).ToList();
@@ -366,6 +791,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region AnimatedUI
+    //Animates locaftion name display
     public void ToggleLocationNameDisplay(bool toggleBool, string locationName)
     {         
         CanvasGroup canv = mainStationDisplay.GetComponent<CanvasGroup>();
@@ -387,6 +813,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Types the planet description for the planet interaction screen
     public void TypePlanetDescription(Planet planet, TMP_Text description)
     {
         StopAllCoroutines();
@@ -487,6 +914,8 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region Marketstuff
+
+    //Selects the item to buy in the market window
     public void MarketSelectCommodityInMarketWindow(BaseItem comm)
     {
         commSelectedInMarketWindow = comm;
@@ -494,6 +923,7 @@ public class UIManager : MonoBehaviour
         marketUnitSelector.value = comm.itemStack;
     }
 
+    //Buys the commodity currently selected from the planet player interacted with.
     public void MarketBuyCommodity()
     {
         try
@@ -532,6 +962,7 @@ public class UIManager : MonoBehaviour
         MarketSwitchToMarketComms();
     }
 
+    //Sells the commodity currently selected from the planet player interacted with
     public void MarketSellCommodity()
     {
         try
@@ -566,6 +997,8 @@ public class UIManager : MonoBehaviour
         MarketSwitchToInventoryComms();
     }
 
+    //Run when the value in the slider of the planet interaction menu changes to change the display and select
+    //how many items are selected of the current stack
     public void MarketUnitSelectorSliderValueChanged()
     {
         try
@@ -579,6 +1012,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Switches tab of planet interaction menu shop to market
     public void MarketSwitchToMarketComms()
     {
         marketBuyButton.SetActive(true);
@@ -630,6 +1064,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Switches tab of planet interaction menu shop to inventory
     public void MarketSwitchToInventoryComms()
     {
         marketBuyButton.SetActive(false);

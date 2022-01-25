@@ -107,7 +107,7 @@ public class PlayerShipMovement : MonoBehaviour
         src = GetComponent<AudioSource>();
         ui = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         playerSuit = GetComponent<PlayersuitManager>();
-
+        postProcessingVolume = GameObject.FindGameObjectWithTag("Volume").GetComponent<Volume>();
         //Setting up input actions for the new input system
     }
 
@@ -162,6 +162,7 @@ public class PlayerShipMovement : MonoBehaviour
         ChangeCameraZoomVelocity();
     }
 
+    //Checking for inputs and running their specific events/functions
     #region Inputs
     public void ChangeMovementVector(InputAction.CallbackContext context)
     {
@@ -223,7 +224,7 @@ public class PlayerShipMovement : MonoBehaviour
     }
     #endregion
 
-
+    //Potential script to make ship face an objective if we add google maps drive by
     private void TurnToObjective(Vector3 positionToNavigateTo)
     {
         float angle = Mathf.Atan2(positionToNavigateTo.y - transform.position.y, positionToNavigateTo.x - transform.position.x) * Mathf.Rad2Deg;
@@ -231,6 +232,7 @@ public class PlayerShipMovement : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, warpNavTurnSpeed);
     }
 
+    //The warp is charging up and will launch when ready
     private void ActivateWarp()
     {
         rb.freezeRotation = true;
@@ -241,6 +243,7 @@ public class PlayerShipMovement : MonoBehaviour
         Invoke("DropInWarp", 1.6f);
     }
 
+    //Starts the warp and travels very fast
     private void DropInWarp()
     {
         isChargingWarp = false;
@@ -258,7 +261,8 @@ public class PlayerShipMovement : MonoBehaviour
         StartCoroutine(IncreaseBlurAmount());
         StartCoroutine(IncreaseWarpEffectParticleRate());     
     }
-
+    
+    //Turns off warp and returns to normal
     private void DropOutWarp()
     {
         inWarp = false;
@@ -279,6 +283,7 @@ public class PlayerShipMovement : MonoBehaviour
         rb.freezeRotation = false;
     }
 
+    //Gradually increase the amount of particles released by the warp effect
     IEnumerator IncreaseWarpEffectParticleRate()
     {
         while(shipWarpEffectParticles.GetInt(Shader.PropertyToID("Spawn Rate")) < maxWarpEffectRate && inWarp)
@@ -289,6 +294,7 @@ public class PlayerShipMovement : MonoBehaviour
         }
     }
 
+    //Gradually inrease the blur amount in the effect
     IEnumerator IncreaseBlurAmount()
     {
         MotionBlur blur = null;
@@ -370,7 +376,7 @@ public class PlayerShipMovement : MonoBehaviour
             #region Dampeners and drag
             if (dampeners)
             {
-                if (inputY != 0)
+                if(inputY != 0)
                 {
                     rb.drag = 0;
                 }
@@ -418,6 +424,13 @@ public class PlayerShipMovement : MonoBehaviour
                 rb.velocity = rb.velocity.normalized * maxSpeed;
             }
         }       
+    }
+
+    private void AddForceForSlowingDown()
+    {
+        float angleBetweenVelAndUp = Mathf.Atan2(rb.velocity.normalized.y - transform.up.y, rb.velocity.x - transform.up.x) * Mathf.Rad2Deg;
+        rb.AddForce(-rb.velocity / (1 / Mathf.Abs(angleBetweenVelAndUp)));
+        Debug.DrawLine(transform.position, -rb.velocity / (1 / Mathf.Abs(angleBetweenVelAndUp)));
     }
 
     public void ChangeParticleThrustRate(int rate)

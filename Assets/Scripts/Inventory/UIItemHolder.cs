@@ -41,6 +41,22 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             img.color = itemHeld.itemRarity.rarityColor;
         }
 
+        if(itemHeld.itemRarity.name == "Common")
+        {
+            GetComponentInChildren<Image>().sprite = PrefabManager.instance.commonItemBorder;
+        }
+        else if(itemHeld.itemRarity.name == "Rare")
+        {
+            GetComponentInChildren<Image>().sprite = PrefabManager.instance.rareItemBorder;
+        }
+        else if(itemHeld.itemRarity.name == "Royal")
+        {
+            GetComponentInChildren<Image>().sprite = PrefabManager.instance.royalItemBorder;
+        }
+        else
+        {
+            GetComponentInChildren<Image>().sprite = PrefabManager.instance.ascendedItemBorder;
+        }
     }
 
     private void Update()
@@ -65,25 +81,36 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
         }
 
-        //if (isHoveredOn && Input.GetKeyDown(KeyCode.Z))
-        //{
-        //    inventory.SpawnDroppedItem(itemHeld);
-        //    Destroy(gameObject);
-        //}
+        Debug.Log(isHoveredOn);
+
+        if(UIManager.instance.playerInput.currentControlScheme == "GamePad")
+        {
+            if (EventSystem.current.currentSelectedGameObject == gameObject)
+            {
+                isHoveredOn = true;
+                UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
+            }
+            else
+            {
+                isHoveredOn = false;
+            }
+        }
+
+        if (isHoveredOn)
+        {
+            UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
+        }
     }
 
-    public void OnPointerEnter(PointerEventData pointerEventData)
+    public void OnPointerEnter(PointerEventData data)
     {
         isHoveredOn = true;
-        //Display Item Stats here
-        //Show();
     }
 
-    public void OnPointerExit(PointerEventData pointerEventData)
+    public void OnPointerExit(PointerEventData data)
     {
         isHoveredOn = false;
-        //Hide item stats here
-        //Hide();
+        UIManager.instance.currentlySelectedItemToDisplay = null;
     }
 
     public void ToggleEquipUnequip()

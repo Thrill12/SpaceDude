@@ -86,6 +86,7 @@ public class PlayerSuitMovement : MonoBehaviour
         }
     }
 
+    //Find nearby interactable, and interacts with the one closest to the front checker
     private void FindInteract()
     {
         Debug.Log("Finding interactable");
@@ -109,6 +110,7 @@ public class PlayerSuitMovement : MonoBehaviour
         InteractWithShipEntrance();
     }
 
+    //Tries to pick up an item
     private void PickUpItem(GameObject item)
     {
         if (Inventory.instance.AddItem(item.GetComponent<ItemHolder>().itemHeld))
@@ -123,6 +125,7 @@ public class PlayerSuitMovement : MonoBehaviour
 
     #region Movement Functions
 
+    //Takes a context's inputs to handle turning, gamepad and keyboard separate functions
     public void HandleTurning(InputAction.CallbackContext context)
     {
         if (playerInput.currentControlScheme == "GamePad")
@@ -135,6 +138,7 @@ public class PlayerSuitMovement : MonoBehaviour
         }
     }
 
+    //Uses mouse position to rotate towards
     private void RotatePlayerToMouse(InputAction.CallbackContext context)
     {    
         if(context.phase == InputActionPhase.Performed)
@@ -158,6 +162,7 @@ public class PlayerSuitMovement : MonoBehaviour
         
     }
 
+    //Uses the angle of the stick to rotate the player
     private void RotatePlayerToGamepadStick(InputAction.CallbackContext context)
     {
         if(playerInput.currentControlScheme == "GamePad")
@@ -181,6 +186,7 @@ public class PlayerSuitMovement : MonoBehaviour
         }       
     }
 
+    //Takes in an input to handle the movement - one universal context as value is still a vector 2
     public void ChangeMovementInputs(InputAction.CallbackContext context)
     {
         //Reads the input if the button pressed is held

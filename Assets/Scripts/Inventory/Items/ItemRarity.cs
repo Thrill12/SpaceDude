@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Item Rarity")]
 public class ItemRarity : BaseRarity
 {
-    
+    public int modAmount = 1;
 }

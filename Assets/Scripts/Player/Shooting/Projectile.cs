@@ -7,7 +7,11 @@ public class Projectile : MonoBehaviour
     public BaseEntity entityShotFrom;
     public BaseWeapon weaponShotFrom;
 
+    public GameObject impactParticles;
+
     public float damage;
+
+    public LayerMask layerMask;
 
     private void Start()
     {
@@ -17,11 +21,21 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<BaseEntity>() && collision.GetComponent<BaseEntity>() != entityShotFrom)
+        if (collision.gameObject.GetComponent<BaseEntity>() && collision.GetComponent<BaseEntity>() != entityShotFrom || ((layerMask.value & (1 << collision.gameObject.layer)) > 0))
         {
-            collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage);
+            if (collision.gameObject.GetComponent<BaseEntity>())
+            {
+                collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage);
+            }
 
+            Explode();
             Destroy(gameObject);
         }
+    }
+
+    public void Explode()
+    {
+        Instantiate(impactParticles, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

@@ -70,7 +70,8 @@ public class BaseEntity : MonoBehaviour
     {
         if(health > 0)
         {
-            health -= damageToTake;           
+            health -= UnityEngine.Random.Range(damageToTake - 2, damageToTake + 2);
+            PrefabManager.instance.SpawnNumberPopup(damageToTake, PrefabManager.instance.orange, (Vector2)transform.position + UnityEngine.Random.insideUnitCircle);
         }        
     }
 

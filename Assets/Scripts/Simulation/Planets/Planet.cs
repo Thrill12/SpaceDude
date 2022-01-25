@@ -8,19 +8,45 @@ public class Planet : MonoBehaviour
     [HideInInspector]
     public string planetName;
     public string planetDescription;
+
+    [Space(10)]
+
     public bool breathableAtmosphere;
     public bool isTakenOverByAliens;
+
+    [Space(10)]
+
+    public PlanetClimate planetClimate;
+
+    [Space(10)]
+
     public float totalInfluence;
     //In Billion
     public long population;
     public float totalWealth;
     public float influenceModifier;
+
+    [Space(10)]
+
+    [Header("Raw Resources Available")]
+
+    public List<RawResource> resources;
+
+    [Space(10)]
+
     public List<BaseItem> startingComms;
+
+    [Space(10)]
+
     public List<BaseItem> commoditiesInMarket;
     public List<TradeRoute> availableTradeRoutes;
+
+    [Space(10)]
+
     public List<PlanetProduction> products;
     public List<PlanetProduction> dependencies;
-    public List<Planet> allPlanets;
+
+    private List<Planet> allPlanets;
 
     [Space(5)]
 
@@ -84,6 +110,35 @@ public class Planet : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        for (int i = 0; i < Random.Range(0, 4); i++)
+        {
+            AddRandomResource();
+        }
+    }
+
+    private void AddRandomResource()
+    {
+        RawResource resourceChosen = ScriptableObject.Instantiate(RawResourceTable.instance.GetRandomResources());
+
+        int randomStackChosen = Random.Range(50, 250);
+
+        resourceChosen.itemStack = randomStackChosen;
+
+        if (planetClimate.CanResourceGrow(resourceChosen))
+        {
+            if(resources.Any(x => x.itemName == resourceChosen.itemName))
+            {
+                resources.Where(x => x.itemName == resourceChosen.itemName).First().itemStack += randomStackChosen;
+            }
+            else
+            {
+                resources.Add(resourceChosen);
+            }
+        }
+    }
+
     //On the planet's own update, update influence and project food consumpton in the next tick.
     private void Update()
     {
@@ -106,7 +161,12 @@ public class Planet : MonoBehaviour
         foreach (PlanetProduction item in dependencies)
         {
             SubtractResource(item);
-        }                   
+        }      
+        
+        if(Random.Range(1, 101) <= population)
+        {
+            AddRandomResource();
+        }
     }
 
     //This will find all the deficits of the planet so that it has enough for its population/needs

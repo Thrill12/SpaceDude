@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Items/Equippable Item"), System.Serializable]
 public class BaseEquippable : BaseItem
 {
+    public const int MAXMODLIMIT = 4;
+
     [Tooltip("The name of the slot that the item will go into. Has to be the same as the name of the slot in the SO")]
     public string itemSlot;
 
@@ -19,33 +21,29 @@ public class BaseEquippable : BaseItem
     public BaseEntity hostEntity;
     public bool isEquipped = false;
 
-    //Has to add a modifier to each stat that the item has mods for.
-    public void OnEquip(BaseEntity entity)
+    public virtual void OnEquip(BaseEntity hostEntity)
     {
-        hostEntity = entity;
-        if (!isEquipped)
-        {
-            isEquipped = true;
-            foreach (Modifier mod in itemMods)
-            {
-                mod.Source = this;
-                //Finding the stat for which its name is the same as the mod's stat it modifies
-                Stat s = (Stat)typeof(BaseEntity).GetField(mod.statToModifyName).GetValue(hostEntity);
-                s.AddModifier(mod);
-            }
-        }
+
     }
 
-    //Has to clean up its modifiers, removing its modifiers from any stats it affected
-    public void OnUnequip()
+    public virtual void OnUnequip()
     {
-        isEquipped = false;
-        foreach (Modifier mod in itemMods)
-        {
-            Stat s = (Stat)typeof(BaseEntity).GetField(mod.statToModifyName).GetValue(hostEntity);
-            s.RemoveAllModifiersFromSource(this);
-        }
-        hostEntity = null;
+
+    }
+
+    public virtual void AddMod(Modifier mod)
+    {
+        //Simply called when adding a mod, might come in useful for requirements or something
+    }
+
+    public void RemoveMod(Modifier mod)
+    {
+        mod.statAffecting.RemoveModifier(mod);
+    }
+
+    public virtual void GenerateMods()
+    {
+        //Each subclass of weapon will have its own stats that need generating, so all the generation is handled in that, this is just for ease of calling.
     }
 
     public void AddXP(float xp)

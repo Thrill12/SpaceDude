@@ -6,6 +6,8 @@ using Random = UnityEngine.Random;
 
 public class StarBackgroundGeneration : MonoBehaviour
 {
+    public StarBackgroundGeneration instance;
+
     public int seed = 1;
     public bool randomizeSeed = true;
 
@@ -42,6 +44,11 @@ public class StarBackgroundGeneration : MonoBehaviour
     public int numOfAsteroids = 500;
     public int numOfOther = 10;
     public int numOfNebulae = 50;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {

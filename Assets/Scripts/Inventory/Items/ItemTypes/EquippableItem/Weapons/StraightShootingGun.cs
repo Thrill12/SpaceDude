@@ -33,4 +33,44 @@ public class StraightShootingGun : BaseWeapon
 
         Destroy(proj, 3);
     }
+
+    public override void GenerateMods()
+    {
+        base.GenerateMods();
+
+        for (int i = 0; i < Random.Range(1, itemRarity.modAmount + 1); i++)
+        {
+            int randomProperty = Random.Range(0, 2);
+
+            switch (randomProperty)
+            {
+                case 0:
+
+                    Modifier mod = new Modifier("Damage", damage, Random.Range(5, 50), Modifier.StatModType.Flat);
+                    mod.Source = this;
+                    damage.AddModifier(mod);
+                    AddMod(mod);
+
+                    break;
+
+                case 1:
+
+                    mod = new Modifier("Attack Cooldown", attackCooldown, Random.Range(-5, -25), Modifier.StatModType.PercentAdd);
+                    mod.Source = this;
+                    attackCooldown.AddModifier(mod);
+                    AddMod(mod);
+
+                    break;
+
+                case 2:
+
+                    mod = new Modifier("Projectile Speed", projectileSpeed, Random.Range(5, 15), Modifier.StatModType.PercentMult);
+                    mod.Source = this;
+                    projectileSpeed.AddModifier(mod);
+                    AddMod(mod);
+
+                    break;
+            }
+        }        
+    }
 }
