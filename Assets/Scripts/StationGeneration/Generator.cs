@@ -56,7 +56,16 @@ public class Generator
         GenerateRooms();
 
         Texture2D texture = DebugTexture();
-        
+
+        TriangulationGraph graph = new TriangulationGraph();
+
+        List<Vector2Int> rooms = new List<Vector2Int>();    
+
+        foreach(PlacedRoom room in placedRooms)
+        {
+            rooms.Add(room.position);
+        }
+
         return texture;
     }
 
@@ -124,7 +133,6 @@ public class Generator
             {
                 //Commit this room to the grid.
                 AddRoomToGrid(room, pos);
-                Debug.Log("Room placed");
                 return true;
             }
         }
@@ -178,9 +186,6 @@ public class Generator
         //Loop over the tiles of the room and set the tiles on the grid.
         foreach(TileData tile in room.roomTileData)
         {
-            Debug.Log(tile);
-            Debug.Log(pos);
-
             //Get the craft grid position this tile should be on .
             Vector2Int gridPos = tile.position + pos;
             //Update the grid with the tile.
@@ -205,6 +210,7 @@ public class Generator
 
     #region Debugging 
 
+    //Generates a debug texture from a generated grid.
     Texture2D DebugTexture()
     {
         Texture2D tex = new Texture2D(profile.gridSize, profile.gridSize, TextureFormat.ARGB32, false);
@@ -234,6 +240,19 @@ public class Generator
         }
         tex.Apply();
         return tex;
+    }
+
+    //Returns a list of vertices (rooms).
+    public List<Vector2Int> RoomPositions()
+    {
+        List<Vector2Int> pos = new List<Vector2Int>();
+
+        foreach (PlacedRoom r in placedRooms)
+        {
+            pos.Add(r.position);
+        }
+
+        return pos;
     }
 
     #endregion

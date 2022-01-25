@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftType: 1
   gridSize: 50
-  minNumRooms: 3
+  minNumRooms: 2
   maxNumRooms: 10
   rooms:
   - {fileID: 11400000, guid: 7b2d5df073976014ca8b798c56fc1eb7, type: 2}
