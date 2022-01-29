@@ -289,6 +289,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         warpSource.PlayOneShot(warpOutSound);
         rb.freezeRotation = false;
+        rb.velocity = rb.velocity.normalized * maxSpeed * 0.2f;
     }
 
     //Gradually increase the amount of particles released by the warp effect

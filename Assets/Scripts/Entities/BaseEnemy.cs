@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class BaseEnemy : BaseEntity
 {
     public Image healthBar;
@@ -21,6 +22,7 @@ public class BaseEnemy : BaseEntity
         base.Start();
 
         prefabManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
+
         healthBarObject = Instantiate(prefabManager.healthBarObject, transform);
         healthBarObject.transform.position = new Vector3(healthBarObject.transform.position.x, healthBarObject.transform.position.y + healthBarYOffset, healthBarObject.transform.position.z);
         healthBar = healthBarObject.transform.Find("HealthBar").GetComponent<Image>();
@@ -29,12 +31,18 @@ public class BaseEnemy : BaseEntity
     public override void Update()
     {
         base.Update();
+
+        if (healthBarObject == null) return;
         healthBar.fillAmount = health / maxHealth.Value;
     }
 
     public override void Die()
     {
-        pfMan.SpawnItem(gameObject, GetRandomItem());
+        if(dropTable.Count > 0)
+        {
+            pfMan.SpawnItem(gameObject, GetRandomItem());
+        }
+        
         base.Die();
     } 
 

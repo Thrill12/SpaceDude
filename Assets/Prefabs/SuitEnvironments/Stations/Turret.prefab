@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 3043783526829755439}
   - component: {fileID: 8422777376399373941}
   - component: {fileID: 7283469730192501926}
+  - component: {fileID: 30635171378689541}
   m_Layer: 7
   m_Name: Turret
   m_TagString: Enemy
@@ -239,7 +240,7 @@ MonoBehaviour:
   - {x: -0.07486631, y: 0.09008035, z: 0}
   m_ShapePathHash: 849515421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 96084
+  m_InstanceId: 184704
 --- !u!114 &8422777376399373941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,3 +323,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.4375}
   m_EdgeRadius: 0
+--- !u!50 &30635171378689541
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108898495478855683}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 5
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 2
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4

@@ -78,6 +78,50 @@ MonoBehaviour:
   exit: 0
   dialogueText: I ain't got any quests for ya, I'm sorry... Maybe i'll have something
     later.
+--- !u!114 &-6635944967807259119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c231240ecdc7cc4790f779f1d54838d, type: 3}
+  m_Name: Set NPC To Graph
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 921.5, y: 13}
+  ports:
+    keys:
+    - entry
+    - exit
+    values:
+    - _fieldName: entry
+      _node: {fileID: -6635944967807259119}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: exit
+        node: {fileID: 293074128296246298}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: exit
+      _node: {fileID: -6635944967807259119}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  entry: 0
+  npcToChange: Mickey the Mad Man
+  graphToChangeTo: {fileID: 11400000, guid: 3f0f2598b9703684084ecbe65da23484, type: 2}
+  exit: 0
 --- !u!114 &-3518339866125157864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +304,7 @@ MonoBehaviour:
   - {fileID: -8068024104194477734}
   - {fileID: 4091862040663903561}
   - {fileID: 8305025315256617438}
+  - {fileID: -6635944967807259119}
   current: {fileID: 0}
 --- !u!114 &293074128296246298
 MonoBehaviour:
@@ -274,7 +319,7 @@ MonoBehaviour:
   m_Name: Quest
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 668.5, y: -57}
+  position: {x: 664, y: -56}
   ports:
     keys:
     - entry
@@ -294,15 +339,18 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: exit
       _node: {fileID: 293074128296246298}
-      _typeQualifiedName: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
-      connections: []
+      connections:
+      - fieldName: entry
+        node: {fileID: -6635944967807259119}
+        reroutePoints: []
       _direction: 1
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
   entry: 0
-  exit: 
+  exit: 0
   questToGive: {fileID: 11400000, guid: 479c4c162362729488d1b2fc15ea8a33, type: 2}
 --- !u!114 &3826896687767829650
 MonoBehaviour:

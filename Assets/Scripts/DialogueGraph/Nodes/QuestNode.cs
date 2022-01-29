@@ -8,7 +8,7 @@ using XNode;
 public class QuestNode : BaseNode {
 
 	[Input] public int entry;
-	[Output] public string exit;
+	[Output] public int exit;
 
 	public Quest questToGive;
 

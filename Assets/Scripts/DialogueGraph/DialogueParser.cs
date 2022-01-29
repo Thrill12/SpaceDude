@@ -56,7 +56,7 @@ public class DialogueParser : MonoBehaviour
         {
             QuestNode q = (QuestNode)b;
 
-            QuestManager.instance.AddQuest(q.GetQuest(), GetComponent<NPC>());
+            QuestManager.instance.AddQuest(q.GetQuest(), GetComponent<NPC>());          
 
             NextNode("exit");
         }
@@ -85,9 +85,10 @@ public class DialogueParser : MonoBehaviour
 
             UIManager.instance.hasChosen = false;            
         }
-        else if(parts[0].Trim() == "QuestCheckReq")
+        else if(parts[0].Trim() == "QuestCheckRequirements")
         {
-            if(parts[1].Trim() == "True")
+            CheckQuestRequirementsNode node = (CheckQuestRequirementsNode)graph.current;
+            if (node.GetQuest().CheckRequirements())
             {
                 NextNode("pass");
             }
@@ -127,6 +128,13 @@ public class DialogueParser : MonoBehaviour
             {
                 UIManager.instance.playerInput.SwitchCurrentActionMap("PlayerSuit");
             }
+        }
+        else if (parts[0].Trim() == "SetNPCToGraph")
+        {
+            SetNPCToGraphNode node = graph.current as SetNPCToGraphNode;
+            NPCManager.instance.SetNPCToGraph(node.npcToChange, node.graphToChangeTo);
+
+            NextNode("exit");
         }
     }
 

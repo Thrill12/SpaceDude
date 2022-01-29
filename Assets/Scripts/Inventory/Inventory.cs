@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour
     public WeaponsHolder weaponHolder;
 
     public GameObject itemInventoryDisplay;
+    public GameObject shipItemInventoryDisplay;
     public GameObject uiItemHolder;
     public GameObject worldItemHolder;
     public GameObject slotsParent;
@@ -23,7 +24,8 @@ public class Inventory : MonoBehaviour
 
     [Space(10)]
 
-    public List<BaseItem> items = new List<BaseItem>();
+    public List<BaseItem> playerInventoryItems = new List<BaseItem>();
+    public List<BaseItem> shipInventoryItems = new List<BaseItem>();
 
     [Space(10)]
 
@@ -32,11 +34,29 @@ public class Inventory : MonoBehaviour
     [HideInInspector]
     public List<UIItemHolder> uiItemHolders = new List<UIItemHolder>();
 
-    public int maxItemCount = 30;
+    [HideInInspector]
+    public List<UIItemHolder> shipUiItemHolders = new List<UIItemHolder>();
+
+    public int maxPlayerItemCount = 30;
+    public int maxShipItemCount = 30;
+
+    public bool isInShipInventory;
 
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Update()
+    {
+        if (shipItemInventoryDisplay.activeInHierarchy)
+        {
+            isInShipInventory = true;
+        }
+        else
+        {
+            isInShipInventory = false;
+        }
     }
 
     public void SpawnDroppedItem(BaseItem itemDropped)
@@ -50,19 +70,20 @@ public class Inventory : MonoBehaviour
     //stack of the item
     public bool AddItem(BaseItem itemToAdd)
     {
-        if (items.Count < maxItemCount)
+        if (playerInventoryItems.Count < maxPlayerItemCount && !playerInventoryItems.Contains(itemToAdd))
         {
             if (!typeof(BaseEquippable).IsAssignableFrom(itemToAdd.GetType()))
             {
-                if (items.Where(x => x.itemName == itemToAdd.itemName).Count() > 0)
+                if (playerInventoryItems.Where(x => x.itemName == itemToAdd.itemName).Count() > 0)
                 {
-                    GeneralItem item = (GeneralItem)items.Where(x => x.itemName == itemToAdd.itemName).First();
+                    GeneralItem item = (GeneralItem)playerInventoryItems.Where(x => x.itemName == itemToAdd.itemName).First();
                     GeneralItem genItemToAdd = (GeneralItem)itemToAdd;
                     item.itemStack += genItemToAdd.itemStack;
                 }
                 else
                 {
-                    items.Add(itemToAdd);
+                    playerInventoryItems.Add(itemToAdd);
+
                     GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
                     uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
                     uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
@@ -70,7 +91,8 @@ public class Inventory : MonoBehaviour
             }
             else
             {
-                items.Add(itemToAdd);
+                playerInventoryItems.Add(itemToAdd);
+
                 GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
                 uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
                 uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
@@ -82,7 +104,7 @@ public class Inventory : MonoBehaviour
         {
             Debug.Log("Inventory Full");
             return false;
-        }
+        }      
     }
 
     public void RemoveItemFromInventory(BaseItem itemToRemove)
@@ -98,8 +120,45 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        items.Remove(itemToRemove);
+        playerInventoryItems.Remove(itemToRemove);
         uiItemHolders.Remove(uiItemHolders.Where(x => x.itemHeld == itemToRemove).First());
+    }
+
+    public bool SwapInventoryOfItem(BaseItem itemToSwap)
+    {
+        if (playerInventoryItems.Contains(itemToSwap))
+        {
+            //Run code to move from player to ship
+
+            Debug.Log("Swapping " + itemToSwap.itemName + " to ship");
+
+            if (shipInventoryItems.Count >= maxShipItemCount) return false;
+
+            playerInventoryItems.Remove(itemToSwap);
+            shipInventoryItems.Add(itemToSwap);
+            GameObject holder = uiItemHolders.Where(x => x.itemHeld == itemToSwap).First().gameObject;
+            holder.transform.SetParent(shipItemInventoryDisplay.transform);
+            uiItemHolders.Remove(holder.GetComponent<UIItemHolder>());
+            shipUiItemHolders.Add(holder.GetComponent<UIItemHolder>());
+
+            return true;
+        }
+        else
+        {
+            //Code to swap item from ship to player
+
+            Debug.Log("Swapping " + itemToSwap.itemName + " to player");
+
+            if (playerInventoryItems.Count >= maxPlayerItemCount) return false;
+
+            shipInventoryItems.Remove(itemToSwap);
+            playerInventoryItems.Add(itemToSwap);
+            GameObject holder = shipUiItemHolders.Where(x => x.itemHeld == itemToSwap).First().gameObject;
+            holder.transform.SetParent(itemInventoryDisplay.transform);
+            shipUiItemHolders.Remove(holder.GetComponent<UIItemHolder>());
+            uiItemHolders.Add(holder.GetComponent<UIItemHolder>());
+            return true;
+        }
     }
 
     //These 2 functions handle equipping and unequipping items, excluding weapons which are handled below.
@@ -109,7 +168,7 @@ public class Inventory : MonoBehaviour
 
         itemToEquip.OnEquip(player);
         itemsEquipped.Add(itemToEquip);
-        items.Remove(itemToEquip);
+        playerInventoryItems.Remove(itemToEquip);
 
         ItemSlot slot = slots.Where(x => x.slotName == itemToEquip.itemSlot).First();
 
@@ -156,7 +215,7 @@ public class Inventory : MonoBehaviour
     public void UnequipItem(BaseEquippable itemToUnequip)
     {     
         itemsEquipped.Remove(itemToUnequip);
-        items.Add(itemToUnequip);
+        playerInventoryItems.Add(itemToUnequip);
 
         ItemSlot slot = slots.Where(x => x.slotName == itemToUnequip.itemSlot).First();
         slot.itemInSlot = null;

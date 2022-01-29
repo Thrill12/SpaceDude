@@ -23,6 +23,9 @@ public class BaseEntity : MonoBehaviour
     [HideInInspector]
     public PrefabManager pfMan;
 
+    [HideInInspector]
+    public bool isDead;
+
     private void Awake()
     {
         health = maxHealth.Value;
@@ -35,9 +38,10 @@ public class BaseEntity : MonoBehaviour
 
     public virtual void Update()
     {
-        if (health <= 0)
+        if (health <= 0 && !isDead)
         {
             Die();
+            isDead = true;
         }
 
         if (nextFireHealthRegen <= 0)

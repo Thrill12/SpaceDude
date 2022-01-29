@@ -27,7 +27,7 @@ public class QuestManager : MonoBehaviour
     public void AddQuest(Quest questToAdd)
     {
         activeQuests.Add(questToAdd);
-
+        
         questToAdd.Init();
 
         foreach (var item in questToAdd.Goals)

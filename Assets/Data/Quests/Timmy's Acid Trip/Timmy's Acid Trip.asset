@@ -20,6 +20,7 @@ MonoBehaviour:
   questInProgressDialogue: {fileID: 11400000, guid: 6d0fa943ba1f5d946ba551d1df4c11a3, type: 2}
   Goals:
   - {fileID: 11400000, guid: e7c3e6483fad4394ca8c1ff60f584773, type: 2}
+  - {fileID: 11400000, guid: fe35c486c60eec849b7a1605d938737b, type: 2}
   ExperienceReward: 0
   FactionInfluenceReward: 0
   ItemReward: {fileID: 11400000, guid: 4410b2826db5b0344b0949e04e95889b, type: 2}

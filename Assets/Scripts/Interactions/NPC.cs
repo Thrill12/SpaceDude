@@ -6,7 +6,6 @@ using UnityEngine;
 public class NPC : Interactable
 {
     public string npcName;
-
     public bool AssignedQuest { get; set; } = false;
 
     [Tooltip("Graph used for interactions with the NPC. Place any quests you want to give out in the graph itself - got rid of the weird old way of doing it")]
@@ -16,11 +15,13 @@ public class NPC : Interactable
     private void Start()
     {
         GetComponent<DialogueParser>().graph = dialogueGraph;
+        NPCManager.instance.allNPCs.Add(this);
     }
 
     public override void Interact()
     {
         base.Interact();
+        GameEvents.instance.OnNPCCommunicate(this);
         if (!AssignedQuest)
         {
             

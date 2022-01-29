@@ -35,7 +35,6 @@ public abstract class BaseWeapon : BaseEquippable
 
     public override void OnEquip(BaseEntity entity)
     {
-        Debug.Log("Equipping");
         hostEntity = entity;
         if (!isEquipped)
         {
@@ -45,7 +44,6 @@ public abstract class BaseWeapon : BaseEquippable
 
     public override void OnUnequip()
     {
-        Debug.Log(hostEntity.entityName);
         isEquipped = false;
         hostEntity = null;
     }

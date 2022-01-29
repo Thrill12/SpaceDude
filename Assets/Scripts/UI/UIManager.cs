@@ -71,7 +71,11 @@ public class UIManager : MonoBehaviour
 
     public GameObject journalObject;
     public GameObject inventory;
+    public GameObject characterSlotsDisplay;
+    public GameObject shipInventory;
     public GameObject pauseMenu;
+
+    public bool isInShipInventory;
 
     [Header("Inventory")]
 
@@ -126,6 +130,8 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        isInShipInventory = shipInventory.activeInHierarchy;
+
         //Displaying the currently hovered on item in the inventory
         if (playerInput.currentControlScheme == "GamePad")
         {
@@ -278,7 +284,7 @@ public class UIManager : MonoBehaviour
     public void PlanetDescription(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
-
+        Debug.Log("Planet description");
         PlanetDescription();    
     }
 
@@ -296,7 +302,7 @@ public class UIManager : MonoBehaviour
         if (context.phase != InputActionPhase.Started) return;
 
         Inventory();
-    }
+    }    
 
     //Turns on pause menu and pauses the game
     public void PauseMenu(InputAction.CallbackContext context)
@@ -309,6 +315,11 @@ public class UIManager : MonoBehaviour
     //Overloads for no context
     public void CloseAllUI()
     {
+        leftItemStatDisplay.gameObject.SetActive(false);
+        rightItemStatDisplay.gameObject.SetActive(false);
+        currentlySelectedItemToDisplay = null;
+        SelectUIObject(null);
+
         if (planetUI.activeInHierarchy)
         {
             PlanetDescription();
@@ -324,6 +335,11 @@ public class UIManager : MonoBehaviour
             Inventory();
         }
 
+        if (shipInventory.activeInHierarchy)
+        {
+            ShipInventory();
+        }
+
         isInUI = false;
 
         if (playerMovement.isPlayerPiloting)
@@ -333,14 +349,17 @@ public class UIManager : MonoBehaviour
         else
         {
             playerInput.SwitchCurrentActionMap("PlayerSuit");
-        }
+        }      
     }
 
     public void PlanetDescription()
     {
-        if (planetCheck.planetHovered != null)
+        if(planetCheck.planetHoveredP != null)
         {
-            ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
+            Debug.Log(planetCheck.planetHoveredP.planetName);
+            //ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
+
+            Debug.Log("Were inside bois");
 
             if (planetUI.activeInHierarchy == false)
             {
@@ -391,7 +410,7 @@ public class UIManager : MonoBehaviour
             populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
 
             MarketSwitchToMarketComms();
-        }
+        }       
     }
 
     public void Journal()
@@ -464,6 +483,8 @@ public class UIManager : MonoBehaviour
         SelectFirstItemHolder();
 
         inventory.SetActive(!inventory.activeInHierarchy);
+        characterSlotsDisplay.SetActive(true);
+        shipInventory.SetActive(false);
 
         if (Time.timeScale == 0)
         {
@@ -475,6 +496,55 @@ public class UIManager : MonoBehaviour
         }
 
         if (inventory.activeInHierarchy)
+        {
+            isInUI = true;
+            commSelectedInMarketWindow = null;
+            commSelectedInMarketWindowUnits = 0;
+        }
+        else
+        {
+            isInUI = false;
+            
+        }
+
+        leftItemStatDisplay.gameObject.SetActive(false);
+        rightItemStatDisplay.gameObject.SetActive(false);
+    }
+
+    public void ShipInventory()
+    {
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        SelectFirstItemHolder();
+
+        inventory.SetActive(!inventory.activeInHierarchy);
+        shipInventory.SetActive(!shipInventory.activeInHierarchy);
+        characterSlotsDisplay.SetActive(false);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+
+        if (shipInventory.activeInHierarchy)
         {
             isInUI = true;
             commSelectedInMarketWindow = null;
@@ -555,7 +625,7 @@ public class UIManager : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null);
 
-        if(inv.items.Count > 0)
+        if(inv.playerInventoryItems.Count > 0)
         {
             if (inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
             {
@@ -814,7 +884,7 @@ public class UIManager : MonoBehaviour
                 newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
                 planetCheck.planetHoveredP.ReceiveCommodity(newCommToAdd);
-                player.GetComponent<Inventory>().items.Remove(player.GetComponent<Inventory>().items.Where(x => x == commSelectedInMarketWindow).First());
+                player.GetComponent<Inventory>().playerInventoryItems.Remove(player.GetComponent<Inventory>().playerInventoryItems.Where(x => x == commSelectedInMarketWindow).First());
             }
             else
             {
@@ -914,7 +984,7 @@ public class UIManager : MonoBehaviour
             Debug.Log("No children to remove");
         }
 
-        foreach (BaseItem item in player.GetComponent<Inventory>().items)
+        foreach (BaseItem item in player.GetComponent<Inventory>().playerInventoryItems)
         {
             GameObject obj = Instantiate(pfManager.commodityMarketDisplayObject, planetMarketLayout.transform);
             obj.GetComponent<CommodityInvHolder>().commodityHeld = item;

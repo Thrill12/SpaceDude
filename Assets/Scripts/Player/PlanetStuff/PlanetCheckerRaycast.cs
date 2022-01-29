@@ -51,6 +51,7 @@ public class PlanetCheckerRaycast : MonoBehaviour
         {
             planetBorder.transform.SetParent(null);
             planetBorder.SetActive(false);
+            planetHoveredP = null;
         }
     }
 

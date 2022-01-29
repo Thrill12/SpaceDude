@@ -14,6 +14,11 @@ public class CheckQuestRequirementsNode : BaseNode
     
     public override string GetString()
     {
-        return "QuestCheckReq/" + questToCheck.CheckRequirements();
+        return "QuestCheckRequirements/";
+    }
+
+    public Quest GetQuest()
+    {
+        return questToCheck;
     }
 }
