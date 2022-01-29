@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using XNode;
 
+[NodeTint("#8c7ae6")]
 public class QuestNode : BaseNode {
 
 	[Input] public int entry;

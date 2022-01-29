@@ -13,6 +13,9 @@ public class PlayersuitManager : MonoBehaviour
     [Tooltip("The global volume for post processing which is enabled when controlling the player character.")]
     public GameObject suitVolume;
 
+    public float orthoSizeNormal;
+    public float orthoSizeDialogue;
+
     [Header("Ship Spawn Points"), Tooltip("The spawn point in the ship interior where the player character is when the player leaves the cockpit and enters the main body of their ship.")]
     public GameObject cockpitExitSpawn;
     [Tooltip("The external spawn point where the player is spawned when they leave out the ship's air lock which places them in space.")]
@@ -41,6 +44,18 @@ public class PlayersuitManager : MonoBehaviour
 
         //Get the player ship.
         ship = GetComponent<PlayerShipMovement>();
+    }
+
+    private void Update()
+    {
+        if (UIManager.instance.playerInput.currentActionMap.name == "UI")
+        {
+            instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = orthoSizeDialogue;
+        }
+        else
+        {
+            instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = orthoSizeNormal;
+        }
     }
 
     public void PlayerLeaveCockpit()

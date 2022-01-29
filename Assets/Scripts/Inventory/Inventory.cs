@@ -105,7 +105,7 @@ public class Inventory : MonoBehaviour
     //These 2 functions handle equipping and unequipping items, excluding weapons which are handled below.
     public void EquipItem(BaseEquippable itemToEquip)
     {
-        Debug.Log("Equipping item");
+        Debug.Log("Equipping item " + itemToEquip.itemName);
 
         itemToEquip.OnEquip(player);
         itemsEquipped.Add(itemToEquip);
@@ -115,6 +115,7 @@ public class Inventory : MonoBehaviour
 
         if (slot.itemInSlot != null)
         {
+            Debug.Log("Item " + slot.itemInSlot.itemName + " is already in the " + slot.slotName + " slot");
             UnequipItem(slot.itemInSlot);
 
             //Checks if the item is a weapon

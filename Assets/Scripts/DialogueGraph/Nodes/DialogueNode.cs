@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XNode;
 
+[NodeTint("#718093")]
 public class DialogueNode : BaseNode {
 
 	[Input] public int entry;

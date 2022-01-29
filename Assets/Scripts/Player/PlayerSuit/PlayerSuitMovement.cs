@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,12 @@ public class PlayerSuitMovement : MonoBehaviour
 
     [Tooltip("Invisible object in scene to take the item in front of the player to interact with them.")]
     public GameObject frontChecker;
+
+    [Header("Camera Settings")]
+
+    public CinemachineVirtualCamera virtualCamera;
+    public float orthoSizeNormal;
+    public float orthoSizeDialogue;
 
     //Get the overarching player object.
     private GameObject playerObj;
@@ -47,7 +54,7 @@ public class PlayerSuitMovement : MonoBehaviour
     // Update is called once per frame - updates input and applies vitals.
     void Update()
     {
-        lastRotation = transform.rotation;
+        lastRotation = transform.rotation;       
     }
 
     //Called every n of a second. Use for physics updating.
@@ -89,38 +96,14 @@ public class PlayerSuitMovement : MonoBehaviour
     //Find nearby interactable, and interacts with the one closest to the front checker
     private void FindInteract()
     {
-        Debug.Log("Finding interactable");
-        List<GameObject> nearby = Physics2D.OverlapCircleAll(frontChecker.transform.position, 0.2f).Select(x => x.gameObject).Where(x => x.GetComponent<Interactable>() || x.GetComponent<ItemHolder>()).ToList();
+        List<GameObject> nearby = Physics2D.OverlapCircleAll(frontChecker.transform.position, 0.2f).Select(x => x.gameObject).Where(x => x.GetComponent<Interactable>()).ToList();
         if (nearby.Any())
         {
-            if (nearby[0].GetComponent<ItemHolder>())
-            {
-                Debug.Log("Item");
-                PickUpItem(nearby[0]);
-                return;
-            }
-            else if (nearby[0].GetComponent<Interactable>())
-            {
-                Debug.Log("Interactable");
-                nearby[0].GetComponent<Interactable>().Interact();
-                return;
-            }
+            nearby[0].GetComponent<Interactable>().Interact();
+            return;
         }
 
         InteractWithShipEntrance();
-    }
-
-    //Tries to pick up an item
-    private void PickUpItem(GameObject item)
-    {
-        if (Inventory.instance.AddItem(item.GetComponent<ItemHolder>().itemHeld))
-        {
-            item.GetComponent<ItemHolder>().ClickedOn(gameObject);
-        }
-        else
-        {
-            Debug.Log("Inventory full, couldn't pick up");
-        }
     }
 
     #region Movement Functions

@@ -59,7 +59,6 @@ public class WeaponsHolder : MonoBehaviour
         {
             firing = false;
         }
-        Debug.Log(firing);
     }
 
     //Void for calling shoot from input system events
@@ -81,30 +80,7 @@ public class WeaponsHolder : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
         {
-            Destroy(weaponObject);
-
-            if (currentlyEquippedWeapon == mainWeapon)
-            {
-                currentlyEquippedWeapon = secondaryWeapon;
-            }
-            else if (currentlyEquippedWeapon == secondaryWeapon)
-            {
-                currentlyEquippedWeapon = mainWeapon;
-            }
-            else
-            {
-                currentlyEquippedWeapon = mainWeapon;
-            }
-
-            if (currentlyEquippedWeapon == null) return;
-
-            weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, transform.rotation);
-            weaponObject.transform.parent = transform;
-
-            nextFire = currentlyEquippedWeapon.attackCooldown.Value;
-
-
-            weaponAttackSource = GameObject.FindGameObjectWithTag("PlayerAttackSource");
+            SwapWeapons();
         }      
     }
 

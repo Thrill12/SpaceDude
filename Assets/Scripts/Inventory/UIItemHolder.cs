@@ -105,6 +105,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerEnter(PointerEventData data)
     {
         isHoveredOn = true;
+        UIManager.instance.SelectUIObject(gameObject);
     }
 
     public void OnPointerExit(PointerEventData data)

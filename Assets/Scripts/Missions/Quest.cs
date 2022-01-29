@@ -9,7 +9,6 @@ public class Quest : ScriptableObject
     public int id;
     public string QuestName;
     public string QuestDescription;
-    public DialogueGraph questAssignedDialogue;
     public DialogueGraph questCompletedDialogue;
     public DialogueGraph questInProgressDialogue;
     public List<Goal> Goals = new List<Goal>();
@@ -47,7 +46,6 @@ public class Quest : ScriptableObject
         if (Completed)
         {
             Debug.Log("Completed quest '" + QuestName + "' - go back to quest giver for reward");
-            QuestManager.instance.RemoveQuest(this);
         }
 
         return Completed;
@@ -56,8 +54,9 @@ public class Quest : ScriptableObject
     //Gives rewards for the quest
     public void GiveReward(GameObject position)
     {
+        QuestManager.instance.RemoveQuest(this);
         UIManager.instance.RemoveQuest(this);
-        Debug.Log("Given reward to player");
+
         if(ItemReward != null)
         {
             PrefabManager.instance.SpawnItem(position, ItemReward);
