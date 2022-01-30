@@ -23,6 +23,10 @@ public enum ItemType
     Breathing,
     Waste,
     Weapon,
-    Ammo,
+    KineticBurstClip,
+    ShotgunShell,
+    KineticBelt,
+    SpikeAmmo,
+    UnionClip,
     Raw
 }

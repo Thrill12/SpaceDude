@@ -11,6 +11,7 @@ public class ItemHolder : MonoBehaviour
 {
     public BaseItem itemHeld;
     public bool generateStats = false;
+    public int stack = 1;
     private SpriteRenderer spriteRenderer;
     private PrefabManager prefabManager;
     private Inventory playerInventory;
@@ -19,8 +20,8 @@ public class ItemHolder : MonoBehaviour
     {
         prefabManager = PrefabManager.instance;
         itemHeld = ScriptableObject.Instantiate(itemHeld);
-        playerInventory = Inventory.instance;       
-
+        playerInventory = Inventory.instance;
+        itemHeld.itemStack = stack;
         //Setting up the item holder on the floor, its light/color etc.
         GetComponentInChildren<Light2D>().color = itemHeld.itemRarity.rarityColor;
         spriteRenderer = GetComponent<SpriteRenderer>();

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using TMPro;
+using System.Linq;
 
 [RequireComponent(typeof(AudioSource))]
 public class WeaponsHolder : MonoBehaviour
@@ -21,9 +23,16 @@ public class WeaponsHolder : MonoBehaviour
     public GameObject weaponAttackSource;
     public GameObject weaponObject;
 
+    [Space(10)]
+
+    public GameObject ammoDisplay;
+    public TMP_Text currentBullets;
+    public TMP_Text totalBulletsInInventory;
+
     private float nextFire;
-    private AudioSource audioSource;
+    public AudioSource audioSource;
     private bool firing = false;
+    private int totalBulletsAvailable;
 
     private void Awake()
     {
@@ -45,6 +54,23 @@ public class WeaponsHolder : MonoBehaviour
         {
             AttackVoid();
         }
+
+        if(currentlyEquippedWeapon != null)
+        {
+            if (ammoDisplay.activeInHierarchy)
+            {
+                BaseGun gun = (BaseGun)currentlyEquippedWeapon;
+                totalBulletsAvailable = inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Sum(x => x.itemStack);
+
+
+                currentBullets.text = gun.currentBullets.ToString();
+                totalBulletsInInventory.text = totalBulletsAvailable.ToString();
+            }
+        }
+        else
+        {
+            ammoDisplay.SetActive(false);
+        }
     }
 
     //Uses the abstract function in the weapon to attack. Passed in the weapon object to allow the gun to have
@@ -61,6 +87,31 @@ public class WeaponsHolder : MonoBehaviour
         }
     }
 
+    public void Reload(InputAction.CallbackContext context)
+    {
+        if (context.phase != InputActionPhase.Started) return;
+
+        if(currentlyEquippedWeapon as BaseGun)
+        {
+            BaseGun gun = currentlyEquippedWeapon as BaseGun;
+            if(gun.currentBullets < gun.maxBulletsInClip.Value)
+            {
+                if (totalBulletsAvailable > gun.maxBulletsInClip.Value)
+                {
+                    inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).First().itemStack -= (int)gun.maxBulletsInClip.Value - gun.currentBullets;
+                    gun.currentBullets = (int)gun.maxBulletsInClip.Value;
+                }
+                else
+                {
+                    int sum = inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Sum(x => x.itemStack);
+                    inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).First().itemStack -= (int)gun.maxBulletsInClip.Value - gun.currentBullets;
+                    inventory.playerInventoryItems.RemoveAll(x => x.itemType == gun.ammoType);
+                    gun.currentBullets = sum;
+                }
+            }        
+        }
+    }
+
     //Void for calling shoot from input system events
     private void AttackVoid()
     {
@@ -68,10 +119,8 @@ public class WeaponsHolder : MonoBehaviour
         {
             if (currentlyEquippedWeapon == null) return;
 
-            audioSource.PlayOneShot(currentlyEquippedWeapon.attackSound);
-            currentlyEquippedWeapon.Attack(weaponObject, playerInput);
+            currentlyEquippedWeapon.Attack(weaponObject, playerInput, audioSource, this);
             nextFire = currentlyEquippedWeapon.attackCooldown.Value;
-            ShakeCamera();
         }       
     }
 
@@ -109,6 +158,14 @@ public class WeaponsHolder : MonoBehaviour
 
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
 
+        if(currentlyEquippedWeapon as BaseGun)
+        {
+            ammoDisplay.SetActive(true);
+        }
+        else
+        {
+            ammoDisplay.SetActive(false);
+        }
 
         weaponAttackSource = GameObject.FindGameObjectWithTag("PlayerAttackSource");
     }

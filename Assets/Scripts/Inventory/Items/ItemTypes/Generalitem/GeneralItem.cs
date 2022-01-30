@@ -5,7 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Items/General Item")]
 public class GeneralItem : BaseItem
 {
-    
+    public GeneralItem()
+    {
+        itemMaxStack = 999;
+    }
 }
 
 

@@ -9,28 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6959a5f84b1d93745babd28f5ae84f17, type: 3}
-  m_Name: Sniper
+  m_Script: {fileID: 11500000, guid: 676700e5f671a1944b0f09195f80b42c, type: 3}
+  m_Name: The Bursty
   m_EditorClassIdentifier: 
-  itemName: Sniper
-  itemDescription: Loud. Deadly. What else would you want from a weapon? Its high
-    calibre makes sure that whatever you aim at dies.
-  itemIcon: {fileID: 494579081, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
+  itemName: The Bursty
+  itemDescription: This legendary pistol was once the preferred handgun of many Frosttips
+    militants, however grew out of fashion due to its unreliability.
+  itemIcon: {fileID: -2062997635, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
   itemRarity: {fileID: 11400000, guid: 88ceb3550f440f14cbaa6ccc05b95fa1, type: 2}
   itemValue: 531
-  itemStack: 1
+  itemStack: 0
   itemMaxStack: 1
   itemType: 6
-  itemSlot: Primary Weapon
+  itemSlot: Secondary Weapon
   itemMods: []
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
   hostEntity: {fileID: 0}
   isEquipped: 0
-  weaponObject: {fileID: 6236642038403192392, guid: 56602c9483dba6a4f936c8a10cb1c77d, type: 3}
+  weaponObject: {fileID: 1525203102352782318, guid: c61b2d24de3dd0a4e9b59fa205d60eaa, type: 3}
   damage:
-    BaseValue: 100
+    BaseValue: 79
     _value: 0
     statModifiers: []
     isDirty: 1
@@ -45,23 +45,33 @@ MonoBehaviour:
     statModifiers: []
     isDirty: 1
   attackCooldown:
-    BaseValue: 2
+    BaseValue: 1
     _value: 0
     statModifiers: []
     isDirty: 1
-  large: 1
-  attackSound: {fileID: 8300000, guid: 4ba745fdabcbb3e4494d34e8b563eeba, type: 3}
+  large: 0
+  attackSound: {fileID: 8300000, guid: ba839be2c32ef7249893ebe6345399e3, type: 3}
   maxBulletsInClip:
-    BaseValue: 0
+    BaseValue: 5
     _value: 0
     statModifiers: []
     isDirty: 1
   currentBullets: 0
   outOfAmmoSound: {fileID: 8300000, guid: 71e70adc1032ba94cb5a6b6da319846c, type: 3}
-  ammoType: 10
+  ammoType: 7
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
-    BaseValue: 100000
+    BaseValue: 75000
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  bulletsInBurst:
+    BaseValue: 3
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  timeBetweenShots:
+    BaseValue: 0.1
     _value: 0
     statModifiers: []
     isDirty: 1

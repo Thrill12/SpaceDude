@@ -23,7 +23,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 97eecbb836dcc174488334ee49bf8394, type: 2}
   ExperienceReward: 0
   FactionInfluenceReward: 0
-  ItemReward: {fileID: 0}
+  ItemReward: {fileID: 11400000, guid: f9d28545cbad2a54bbbdc9d76f3fed86, type: 2}
   Completed: 0
   questRequirements:
   - {fileID: 11400000, guid: 479c4c162362729488d1b2fc15ea8a33, type: 2}

@@ -4,14 +4,18 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [CreateAssetMenu(menuName = "Items/Weapons/Projectile Gun")]
-public class StraightShootingGun : BaseWeapon
+public class StraightShootingGun : BaseGun
 {
     public GameObject projectile;
     public Stat projectileSpeed;
 
     //A normal shoot function for a straight shooting gun
-    public override void Attack(GameObject weaponObject, PlayerInput playerInput)
+    public override void Attack(GameObject weaponObject, PlayerInput playerInput, AudioSource audioSource, WeaponsHolder holder)
     {
+        base.Attack(weaponObject, playerInput, audioSource, holder);
+
+        if (currentBullets == 0) return;
+
         Vector3 lookDir = Vector3.zero;
         if(playerInput.currentActionMap.name == "KeyBoard")
         {
@@ -31,6 +35,9 @@ public class StraightShootingGun : BaseWeapon
         proj.GetComponent<Projectile>().entityShotFrom = hostEntity;
         proj.GetComponent<Projectile>().weaponShotFrom = this;
 
+        audioSource.PlayOneShot(attackSound);
+        holder.ShakeCamera();
+        currentBullets -= 1;
         Destroy(proj, 3);
     }
 
