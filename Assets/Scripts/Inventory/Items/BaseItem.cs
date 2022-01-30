@@ -9,7 +9,7 @@ public class BaseItem : ScriptableObject
     public Sprite itemIcon;
     public ItemRarity itemRarity;
     public int itemValue;
-    public int itemStack;
+    public int itemStack = 1;
     public int itemMaxStack = 1;
     public ItemType itemType;
 }

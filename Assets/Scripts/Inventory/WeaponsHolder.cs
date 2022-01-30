@@ -104,9 +104,13 @@ public class WeaponsHolder : MonoBehaviour
                 else
                 {
                     int sum = inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Sum(x => x.itemStack);
-                    inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).First().itemStack -= (int)gun.maxBulletsInClip.Value - gun.currentBullets;
-                    inventory.playerInventoryItems.RemoveAll(x => x.itemType == gun.ammoType);
-                    gun.currentBullets = sum;
+
+                    if(sum > 0)
+                    {
+                        inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).First().itemStack -= (int)gun.maxBulletsInClip.Value - gun.currentBullets;
+                        inventory.playerInventoryItems.RemoveAll(x => x.itemType == gun.ammoType);
+                        gun.currentBullets = sum;
+                    }                    
                 }
             }        
         }

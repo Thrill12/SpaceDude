@@ -30,21 +30,25 @@ MonoBehaviour:
   isEquipped: 0
   weaponObject: {fileID: 1525203102352782318, guid: c61b2d24de3dd0a4e9b59fa205d60eaa, type: 3}
   damage:
+    statName: Damage
     BaseValue: 79
     _value: 0
     statModifiers: []
     isDirty: 1
   criticalChance:
+    statName: Critical Hit Chance
     BaseValue: 0
     _value: 0
     statModifiers: []
     isDirty: 1
   criticalDamage:
+    statName: Critical Hit Damage
     BaseValue: 0
     _value: 0
     statModifiers: []
     isDirty: 1
   attackCooldown:
+    statName: s Cooldown
     BaseValue: 1
     _value: 0
     statModifiers: []
@@ -52,6 +56,7 @@ MonoBehaviour:
   large: 0
   attackSound: {fileID: 8300000, guid: ba839be2c32ef7249893ebe6345399e3, type: 3}
   maxBulletsInClip:
+    statName: Bullets In Clip
     BaseValue: 35
     _value: 0
     statModifiers: []
@@ -61,16 +66,19 @@ MonoBehaviour:
   ammoType: 7
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
+    statName: Projectile Speed
     BaseValue: 75000
     _value: 0
     statModifiers: []
     isDirty: 1
   bulletsInBurst:
+    statName: Bullets In Burst
     BaseValue: 3
     _value: 0
     statModifiers: []
     isDirty: 1
   timeBetweenShots:
+    statName: Time Between Burst Shots
     BaseValue: 0.1
     _value: 0
     statModifiers: []

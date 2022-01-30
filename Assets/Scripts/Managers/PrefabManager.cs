@@ -80,6 +80,7 @@ public class PrefabManager : MonoBehaviour
         if(baseItem != null)
         {
             GameObject obj = Instantiate(itemObject, objPos.transform.position, Quaternion.identity);
+            obj.GetComponent<ItemHolder>().stack = baseItem.itemStack;
             obj.GetComponent<ItemHolder>().itemHeld = baseItem;
             obj.GetComponent<ItemHolder>().generateStats = true;
         }

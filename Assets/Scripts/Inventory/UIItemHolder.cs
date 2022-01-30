@@ -89,6 +89,12 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
         }
+
+        if(itemHeld.itemStack <= 0)
+        {
+            inventory.RemoveItemFromInventory(itemHeld);
+            Destroy(gameObject);
+        }
     }
 
     private void CheckingBeingEquippedOrNot()
@@ -137,16 +143,19 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (!UIManager.instance.isInShipInventory)
         {
-            BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
+            if(itemHeld as BaseEquippable)
+            {
+                BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
 
-            if (eqItemHeld.isEquipped)
-            {
-                Unequip();
-            }
-            else
-            {
-                Equip(eqItemHeld.itemSlot);
-            }
+                if (eqItemHeld.isEquipped)
+                {
+                    Unequip();
+                }
+                else
+                {
+                    Equip(eqItemHeld.itemSlot);
+                }
+            }            
         }
         else
         {
