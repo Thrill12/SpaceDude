@@ -138,29 +138,7 @@ public class UIManager : MonoBehaviour
             //Displaying the current item selected in the inventory
             if (currentlySelectedItemToDisplay != null && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<UIItemHolder>())
             {
-                if (currentlySelectedItemToDisplay as BaseEquippable)
-                {
-                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
-
-                    if (equip.isEquipped)
-                    {
-                        leftItemStatDisplay.gameObject.SetActive(true);
-                        rightItemStatDisplay.gameObject.SetActive(false);
-                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
-                    }
-                    else
-                    {
-                        leftItemStatDisplay.gameObject.SetActive(false);
-                        rightItemStatDisplay.gameObject.SetActive(true);
-                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
-                    }
-                }
-                else
-                {
-                    leftItemStatDisplay.gameObject.SetActive(false);
-                    rightItemStatDisplay.gameObject.SetActive(true);
-                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
-                }
+                DisplayItemStatsInItemStatDisplayer();
             }
             else
             {
@@ -174,29 +152,7 @@ public class UIManager : MonoBehaviour
             //Displaying the current item selected in the inventory
             if (currentlySelectedItemToDisplay != null)
             {
-                if (currentlySelectedItemToDisplay as BaseEquippable)
-                {
-                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
-
-                    if (equip.isEquipped)
-                    {
-                        leftItemStatDisplay.gameObject.SetActive(true);
-                        rightItemStatDisplay.gameObject.SetActive(false);
-                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
-                    }
-                    else
-                    {
-                        leftItemStatDisplay.gameObject.SetActive(false);
-                        rightItemStatDisplay.gameObject.SetActive(true);
-                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
-                    }
-                }
-                else
-                {
-                    leftItemStatDisplay.gameObject.SetActive(false);
-                    rightItemStatDisplay.gameObject.SetActive(true);
-                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
-                }
+                DisplayItemStatsInItemStatDisplayer();
             }
             else
             {
@@ -258,7 +214,57 @@ public class UIManager : MonoBehaviour
         }
 
         #endregion
-    }   
+    }
+
+    private void DisplayItemStatsInItemStatDisplayer()
+    {
+        if (shipInventory.activeInHierarchy)
+        {
+            if (inv.playerInventoryItems.Contains(currentlySelectedItemToDisplay))
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(true);
+                rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                Debug.Log("Ship Inventory in player");
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(true);
+                rightItemStatDisplay.gameObject.SetActive(false);
+                leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                Debug.Log("Ship Inventory in ship");
+            }
+        }
+        else
+        {
+            if (currentlySelectedItemToDisplay as BaseEquippable)
+            {
+                BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                if (equip.isEquipped)
+                {
+                    leftItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.gameObject.SetActive(false);
+                    leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    Debug.Log("Player Inventory in equipped");
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    Debug.Log("Player Inventory in inventory");
+                }
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(true);
+                rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                Debug.Log("Player Inventory in inventory");
+            }
+        }
+    }
 
     #region NormalUI
 
@@ -735,7 +741,7 @@ public class UIManager : MonoBehaviour
     //tell the node parser what choice they chose
     public void DisplayChoices(List<string> choices)
     {
-        playerInput.SwitchCurrentActionMap("UI");
+        playerInput.SwitchCurrentActionMap("Dialogue");
 
         choiceDisplayer.SetActive(true);
 

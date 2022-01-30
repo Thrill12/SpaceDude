@@ -52,7 +52,7 @@ MonoBehaviour:
   large: 0
   attackSound: {fileID: 8300000, guid: ba839be2c32ef7249893ebe6345399e3, type: 3}
   maxBulletsInClip:
-    BaseValue: 5
+    BaseValue: 35
     _value: 0
     statModifiers: []
     isDirty: 1

@@ -401,3 +401,4 @@
 /Assets/Sounds/Files/GoalCompletedSound.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Sounds/Files/QuestAssignedSound.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Sounds/Music/HavenTheme.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Font/Quantico-BoldItalic[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text

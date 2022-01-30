@@ -9,10 +9,13 @@ public class ItemStatDisplayer : MonoBehaviour
 {
     public Image itemIcon;
     public Image itemBorder;
+    public Image itemStatsBar;
+    public Image itemDescriptionBorder;
     public TMP_Text itemName;
     public TMP_Text itemRarity;
     public TMP_Text itemValue;
     public TMP_Text itemDescription;
+    public TMP_Text itemSlotText;
 
     [Header("Stats")]
     public GameObject itemStatObject;
@@ -22,14 +25,14 @@ public class ItemStatDisplayer : MonoBehaviour
 
     public void ShowItem(BaseItem item)
     {
-        if(item as BaseEquippable)
+        foreach (var statDisplay in activatedStats)
         {
-            BaseEquippable equip = item as BaseEquippable;
+            Destroy(statDisplay.gameObject);
+        }
 
-            foreach (var statDisplay in activatedStats)
-            {
-                Destroy(statDisplay.gameObject);
-            }
+        if (item as BaseEquippable)
+        {
+            BaseEquippable equip = item as BaseEquippable;            
 
             foreach (var stat in equip.itemMods)
             {
@@ -38,30 +41,59 @@ public class ItemStatDisplayer : MonoBehaviour
 
                 TextInfo info = new CultureInfo("en-US", false).TextInfo;
 
-                if (stat.Type == Modifier.StatModType.Flat)
+                if(stat.Value > 0)
                 {
-                    statText.text = "- + " + Mathf.RoundToInt(stat.Value) + " " + info.ToTitleCase(stat.statDisplayStringName) + ".";
+                    if (stat.Type == Modifier.StatModType.Flat)
+                    {
+                        statText.text = "+" + Mathf.RoundToInt(Mathf.Abs(stat.Value)) + " " + info.ToTitleCase(stat.statDisplayStringName) + ".";
+                    }
+                    else if (stat.Type == Modifier.StatModType.PercentAdd)
+                    {
+                        statText.text = "+" + Mathf.RoundToInt(Mathf.Abs(stat.Value)) + "% " + info.ToTitleCase(stat.statDisplayStringName) + ".";
+                    }
+                    else if (stat.Type == Modifier.StatModType.PercentMult)
+                    {
+                        statText.text = "" + Mathf.RoundToInt(Mathf.Abs(stat.Value)) + "% increased " + info.ToTitleCase(stat.statDisplayStringName) + ".";
+                    }
                 }
-                else if (stat.Type == Modifier.StatModType.PercentAdd)
+                else
                 {
-                    statText.text = "- + " + Mathf.RoundToInt(stat.Value) + "% " + info.ToTitleCase(stat.statDisplayStringName) + ".";
-                }
-                else if (stat.Type == Modifier.StatModType.PercentMult)
-                {
-                    statText.text = "- " + Mathf.RoundToInt(stat.Value) + "% increased " + info.ToTitleCase(stat.statDisplayStringName) + ".";
-                }
+                    if (stat.Type == Modifier.StatModType.Flat)
+                    {
+                        statText.text = "-" + Mathf.RoundToInt(Mathf.Abs(stat.Value)) + " " + info.ToTitleCase(stat.statDisplayStringName) + ".";
+                    }
+                    else if (stat.Type == Modifier.StatModType.PercentAdd)
+                    {
+                        statText.text = "-" + Mathf.RoundToInt(Mathf.Abs(stat.Value)) + "% " + info.ToTitleCase(stat.statDisplayStringName) + ".";
+                    }
+                    else if (stat.Type == Modifier.StatModType.PercentMult)
+                    {
+                        statText.text = "" + Mathf.RoundToInt(Mathf.Abs(stat.Value)) + "% decreased " + info.ToTitleCase(stat.statDisplayStringName) + ".";
+                    }
+                }                
 
                 activatedStats.Add(statObj);
             }
+
+            itemName.text = item.itemName;
+            itemStatsBar.enabled = true;
+        }
+        else
+        {
+            itemName.text = item.itemName + "(" + item.itemStack + ")";
+            itemStatsBar.enabled = false;           
         }
 
+        itemSlotText.text = "[" +item.itemType.ToString().Replace("_", " ") + "]";
+
+        itemStatsBar.color = item.itemRarity.rarityColor;
+        itemDescriptionBorder.color = item.itemRarity.rarityColor;
         itemIcon.sprite = item.itemIcon;
         SetBorder(item);
-        itemName.text = item.itemName;
         itemRarity.text = item.itemRarity.name;
         itemRarity.color = item.itemRarity.rarityColor;
         itemValue.text = "C:" + item.itemValue;
-        itemDescription.text = item.itemDescription;               
+        itemDescription.text = item.itemDescription;
     }
 
     public void SetBorder(BaseItem item)

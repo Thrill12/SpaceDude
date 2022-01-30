@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(AudioSource))]
 public class BaseEntity : MonoBehaviour
 {
     public int ID;
@@ -16,6 +17,10 @@ public class BaseEntity : MonoBehaviour
     public float energy;
     public Stat maxEnergy;
     public Stat energyRegeneration;
+
+    [Space(5)]
+
+    public AudioClip hitSound;
 
     float nextFireHealthRegen;
     float nextFireEnergyRegen;
@@ -72,9 +77,11 @@ public class BaseEntity : MonoBehaviour
 
     public virtual void TakeDamage(float damageToTake)
     {
-        if(health > 0)
+        UIManager.instance.audioSource.PlayOneShot(hitSound);
+        if (health > 0)
         {
             health -= UnityEngine.Random.Range(damageToTake - 2, damageToTake + 2);
+            
             PrefabManager.instance.SpawnNumberPopup(damageToTake, PrefabManager.instance.orange, (Vector2)transform.position + UnityEngine.Random.insideUnitCircle);
         }        
     }
