@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class TriangulationGraph
 {
@@ -21,31 +22,50 @@ public class TriangulationGraph
         public float a; 
         public float b; 
         public float c;
+
+        //The weight assigned to the edge based on the distance of the two points.
+        public float weight;
     }
 
-    //The triangles made in the triangulation, the first being the super triangle.
-    List<Triangle> triangles = new List<Triangle>();
-    //The graph which we want to create.
-    HashSet<Edge> graph = new HashSet<Edge>();
-
-    public HashSet<Edge> DelenauyTriangulation(List<Vector2Int> roomPositions, int gridSize)
+    public struct NodeEdge
     {
-        triangles.Clear();
+        //The two verts of the edge.
+        public int sourceNode;
+        public int destNode;
 
+        //The weight assigned to the edge based on the distance of the two points.
+        public int weight;
+    }
+
+    struct Subset
+    {
+        public int parent;
+        public int rank;
+    }
+
+    //The graphs which we want to create.
+    public HashSet<Edge> graph = new HashSet<Edge>();
+    List<Vector2Int> rooms;
+    List<NodeEdge> nodeGraph;
+    int[,] table;
+
+    public List<Edge> DelenauyTriangulation(List<Vector2Int> roomPositions, int gridSize)
+    {
         //Firstly, create the super triangle which will form basis of the algorithm.
         Triangle superTriangle = CreateSuperTriangle(gridSize);
 
-        //Add the super triangle to our list.
+        //Add the super triangle to our list and to the graph.
         triangles.Add(superTriangle);
-
         AddTriangleToGraph(superTriangle);
 
+        //Now Completes the triangulation with the nodes and the super triangle.
         CheckVertices(roomPositions);
 
-        //RemoveTrianglesFromGraph(new List<Triangle> { superTriangle });
+        #region Remove Duplicate Edges:
 
-        HashSet<Edge> edgeToCull = new HashSet<Edge>();
+        List<Edge> edgeToCull = new List<Edge>();
 
+        //Identifies any verts of the super triangle to remove.
         foreach (Edge edge in graph)
         {
             if (edge.point1 == superTriangle.verts[0] || edge.point1 == superTriangle.verts[1] || edge.point1 == superTriangle.verts[2])
@@ -63,29 +83,128 @@ public class TriangulationGraph
             graph.Remove(item);
         }
 
+        #endregion
 
-        //select the first room:
-        //Look for traingles whose circumcircles contain our point: 
-        //These are not delaunay triangles.
-        //Connet our the point to the vertices of that triangle to make a new set of triangles.
+        rooms = roomPositions;
 
-        //Repeat the steps for the other points. 
-        //Look for traingles whose circumcircles contain our point, for each of those triangles:
-        //These are not delaunay triangles.
-        //Delete the overlapping triangles
-        //Connect the point to dges of that triangle to make a new set of triangles. 
-
-        //Once looped through all rooms, delete the super triangle edges.
-        //The remaining edges are the final triangulation graph. 
-
-        foreach (Edge edge in graph)
-        {
-            Debug.Log("Edge: Point 1: " + edge.point1 + ". Point 2: " + edge.point2);
-        }
-
-        return graph;
+        return graph.ToList();
     }
 
+    //Create shortest path with Diskstra's algorithm.
+    public List<Edge> ShortestPath(List<Edge> graph)
+    {
+        //Give weightings to the edges of the graph.
+        graph = MakeGraphWeighted(graph);
+        nodeGraph = NodeEdgeGraph(graph, true);
+
+        List<Edge> shortestPath = NodeEdgeToEdge(KruskalMST(nodeGraph));
+
+        //remove the last edge.
+        shortestPath.RemoveAt(shortestPath.Count - 1);
+
+        return shortestPath;
+    }
+
+    #region Graph Functions
+
+    //Creates and returns a boolean adjacency table using this indexing: [From, To]
+    int[,] GraphAdjacencyTable(List<Edge> graph, List<Vector2Int> nodes, bool weighted = false)
+    {
+        int[,] table = new int[nodes.Count, nodes.Count];
+
+        //Work out which edge matches who. 
+        foreach (Edge edge in graph)
+        {
+            int fromIndex = nodes.IndexOf(new Vector2Int((int)edge.point1.x, ((int)edge.point1.y)));
+            int toIndex = nodes.IndexOf(new Vector2Int((int)edge.point2.x, ((int)edge.point2.y)));
+
+            if (fromIndex == toIndex)
+            {
+                table[fromIndex, toIndex] = 0;
+                table[toIndex, fromIndex] = 0;
+            }
+            else if (weighted)
+            {
+                //The graph is undirected thus set both to the value of the weight.
+                table[fromIndex, toIndex] = (int)edge.weight;
+                table[toIndex, fromIndex] = (int)edge.weight;
+            }
+            else
+            {
+                //The graph is undirected thus set both to be true.
+                table[fromIndex, toIndex] = 1;
+                table[toIndex, fromIndex] = 0;
+            }
+            
+        }
+
+        //Return the populated adjacency table.
+        return table;
+    }
+
+    List<NodeEdge> NodeEdgeGraph(List<Edge> graph, bool weighted = true)
+    {
+        List<NodeEdge> edges = new List<NodeEdge>();
+
+        // Work out which edge matches who. 
+        foreach (Edge e in graph)
+        {
+            int fromIndex = rooms.IndexOf(new Vector2Int((int)e.point1.x, ((int)e.point1.y)));
+            int toIndex = rooms.IndexOf(new Vector2Int((int)e.point2.x, ((int)e.point2.y)));
+
+
+            if (weighted)
+            {
+
+                NodeEdge edge = new NodeEdge()
+                {
+                    sourceNode = fromIndex,
+                    destNode = toIndex,
+                    weight = (int)e.weight
+                };
+                edges.Add(edge);
+            }
+            else
+            {
+
+                NodeEdge edge = new NodeEdge()
+                {
+                    sourceNode = fromIndex,
+                    destNode = toIndex
+                };
+                edges.Add(edge);
+            }
+
+            
+        }
+
+        return edges;
+    }
+
+    List<Edge> NodeEdgeToEdge(List<NodeEdge> graph)
+    {
+        List<Edge> edges = new List<Edge>();
+
+        foreach(NodeEdge e in graph)
+        {
+            Edge edge = new Edge()
+            {
+                point1 = rooms[e.sourceNode],
+                point2 = rooms[e.destNode],
+                weight = e.weight
+            };
+
+            edges.Add(edge);
+        }
+
+        return edges;
+    }
+    #endregion
+
+    #region Delenauy Triangulation
+
+    //The triangles made in the triangulation, the first being the super triangle.
+    List<Triangle> triangles = new List<Triangle>();
     Triangle CreateSuperTriangle(int gridSize)
     {
         //The 'verts' represent rooms which ther super traingle needs to to enclose. 
@@ -149,11 +268,11 @@ public class TriangulationGraph
                 //Finds the room's distance from the circle centre.
                 float roomDist = Vector2.Distance(roomPos, circumCentre);
 
-                Debug.Log("Triangle:");
-                Debug.Log(t.verts[0]);
-                Debug.Log(t.verts[1]);
-                Debug.Log(t.verts[2]);
-                Debug.Log("Circumcentre:" + circumCentre);
+                //Debug.Log("Triangle:");
+                //Debug.Log(t.verts[0]);
+                //Debug.Log(t.verts[1]);
+                //Debug.Log(t.verts[2]);
+                //Debug.Log("Circumcentre:" + circumCentre);
 
                 //Checks this against the radius of the circle. > then its outside, < then its inside.
                 if (roomDist > radius)
@@ -447,6 +566,96 @@ public class TriangulationGraph
         edge.b = temp;
 
         return edge;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Shortest Path - Disjkstra's Algorithm
+
+    //Gives a weight to each of the edges. 
+    List<Edge> MakeGraphWeighted(List<Edge> graph)
+    {
+        List<Edge> weightedGraph = graph;
+
+        for (int i = 0; i < graph.Count; i++)
+        {
+            Edge edge = weightedGraph[i];
+
+            edge.weight = Vector2.Distance(weightedGraph[i].point1, weightedGraph[i].point2);
+
+            weightedGraph[i] = edge;
+        }
+
+       
+
+        return weightedGraph;
+    }
+
+    int Find(Subset[] subsets, int i)
+    {
+        if (subsets[i].parent != i)
+            subsets[i].parent = Find(subsets, subsets[i].parent);
+
+        return subsets[i].parent;
+    }
+
+    void Union(Subset[] subsets, int x, int y)
+    {
+        int xroot = Find(subsets, x);
+        int yroot = Find(subsets, y);
+
+        if (subsets[xroot].rank < subsets[yroot].rank)
+            subsets[xroot].parent = yroot;
+        else if (subsets[xroot].rank > subsets[yroot].rank)
+            subsets[yroot].parent = xroot;
+        else
+        {
+            subsets[yroot].parent = xroot;
+            ++subsets[xroot].rank;
+        }
+    }
+
+    List<NodeEdge> KruskalMST(List<NodeEdge> graph)
+    {
+        //Number of rooms (aka nodes) on the graph.
+        int nodeCount = rooms.Count;
+        //An array of integers which are the room indexes of the route.
+        NodeEdge[] result = new NodeEdge[nodeCount];
+
+        int i = 0;
+        int e = 0;
+
+        graph.Sort(delegate (NodeEdge a, NodeEdge b)
+        {
+            return a.weight.CompareTo(b.weight);
+        });
+
+        Subset[] subsets = new Subset[nodeCount];
+
+        for (int v = 0; v < nodeCount; ++v)
+        {
+            subsets[v].parent = v;
+            subsets[v].rank = 0;
+        }
+
+        while (e < nodeCount - 1)
+        {
+
+            NodeEdge nextEdge = graph[i++];
+            int x = Find(subsets, nextEdge.sourceNode);
+            int y = Find(subsets, nextEdge.destNode);
+
+            if (x != y)
+            {
+                result[e++] = nextEdge;
+                Union(subsets, x, y);
+            }
+
+        }
+
+        return result.ToList();
     }
 
     #endregion

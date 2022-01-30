@@ -116,7 +116,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(playerInput.currentActionMap.name);
+       // Debug.Log(playerInput.currentActionMap.name);
 
         //Displaying the currently hovered on item in the inventory
         if (playerInput.currentControlScheme == "GamePad")

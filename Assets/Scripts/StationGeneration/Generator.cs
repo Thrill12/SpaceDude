@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
- struct PlacedRoom
+ public struct PlacedRoom
 {
     public Vector2Int position;
     public int roomWidth;
@@ -15,6 +15,12 @@ using UnityEngine.Rendering;
         roomWidth = room.roomWidth;  
         roomHeight = room.roomHeight;    
     }
+}
+
+struct Corridor
+{
+    public PlacedRoom room1;
+    public PlacedRoom room2;
 }
 
 //Creates the data representations.
@@ -208,7 +214,7 @@ public class Generator
     }
     #endregion
 
-    #region Debugging 
+    #region Outputs 
 
     //Generates a debug texture from a generated grid.
     Texture2D DebugTexture()
