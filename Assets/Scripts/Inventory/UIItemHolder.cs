@@ -60,6 +60,38 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 
     private void Update()
+    {      
+        if (inventory.shipInventoryItems.Contains(itemHeld))
+        {
+            transform.SetParent(inventory.shipItemInventoryDisplay.transform);
+        }
+        else
+        {
+            CheckingBeingEquippedOrNot();
+        }
+
+        Debug.Log(isHoveredOn);
+
+        if (UIManager.instance.playerInput.currentControlScheme == "GamePad")
+        {
+            if (EventSystem.current.currentSelectedGameObject == gameObject)
+            {
+                isHoveredOn = true;
+                UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
+            }
+            else
+            {
+                isHoveredOn = false;
+            }
+        }
+
+        if (isHoveredOn)
+        {
+            UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
+        }
+    }
+
+    private void CheckingBeingEquippedOrNot()
     {
         //This checks whether the item held derives from a general item or an equippable item
         //No need to do anything else if the item is not equippable, so no else though this might change
@@ -80,50 +112,45 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 transform.SetParent(inventory.itemInventoryDisplay.transform);
             }
         }
-
-        Debug.Log(isHoveredOn);
-
-        if(UIManager.instance.playerInput.currentControlScheme == "GamePad")
-        {
-            if (EventSystem.current.currentSelectedGameObject == gameObject)
-            {
-                isHoveredOn = true;
-                UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
-            }
-            else
-            {
-                isHoveredOn = false;
-            }
-        }
-
-        if (isHoveredOn)
-        {
-            UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
-        }
     }
 
     public void OnPointerEnter(PointerEventData data)
     {
         isHoveredOn = true;
+        UIManager.instance.SelectUIObject(gameObject);
     }
 
     public void OnPointerExit(PointerEventData data)
     {
         isHoveredOn = false;
+        UIManager.instance.SelectUIObject(null);
         UIManager.instance.currentlySelectedItemToDisplay = null;
+    }
+
+    private void OnDisable()
+    {
+        isHoveredOn = false;
+        UIManager.instance.SelectUIObject(null);
     }
 
     public void ToggleEquipUnequip()
     {
-        BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
-
-        if (eqItemHeld.isEquipped)
+        if (!UIManager.instance.isInShipInventory)
         {
-            Unequip();
+            BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
+
+            if (eqItemHeld.isEquipped)
+            {
+                Unequip();
+            }
+            else
+            {
+                Equip(eqItemHeld.itemSlot);
+            }
         }
         else
         {
-            Equip(eqItemHeld.itemSlot);
+            inventory.SwapInventoryOfItem(itemHeld);
         }
     }
 

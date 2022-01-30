@@ -48,7 +48,7 @@ public class PlayerShipMovement : MonoBehaviour
     
     public float maxSpeed = 1000;
     public float maxAngVel = 100;
-    public float drag = 5;
+    public AnimationCurve dragCurve;
     public float angularDrag = 5;
     public AnimationCurve thrusterSoundCurve;
 
@@ -257,6 +257,10 @@ public class PlayerShipMovement : MonoBehaviour
 
         GetComponent<CinemachineImpulseSource>().GenerateImpulse();
 
+        LensDistortion distortion = null;
+        postProcessingVolume.profile.TryGet<LensDistortion>(out distortion);
+        distortion.active = true;
+
         StartCoroutine(IncreaseSpeedInWarp());
         StartCoroutine(IncreaseBlurAmount());
         StartCoroutine(IncreaseWarpEffectParticleRate());     
@@ -279,8 +283,13 @@ public class PlayerShipMovement : MonoBehaviour
         postProcessingVolume.profile.TryGet<MotionBlur>(out blur);
         blur.intensity.value = 0;
 
+        LensDistortion distortion = null;
+        postProcessingVolume.profile.TryGet<LensDistortion>(out distortion);
+        distortion.active = false;
+
         warpSource.PlayOneShot(warpOutSound);
         rb.freezeRotation = false;
+        rb.velocity = rb.velocity.normalized * maxSpeed * 0.2f;
     }
 
     //Gradually increase the amount of particles released by the warp effect
@@ -345,7 +354,9 @@ public class PlayerShipMovement : MonoBehaviour
     {
         if (!inWarp && !isChargingWarp)
         {
+            Debug.DrawLine(transform.position, rb.velocity.normalized * 5);
             rb.AddForce(-transform.up * moveSpeed * inputY);
+            
         }       
 
         if (!inWarp && !isChargingWarp)
@@ -371,33 +382,24 @@ public class PlayerShipMovement : MonoBehaviour
             }
         }
 
+        #region Dampeners and drag
         if (!inWarp && !isChargingWarp)
-        {
-            #region Dampeners and drag
-            if (dampeners)
+        {           
+            if (dampeners && inputY != 0)
             {
-                if(inputY != 0)
-                {
-                    rb.drag = 0;
-                }
-                else
-                {
-                    rb.drag = drag;
-                }
+                rb.drag = dragCurve.Evaluate(currentSpeed / maxSpeed);
+                rb.angularDrag = angularDrag;
+                AddForceForSlowingDown();
+            }
+            else if(dampeners && inputY == 0)
+            {
+                rb.drag = dragCurve.Evaluate(1);
+                rb.angularDrag = angularDrag;
             }
             else
             {
                 rb.drag = 0;
-            }
-
-
-            if (inputX != 0)
-            {
                 rb.angularDrag = 0;
-            }
-            else
-            {
-                rb.angularDrag = angularDrag;
             }
         }
         else
@@ -428,9 +430,9 @@ public class PlayerShipMovement : MonoBehaviour
 
     private void AddForceForSlowingDown()
     {
-        float angleBetweenVelAndUp = Mathf.Atan2(rb.velocity.normalized.y - transform.up.y, rb.velocity.x - transform.up.x) * Mathf.Rad2Deg;
-        rb.AddForce(-rb.velocity / (1 / Mathf.Abs(angleBetweenVelAndUp)));
-        Debug.DrawLine(transform.position, -rb.velocity / (1 / Mathf.Abs(angleBetweenVelAndUp)));
+        float angleBetweenVelAndUp = Mathf.Atan2(rb.velocity.normalized.y - transform.up.y, rb.velocity.normalized.x - transform.up.x) * Mathf.Rad2Deg;
+        rb.AddForce(-rb.velocity * 5 / (1 / Mathf.Abs(angleBetweenVelAndUp)));
+        Debug.DrawLine(transform.position, -rb.velocity / (1 / Mathf.Abs(angleBetweenVelAndUp)), Color.magenta);
     }
 
     public void ChangeParticleThrustRate(int rate)

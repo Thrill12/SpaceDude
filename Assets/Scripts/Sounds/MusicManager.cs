@@ -13,18 +13,22 @@ public class MusicManager : MonoBehaviour
 
     private void Update()
     {
-        if (isPlaying) return;
-
         if (musicSource.isPlaying)
         {
             isPlaying = true;
         }
+        else
+        {
+            isPlaying = false;
+        }
+
+        if (isPlaying) return;        
 
         //Loops through all the songs in the list, making sure it doesn't play the same song
         //Twice in a row if there is more than 1 song.
         if (songs.Count > 1)
         {
-            int songindex = Random.Range(0, songs.Count);
+            int songindex = Random.Range(0, songs.Count + 1);
             musicSource.clip = songs[songindex];
 
             if(songindex == lastSong)

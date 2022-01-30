@@ -395,3 +395,9 @@
 /Assets/Sprites/Background/Space/Other/BlackHoleSpritesheet.jpg filter=lfs diff=lfs merge=lfs -text
 /Assets/Sprites/Background/Space/Other/BlackHoleSpritesheet.jpg.meta filter=lfs diff=lfs merge=lfs -text
 /Assets/Data/Projectiles/BulletExplosion.prefab filter=lfs diff=lfs merge=lfs -text
+/Assets/TextMesh[[:space:]]Pro/Examples[[:space:]]&[[:space:]]Extras/Scenes/26[[:space:]]-[[:space:]]Dropdown[[:space:]]Placeholder[[:space:]]Example.unity filter=lfs diff=lfs merge=lfs -text
+/Assets/Prefabs/Effects/Explosion.prefab filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/Files/ExplosionSound.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/Files/GoalCompletedSound.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/Files/QuestAssignedSound.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Sounds/Music/HavenTheme.wav filter=lfs diff=lfs merge=lfs -text

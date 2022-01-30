@@ -9,7 +9,6 @@ public class Quest : ScriptableObject
     public int id;
     public string QuestName;
     public string QuestDescription;
-    public DialogueGraph questAssignedDialogue;
     public DialogueGraph questCompletedDialogue;
     public DialogueGraph questInProgressDialogue;
     public List<Goal> Goals = new List<Goal>();
@@ -37,6 +36,7 @@ public class Quest : ScriptableObject
             Goals[i] = Instantiate(Goals[i]);
         }
         UIManager.instance.DrawQuest(this);
+        UIManager.instance.audioSource.PlayOneShot(PrefabManager.instance.questAssignedSound);
     }
 
     public bool CheckGoals()
@@ -47,7 +47,6 @@ public class Quest : ScriptableObject
         if (Completed)
         {
             Debug.Log("Completed quest '" + QuestName + "' - go back to quest giver for reward");
-            QuestManager.instance.RemoveQuest(this);
         }
 
         return Completed;
@@ -56,8 +55,9 @@ public class Quest : ScriptableObject
     //Gives rewards for the quest
     public void GiveReward(GameObject position)
     {
+        QuestManager.instance.RemoveQuest(this);
         UIManager.instance.RemoveQuest(this);
-        Debug.Log("Given reward to player");
+
         if(ItemReward != null)
         {
             PrefabManager.instance.SpawnItem(position, ItemReward);
@@ -78,9 +78,16 @@ public class Quest : ScriptableObject
             //returns true only if all reqs are completed and their own reqs are completed and pass reqs
             foreach (var item in questRequirements)
             {
-                if(QuestManager.instance.completedQuests.Any(x => x.id == item.id && x.Completed && x.CheckRequirements() && x.HandedIn))
+                if(QuestManager.instance.completedQuests.Count > 0)
                 {
-                    return true;
+                    if (QuestManager.instance.completedQuests.First(x => x.id == item.id && x.Completed && x.CheckRequirements() && x.HandedIn))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
                 }
             }
 

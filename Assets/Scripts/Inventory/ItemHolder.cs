@@ -7,11 +7,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
-public class ItemHolder : MonoBehaviour, IPointerClickHandler
+public class ItemHolder : MonoBehaviour
 {
     public BaseItem itemHeld;
     public bool generateStats = false;
-    private TMP_Text itemNameText;
+    public int stack = 1;
     private SpriteRenderer spriteRenderer;
     private PrefabManager prefabManager;
     private Inventory playerInventory;
@@ -20,14 +20,12 @@ public class ItemHolder : MonoBehaviour, IPointerClickHandler
     {
         prefabManager = PrefabManager.instance;
         itemHeld = ScriptableObject.Instantiate(itemHeld);
-        playerInventory = Inventory.instance;       
-
+        playerInventory = Inventory.instance;
+        itemHeld.itemStack = stack;
         //Setting up the item holder on the floor, its light/color etc.
         GetComponentInChildren<Light2D>().color = itemHeld.itemRarity.rarityColor;
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = itemHeld.itemRarity.rarityColor;
-        itemNameText = GetComponentInChildren<TMP_Text>();
-        itemNameText.text = itemHeld.itemName;
 
         if (itemHeld.itemIcon != null)
         {
@@ -47,12 +45,11 @@ public class ItemHolder : MonoBehaviour, IPointerClickHandler
                 equippable.GenerateMods();
             }
         }
-
-        itemNameText.gameObject.SetActive(false);
     }
 
-    public void ClickedOn(GameObject player)
+    public void ClickedOn()
     {
+        Debug.Log("Clicked ON");
         Destroy(gameObject);
     }
 
@@ -60,21 +57,11 @@ public class ItemHolder : MonoBehaviour, IPointerClickHandler
     {
         if (collision.transform.CompareTag("PlayerSuit"))
         {
-            itemNameText.gameObject.SetActive(true);
+            if (Inventory.instance.AddItem(itemHeld))
+            {
+                Debug.Log("Trigger");
+                ClickedOn();
+            }
         }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.transform.CompareTag("PlayerSuit"))
-        {
-            itemNameText.gameObject.SetActive(false);
-        }
-    }
-
-    public void OnPointerClick(PointerEventData data)
-    {
-        Inventory.instance.AddItem(itemHeld);
-        ClickedOn(GameObject.FindGameObjectWithTag("PlayerSuit"));
     }
 }

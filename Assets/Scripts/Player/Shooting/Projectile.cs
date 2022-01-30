@@ -28,6 +28,11 @@ public class Projectile : MonoBehaviour
                 collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage);
             }
 
+            if (collision.gameObject.GetComponent<Rigidbody2D>())
+            {
+                collision.gameObject.GetComponent<Rigidbody2D>().AddForce(GetComponent<Rigidbody2D>().velocity.normalized, ForceMode2D.Impulse);
+            }
+
             Explode();
             Destroy(gameObject);
         }

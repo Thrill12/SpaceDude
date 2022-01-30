@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Threading.Tasks;
 
 public class UIManager : MonoBehaviour
 {
@@ -21,12 +22,21 @@ public class UIManager : MonoBehaviour
 
     public Image dampenersImage;
 
+    [Header("Dialogue Stuff")]
+
     [HideInInspector]
     public bool triggeredNextStep;
     public GameObject dialogueDisplay;
     public GameObject dialogueLocationEnabled;
     public GameObject dialogueLocationDisabled;
+
+    public GameObject choiceOption;
+    public GameObject choiceDisplayer;
+
+    [Space(10)]
+
     public GameObject activeMissionsLog;
+
     private Vector3 originalDialogueDisplayPosition;
 
     [Space(5)]
@@ -61,7 +71,11 @@ public class UIManager : MonoBehaviour
 
     public GameObject journalObject;
     public GameObject inventory;
+    public GameObject characterSlotsDisplay;
+    public GameObject shipInventory;
     public GameObject pauseMenu;
+
+    public bool isInShipInventory;
 
     [Header("Inventory")]
 
@@ -116,7 +130,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-       // Debug.Log(playerInput.currentActionMap.name);
+        isInShipInventory = shipInventory.activeInHierarchy;
 
         //Displaying the currently hovered on item in the inventory
         if (playerInput.currentControlScheme == "GamePad")
@@ -248,6 +262,12 @@ public class UIManager : MonoBehaviour
 
     #region NormalUI
 
+    public void SelectUIObject(GameObject objToSelect)
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(objToSelect);
+    }
+
     //This selects the first item in the inventory when the player switches to a gamepad midgame
     public void OnControlsChanged()
     {
@@ -260,147 +280,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    //Makes sure all the active UI is closed
-    public void CloseAllUI(InputAction.CallbackContext context)
-    {
-        if (planetUI.activeInHierarchy)
-        {
-            PlanetDescription(context);
-        }
-
-        if (journalObject.activeInHierarchy)
-        {
-            Journal(context);
-        }
-
-        if (inventory.activeInHierarchy)
-        {
-            Inventory(context);
-        }
-
-        if (pauseMenu.activeInHierarchy)
-        {
-            PauseMenu(context);
-        }
-
-        isInUI = false;
-
-        if (playerMovement.isPlayerPiloting)
-        {
-            playerInput.SwitchCurrentActionMap("PlayerShip");
-        }
-        else
-        {
-            playerInput.SwitchCurrentActionMap("PlayerSuit");
-        }
-    }
-
     //Turns on the planet interaction menu when the player is in the ship
     public void PlanetDescription(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
-
-        if(planetCheck.planetHovered != null)
-        {      
-            ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
-
-            if (planetUI.activeInHierarchy == false)
-            {
-                CloseAllUI(context);
-            }
-
-            if (playerInput.currentActionMap.name == "UI")
-            {
-                if (playerMovement.isPlayerPiloting)
-                {
-                    playerInput.SwitchCurrentActionMap("PlayerShip");
-                }
-                else
-                {
-                    playerInput.SwitchCurrentActionMap("PlayerSuit");
-                }
-            }
-            else
-            {
-                playerInput.SwitchCurrentActionMap("UI");
-            }
-
-            planetUI.SetActive(!planetUI.activeInHierarchy);
-
-            if (planetUI.activeInHierarchy)
-            {
-                isInUI = true;
-            }
-            else
-            {
-                isInUI = false;
-            }
-
-            if (Time.timeScale == 0)
-            {
-                
-                Time.timeScale = 1;
-                StopAllCoroutines();
-            }
-            else
-            {
-                Time.timeScale = 0;
-                TypePlanetDescription(planetCheck.planetHoveredP, planetDescription);
-            }
-
-            planetName.text = planetCheck.planetHoveredP.planetName;
-            planetImage.sprite = planetCheck.planetHovered.GetComponent<SpriteRenderer>().sprite;
-            populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
-
-            MarketSwitchToMarketComms();
-        }      
+        Debug.Log("Planet description");
+        PlanetDescription();    
     }
 
     //Turns on the journal menu for the player to keep track of their progress
     public void Journal(InputAction.CallbackContext context)
     {
-        if (context.phase != InputActionPhase.Started) return;        
+        if (context.phase != InputActionPhase.Started) return;
 
-        if (journalObject.activeInHierarchy == false)
-        {
-            CloseAllUI(context);
-        }
-
-        if (playerInput.currentActionMap.name == "UI")
-        {
-            if (playerMovement.isPlayerPiloting)
-            {
-                playerInput.SwitchCurrentActionMap("PlayerShip");
-            }
-            else
-            {
-                playerInput.SwitchCurrentActionMap("PlayerSuit");
-            }           
-        }
-        else
-        {
-            playerInput.SwitchCurrentActionMap("UI");
-        }
-
-        journalObject.SetActive(!journalObject.activeInHierarchy);
-
-        if (Time.timeScale == 0)
-        {
-            Time.timeScale = 1;
-        }
-        else
-        {
-            Time.timeScale = 0;
-        }
-
-        if (journalObject.activeInHierarchy)
-        {
-            isInUI = true;
-        }
-        else
-        {
-            isInUI = false;
-        }
+        Journal();
     }
 
     //Turns on player inventory when the player is outside the ship
@@ -408,107 +301,25 @@ public class UIManager : MonoBehaviour
     {
         if (context.phase != InputActionPhase.Started) return;
 
-        if (inventory.activeInHierarchy == false)
-        {
-            CloseAllUI(context);
-        }
-
-        if (playerInput.currentActionMap.name == "UI")
-        {
-            if (playerMovement.isPlayerPiloting)
-            {
-                playerInput.SwitchCurrentActionMap("PlayerShip");
-            }
-            else
-            {
-                playerInput.SwitchCurrentActionMap("PlayerSuit");
-            }
-        }
-        else
-        {
-            playerInput.SwitchCurrentActionMap("UI");
-        }
-
-        if(playerInput.currentControlScheme == "GamePad")
-        {
-            Debug.Log("Selected");
-            SelectFirstItemHolder();
-        }
-
-        inventory.SetActive(!inventory.activeInHierarchy);
-
-        if (Time.timeScale == 0)
-        {
-            Time.timeScale = 1;
-        }
-        else
-        {
-            Time.timeScale = 0;
-        }
-
-        if (inventory.activeInHierarchy)
-        {
-            isInUI = true;
-            commSelectedInMarketWindow = null;
-            commSelectedInMarketWindowUnits = 0;
-        }
-        else
-        {
-            isInUI = false;
-        }
-    }
+        Inventory();
+    }    
 
     //Turns on pause menu and pauses the game
     public void PauseMenu(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
 
-        if (pauseMenu.activeInHierarchy == false)
-        {
-            CloseAllUI(context);
-        }
-
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstSelectedInPauseMenu);
-
-
-        if (playerInput.currentActionMap.name == "UI")
-        {
-            if (playerMovement.isPlayerPiloting)
-            {
-                playerInput.SwitchCurrentActionMap("PlayerShip");
-                pauseMenu.SetActive(false);
-                Time.timeScale = 1;
-            }
-            else
-            {
-                playerInput.SwitchCurrentActionMap("PlayerSuit");
-                pauseMenu.SetActive(false);
-                Time.timeScale = 1;
-            }
-
-
-        }
-        else
-        {
-            playerInput.SwitchCurrentActionMap("UI");
-            pauseMenu.SetActive(true);
-            Time.timeScale = 0;
-        }
-
-        if (pauseMenu.activeSelf)
-        {
-            isInUI = true;
-        }
-        else
-        {
-            isInUI = false;
-        }
+        PauseMenu();
     }
 
     //Overloads for no context
     public void CloseAllUI()
     {
+        leftItemStatDisplay.gameObject.SetActive(false);
+        rightItemStatDisplay.gameObject.SetActive(false);
+        currentlySelectedItemToDisplay = null;
+        SelectUIObject(null);
+
         if (planetUI.activeInHierarchy)
         {
             PlanetDescription();
@@ -524,6 +335,11 @@ public class UIManager : MonoBehaviour
             Inventory();
         }
 
+        if (shipInventory.activeInHierarchy)
+        {
+            ShipInventory();
+        }
+
         isInUI = false;
 
         if (playerMovement.isPlayerPiloting)
@@ -533,14 +349,17 @@ public class UIManager : MonoBehaviour
         else
         {
             playerInput.SwitchCurrentActionMap("PlayerSuit");
-        }
+        }      
     }
 
     public void PlanetDescription()
     {
-        if (planetCheck.planetHovered != null)
+        if(planetCheck.planetHoveredP != null)
         {
-            ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
+            Debug.Log(planetCheck.planetHoveredP.planetName);
+            //ProgressHolder.instance.AddPlanet(planetCheck.planetHovered);
+
+            Debug.Log("Were inside bois");
 
             if (planetUI.activeInHierarchy == false)
             {
@@ -591,7 +410,7 @@ public class UIManager : MonoBehaviour
             populationCounter.text = "Population: " + planetCheck.planetHovered.GetComponent<Planet>().population + " billion";
 
             MarketSwitchToMarketComms();
-        }
+        }       
     }
 
     public void Journal()
@@ -664,6 +483,8 @@ public class UIManager : MonoBehaviour
         SelectFirstItemHolder();
 
         inventory.SetActive(!inventory.activeInHierarchy);
+        characterSlotsDisplay.SetActive(true);
+        shipInventory.SetActive(false);
 
         if (Time.timeScale == 0)
         {
@@ -683,6 +504,57 @@ public class UIManager : MonoBehaviour
         else
         {
             isInUI = false;
+            
+        }
+
+        leftItemStatDisplay.gameObject.SetActive(false);
+        rightItemStatDisplay.gameObject.SetActive(false);
+    }
+
+    public void ShipInventory()
+    {
+        if (playerInput.currentActionMap.name == "UI")
+        {
+            if (playerMovement.isPlayerPiloting)
+            {
+                playerInput.SwitchCurrentActionMap("PlayerShip");
+            }
+            else
+            {
+                playerInput.SwitchCurrentActionMap("PlayerSuit");
+            }
+        }
+        else
+        {
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+
+        SelectFirstItemHolder();
+
+        inventory.SetActive(!inventory.activeInHierarchy);
+        shipInventory.SetActive(!shipInventory.activeInHierarchy);
+        characterSlotsDisplay.SetActive(false);
+
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+
+        if (shipInventory.activeInHierarchy)
+        {
+            isInUI = true;
+            commSelectedInMarketWindow = null;
+            commSelectedInMarketWindowUnits = 0;
+        }
+        else
+        {
+            isInUI = false;
+            leftItemStatDisplay.gameObject.SetActive(false);
+            rightItemStatDisplay.gameObject.SetActive(false);
         }
     }
 
@@ -753,7 +625,7 @@ public class UIManager : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null);
 
-        if(inv.items.Count > 0)
+        if(inv.playerInventoryItems.Count > 0)
         {
             if (inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
             {
@@ -854,6 +726,57 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    #region DialogueChoices
+    [HideInInspector]
+    public bool hasChosen = false;
+    [HideInInspector]
+    public int chosenChoice;
+    //Pass in a list of strings to display as choices in each button, returns an int to
+    //tell the node parser what choice they chose
+    public void DisplayChoices(List<string> choices)
+    {
+        playerInput.SwitchCurrentActionMap("UI");
+
+        choiceDisplayer.SetActive(true);
+
+        string firstItem = choices[0];
+        GameObject firstOption = Instantiate(choiceOption, choiceDisplayer.transform);
+        firstOption.GetComponentInChildren<TMP_Text>().text = firstItem;
+        firstOption.GetComponent<Button>().onClick.AddListener(() => SelectChoice(0));
+        if(playerInput.currentControlScheme == "GamePad")
+        {
+            SelectUIObject(firstOption);
+        }
+
+        for (int i = 1; i < choices.Count; i++)
+        {
+            string itemm = choices[i];
+            GameObject choice = Instantiate(choiceOption, choiceDisplayer.transform);
+            choice.GetComponentInChildren<TMP_Text>().text = itemm;
+            choice.GetComponent<Button>().onClick.AddListener(() => SelectChoice(choices.IndexOf(itemm)));
+        }
+    }
+
+    //Function called by the buttons spawned in for choosing choices - each button
+    //is assigned an integer value with which we figure out the intended response
+    //to the previous dialogue
+    public int SelectChoice(int choiceNumber)
+    {
+        Debug.Log("Chose number " + choiceNumber);
+        chosenChoice = choiceNumber;
+        hasChosen = true;
+
+        choiceDisplayer.SetActive(false);
+
+        for (int i = 1; i < choiceDisplayer.transform.childCount; i++)
+        {
+            Destroy(choiceDisplayer.transform.GetChild(i).gameObject);
+        }
+
+        return choiceNumber;
+    }
+    #endregion
+
     //Dialogue pages is the string you want it to display in the dialogue box, dialogue source is the place from where the dialogue came from
     public void DisplayDialogue(string dialoguePages, string dialogueSource)
     {
@@ -868,6 +791,7 @@ public class UIManager : MonoBehaviour
     //Coroutine for actually animating the writing of text in the dialogue box
     IEnumerator WriteDialogue(string dialoguePages)
     {
+        AnimateDialogueIn();
         AnimateTyping(dialoguePages, dialogueDisplay.GetComponentInChildren<TMP_Text>());
 
         yield return new WaitForSecondsRealtime(letterTypingPause * dialoguePages.Length);
@@ -877,38 +801,16 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0);
     }
 
-    //List overload for previous functions in order to have multiple pages of dialogue
-
-    /// <summary>
-    /// It displays dialogue with the source of the second argument in the dialogue page.
-    /// Each element of the list is treated as a separate page, and will be displayed
-    /// in the next iteration.
-    /// </summary>
-    /// <param name="dialoguePages"></param>
-    /// <param name="dialogueSource"></param>
-    public void DisplayDialogue(List<string> dialoguePages, string dialogueSource)
+    public void AnimateDialogueIn()
     {
-        StopAllCoroutines();
-        dialogueDisplay.SetActive(true);
-        dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
-        //LeanTween.moveLocalY(dialogueDisplay, -480, 0.4f).setEaseInQuad();
-
-        StartCoroutine(WriteDialogue(dialoguePages));
+        LeanTween.scaleY(dialogueDisplay, 1, 0.1f);
+        LeanTween.scaleX(dialogueDisplay, 1, 0.1f).setDelay(0.1f);
     }
 
-    //Coroutine for actually animating the writing of text in the dialogue box
-    IEnumerator WriteDialogue(List<string> dialoguePages)
+    public void AnimateDialogueOut()
     {
-        foreach (var item in dialoguePages)
-        {
-            AnimateTyping(item, dialogueDisplay.GetComponentInChildren<TMP_Text>());
-
-            yield return new WaitForSecondsRealtime(letterTypingPause * item.Length);
-        }
-        dialogueDisplay.SetActive(false);
-
-        //LeanTween.moveLocalY(dialogueDisplay, 60, 0.4f).setEaseInQuad();
-        yield return new WaitForSecondsRealtime(0);
+        LeanTween.scaleY(dialogueDisplay, 0.2f, 0.1f);
+        LeanTween.scaleX(dialogueDisplay, 0.5f, 0.1f).setDelay(0.1f);
     }
 
     #endregion
@@ -982,7 +884,7 @@ public class UIManager : MonoBehaviour
                 newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
                 planetCheck.planetHoveredP.ReceiveCommodity(newCommToAdd);
-                player.GetComponent<Inventory>().items.Remove(player.GetComponent<Inventory>().items.Where(x => x == commSelectedInMarketWindow).First());
+                player.GetComponent<Inventory>().playerInventoryItems.Remove(player.GetComponent<Inventory>().playerInventoryItems.Where(x => x == commSelectedInMarketWindow).First());
             }
             else
             {
@@ -1082,7 +984,7 @@ public class UIManager : MonoBehaviour
             Debug.Log("No children to remove");
         }
 
-        foreach (BaseItem item in player.GetComponent<Inventory>().items)
+        foreach (BaseItem item in player.GetComponent<Inventory>().playerInventoryItems)
         {
             GameObject obj = Instantiate(pfManager.commodityMarketDisplayObject, planetMarketLayout.transform);
             obj.GetComponent<CommodityInvHolder>().commodityHeld = item;

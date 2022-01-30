@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676700e5f671a1944b0f09195f80b42c, type: 3}
+  m_Name: The Bursty
+  m_EditorClassIdentifier: 
+  itemName: The Bursty
+  itemDescription: This legendary pistol was once the preferred handgun of many Frosttips
+    militants, however grew out of fashion due to its unreliability.
+  itemIcon: {fileID: -2062997635, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
+  itemRarity: {fileID: 11400000, guid: 88ceb3550f440f14cbaa6ccc05b95fa1, type: 2}
+  itemValue: 531
+  itemStack: 0
+  itemMaxStack: 1
+  itemType: 6
+  itemSlot: Secondary Weapon
+  itemMods: []
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0
+  weaponObject: {fileID: 1525203102352782318, guid: c61b2d24de3dd0a4e9b59fa205d60eaa, type: 3}
+  damage:
+    BaseValue: 79
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalChance:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalDamage:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  attackCooldown:
+    BaseValue: 1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  large: 0
+  attackSound: {fileID: 8300000, guid: ba839be2c32ef7249893ebe6345399e3, type: 3}
+  maxBulletsInClip:
+    BaseValue: 5
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  currentBullets: 0
+  outOfAmmoSound: {fileID: 8300000, guid: 71e70adc1032ba94cb5a6b6da319846c, type: 3}
+  ammoType: 7
+  projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
+  projectileSpeed:
+    BaseValue: 75000
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  bulletsInBurst:
+    BaseValue: 3
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  timeBetweenShots:
+    BaseValue: 0.1
+    _value: 0
+    statModifiers: []
+    isDirty: 1

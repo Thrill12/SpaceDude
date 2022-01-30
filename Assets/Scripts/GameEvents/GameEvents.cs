@@ -35,4 +35,17 @@ public class GameEvents : MonoBehaviour
         }
     }
     #endregion
+
+    #region Miscellaneous Events
+
+    public event Action<NPC> onNPCCommunicate;
+
+    public void OnNPCCommunicate(NPC npc)
+    {
+        if(onNPCCommunicate != null)
+        {
+            onNPCCommunicate(npc);
+        }
+    }
+    #endregion
 }

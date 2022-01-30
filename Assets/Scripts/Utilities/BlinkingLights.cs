@@ -22,6 +22,7 @@ public class BlinkingLights : MonoBehaviour
     {
         if (nextFire <= 0)
         {
+            if (lightt == null) return;
             lightt.enabled = !lightt.enabled;
             nextFire = cooldown;
             cooldown = Random.Range(0.1f, 0.7f);

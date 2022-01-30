@@ -10,6 +10,12 @@ public class PrefabManager : MonoBehaviour
 
     public GameObject planetBorder;
 
+    [Header("Sound Clips")]
+
+    public AudioClip questAssignedSound;
+    public AudioClip questGoalCompletedSound;
+    public AudioClip explosionSound;
+
     [Header("UI")]
 
     public Color white;

@@ -31,7 +31,11 @@ public class Goal : ScriptableObject
 
     public void Complete()
     {
-        GoalCompleted = true;
-        goalQuest.CheckGoals();
+        if (!GoalCompleted)
+        {
+            UIManager.instance.audioSource.PlayOneShot(PrefabManager.instance.questGoalCompletedSound);
+            GoalCompleted = true;
+            goalQuest.CheckGoals();
+        }       
     }
 }

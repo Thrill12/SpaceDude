@@ -49,11 +49,19 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
-  large: 0
+  large: 1
   attackSound: {fileID: 8300000, guid: 4ba745fdabcbb3e4494d34e8b563eeba, type: 3}
+  maxBulletsInClip:
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  currentBullets: 0
+  outOfAmmoSound: {fileID: 8300000, guid: 71e70adc1032ba94cb5a6b6da319846c, type: 3}
+  ammoType: 10
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
-    BaseValue: 700
+    BaseValue: 100000
     _value: 0
     statModifiers: []
     isDirty: 1
