@@ -9,7 +9,7 @@ public class BaseItem : ScriptableObject
     public Sprite itemIcon;
     public ItemRarity itemRarity;
     public int itemValue;
-    public int itemStack;
+    public int itemStack = 1;
     public int itemMaxStack = 1;
     public ItemType itemType;
 }
@@ -19,14 +19,14 @@ public enum ItemType
     None,
     Food,
     Electronic,
-    BuildingSupply,
+    Building_Supply,
     Breathing,
     Waste,
     Weapon,
-    KineticBurstClip,
-    ShotgunShell,
-    KineticBelt,
-    SpikeAmmo,
-    UnionClip,
+    Kinetic_Clip,
+    Shotgun_Shell,
+    Kinetic_Belt,
+    Spike_Ammo,
+    Union_Clip,
     Raw
 }

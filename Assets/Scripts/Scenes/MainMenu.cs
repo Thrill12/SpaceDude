@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
@@ -31,6 +32,8 @@ public class MainMenu : MonoBehaviour
     public GameObject masterVolumeBar;
     public GameObject musicVolumeBar;
     public GameObject sfxVolumeBar;
+    public TMP_Text graphicsTierText;
+    public Toggle fpsCounter;
 
     private void Start()
     {
@@ -59,6 +62,8 @@ public class MainMenu : MonoBehaviour
                 rebindingKeysKeyboard.SetActive(true);
             }
         }
+
+        GameManager.instance.fpsCounter.enabled = !GameManager.instance.options.fpsCounter;
     }
 
     //Turns on options
@@ -98,9 +103,12 @@ public class MainMenu : MonoBehaviour
         OptionsSO options = GameManager.instance.options;
 
         masterVolumeBar.GetComponent<Image>().fillAmount = options.masterLevel;  
-        musicVolumeBar.GetComponent<Image>().fillAmount = options.musicLevel;  
+        musicVolumeBar.GetComponent<Image>().fillAmount = options.musicLevel;
         sfxVolumeBar.GetComponent<Image>().fillAmount = options.sfxLevel;
 
+        QualitySettings.SetQualityLevel(options.qualityTier);
+        graphicsTierText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+        fpsCounter.isOn = GameManager.instance.options.fpsCounter;
         mixer.SetFloat("Master", Mathf.Log10(masterVolumeBar.GetComponent<Image>().fillAmount) * 20);
         mixer.SetFloat("Music", Mathf.Log10(musicVolumeBar.GetComponent<Image>().fillAmount) * 20);
         mixer.SetFloat("SFX", Mathf.Log10(sfxVolumeBar.GetComponent<Image>().fillAmount) * 20);
@@ -114,10 +122,34 @@ public class MainMenu : MonoBehaviour
         options.masterLevel = masterVolumeBar.GetComponent<Image>().fillAmount;
         options.musicLevel = musicVolumeBar.GetComponent<Image>().fillAmount;
         options.sfxLevel = sfxVolumeBar.GetComponent<Image>().fillAmount;
-
         options.keybindsJson = inputActionAsset.SaveBindingOverridesAsJson();
 
         GameManager.instance.SaveOptions();
+    }
+
+    public void IncreaseGraphics()
+    {
+        QualitySettings.IncreaseLevel(true);
+
+        graphicsTierText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+        GameManager.instance.options.qualityTier = QualitySettings.GetQualityLevel();
+
+        SaveSettings();
+    }
+
+    public void DecreaseGraphics()
+    {
+        QualitySettings.DecreaseLevel(true);
+
+        graphicsTierText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+        GameManager.instance.options.qualityTier = QualitySettings.GetQualityLevel();
+
+        SaveSettings();
+    }
+
+    public void ToggleFPSCounter()
+    {
+        GameManager.instance.options.fpsCounter = !GameManager.instance.options.fpsCounter;
     }
 
     //Saves settings on application quit in case people do ALT+F4

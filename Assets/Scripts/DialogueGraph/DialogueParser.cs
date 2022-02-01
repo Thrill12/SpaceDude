@@ -46,6 +46,7 @@ public class DialogueParser : MonoBehaviour
         }
         else if (parts[0].Trim() == "Dialogue")
         {
+            UIManager.instance.playerInput.SwitchCurrentActionMap("Dialogue");
             UIManager.instance.DisplayDialogue(parts[1], GetComponent<NPC>().npcName);
 
             yield return new WaitForSeconds(parts[1].Length * UIManager.instance.letterTypingPause);
@@ -63,7 +64,7 @@ public class DialogueParser : MonoBehaviour
         else if(parts[0].Trim() == "TwoChoice")
         {
             //Index 1 is the dialogue for the main textbox, 2 is the pass button string, 3 is the fail button string
-
+            UIManager.instance.playerInput.SwitchCurrentActionMap("Dialogue");
             UIManager.instance.DisplayDialogue(parts[1], GetComponent<NPC>().npcName);
 
             yield return new WaitForSeconds(parts[1].Length * UIManager.instance.letterTypingPause);

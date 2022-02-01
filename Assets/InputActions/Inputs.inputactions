@@ -812,15 +812,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Next Dialogue",
-                    "type": "Button",
-                    "id": "9f0c9e47-c86f-48e6-ab27-72cce671d491",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -922,10 +913,78 @@
                     "action": "Journal",
                     "isComposite": false,
                     "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Dialogue",
+            "id": "5e9de45b-a238-40f9-baa3-083c78e2c74d",
+            "actions": [
+                {
+                    "name": "Submit",
+                    "type": "Button",
+                    "id": "6f814ae3-8e35-4d50-8848-74a220cb9d4d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cursor",
+                    "type": "Value",
+                    "id": "40b58dbf-0924-454e-8810-4a07a69ef914",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Next Dialogue",
+                    "type": "Button",
+                    "id": "26dcc959-1d50-428e-89fb-26e85da68ba2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "693b9bfa-a8f3-4d89-ac9e-29f7f3c6011f",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "172db4a8-b8cc-4eef-8dc7-c82cf4290f98",
+                    "id": "63763d44-a565-4f92-b02f-da8b299073bd",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8df6382e-bb61-4d49-a5c6-e735067369b6",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Cursor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e0599d0-9018-46fd-91c3-50cdc8e52d19",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
@@ -936,7 +995,7 @@
                 },
                 {
                     "name": "",
-                    "id": "64e42940-1e28-48e9-b332-c99386837cf3",
+                    "id": "59d82734-b51f-4ad8-9cbe-5811cdcd239e",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
@@ -947,8 +1006,8 @@
                 },
                 {
                     "name": "",
-                    "id": "a700ede2-f602-4447-88f8-da5a9eff5a2f",
-                    "path": "<Keyboard>/anyKey",
+                    "id": "e24f0212-6eaa-4eae-8815-8e38e1bacc8b",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyBoard",

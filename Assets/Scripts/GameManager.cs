@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameObject loadingScreen;
     public Image loadingBar;
+    public TMP_Text fpsCounter;
 
     public string saveFile = "/SpaceDudeOptions.spsv";
     public InputActionAsset inputActions;
@@ -50,6 +52,11 @@ public class GameManager : MonoBehaviour
             timer += Time.deltaTime;
             displayLoadingBarLoadingValue = Mathf.Lerp(0, totalSceneProgress, timer);
             loadingBar.fillAmount = displayLoadingBarLoadingValue;
+        }
+
+        if (fpsCounter.enabled)
+        {
+            fpsCounter.text = "FPS: " + Mathf.RoundToInt(1 / Time.deltaTime);
         }
     }
 

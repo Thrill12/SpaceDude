@@ -23,9 +23,11 @@ public class BaseEnemy : BaseEntity
 
         prefabManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
 
-        healthBarObject = Instantiate(prefabManager.healthBarObject, transform);
+        healthBarObject = Instantiate(prefabManager.healthBarObject, transform.position, Quaternion.identity);
         healthBarObject.transform.position = new Vector3(healthBarObject.transform.position.x, healthBarObject.transform.position.y + healthBarYOffset, healthBarObject.transform.position.z);
         healthBar = healthBarObject.transform.Find("HealthBar").GetComponent<Image>();
+        healthBarObject.transform.localScale = new Vector3(1, 1, 1);
+        healthBarObject.transform.SetParent(transform);
     }
 
     public override void Update()

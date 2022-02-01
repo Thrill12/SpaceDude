@@ -48,7 +48,7 @@ public class PlayersuitManager : MonoBehaviour
 
     private void Update()
     {
-        if (UIManager.instance.playerInput.currentActionMap.name == "UI")
+        if (UIManager.instance.playerInput.currentActionMap.name == "Dialogue")
         {
             instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = orthoSizeDialogue;
         }

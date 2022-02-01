@@ -7,6 +7,8 @@ using UnityEngine;
 [System.Serializable]
 public class Stat
 {
+    [SerializeField]
+    public string statName;
     public float BaseValue;
     //You want to access the value of the stat with .Value instead of _value, as that is a function
     //that returns the cleaned up version of the stat.
