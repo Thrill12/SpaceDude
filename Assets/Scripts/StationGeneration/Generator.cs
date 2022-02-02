@@ -63,8 +63,6 @@ public class Generator
 
         Texture2D texture = DebugTexture();
 
-        TriangulationGraph graph = new TriangulationGraph();
-
         List<Vector2Int> rooms = new List<Vector2Int>();    
 
         foreach(PlacedRoom room in placedRooms)

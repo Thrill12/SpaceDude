@@ -19,30 +19,16 @@ public class GenDebugger : MonoBehaviour
 
         List<TriangulationGraph.Edge> graph = tGraph.DelenauyTriangulation(gen.RoomPositions(), profile.gridSize);
 
-        List<TriangulationGraph.Edge> shortGraph = tGraph.ShortestPath(graph);
+        List<TriangulationGraph.Edge> shortGraph = tGraph.MinimumSoanningTree(graph);
         
-        List<Vector3> pos = new List<Vector3>();
 
-        //foreach (TriangulationGraph.Edge e in shortGraph)
-        //{
-        //    pos.Add(e.point1 - new Vector2(profile.gridSize/2, profile.gridSize/2));
-        //    pos.Add(e.point2 - new Vector2(profile.gridSize/2, profile.gridSize/2));
-        //}
-
-        //LineRenderer lr = gameObject.AddComponent<LineRenderer>();
-        //lr.positionCount = (shortGraph.Count *2);
-        //lr.SetPositions(pos.ToArray());
-
-        foreach (TriangulationGraph.Edge e in shortGraph)
+        foreach (TriangulationGraph.Edge e in graph)
         {
             GameObject go = new GameObject();
             LineRenderer lr = go.AddComponent<LineRenderer>();
 
             lr.SetPosition(0, e.point1 - new Vector2(profile.gridSize / 2, profile.gridSize / 2));
             lr.SetPosition(1, e.point2 - new Vector2(profile.gridSize / 2, profile.gridSize / 2));
-
-            pos.Add(e.point1 - new Vector2(profile.gridSize / 2, profile.gridSize / 2));
-            pos.Add(e.point2 - new Vector2(profile.gridSize / 2, profile.gridSize / 2));
         }
 
 
@@ -54,3 +40,4 @@ public class GenDebugger : MonoBehaviour
         
     }
 }
+
