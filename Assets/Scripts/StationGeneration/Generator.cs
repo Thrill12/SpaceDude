@@ -8,12 +8,14 @@ using UnityEngine.Rendering;
     public Vector2Int position;
     public int roomWidth;
     public int roomHeight;
+    public List<Vector2Int> entrances;
 
     public PlacedRoom(RoomData room, Vector2Int pos)
     {
         position = pos;
         roomWidth = room.roomWidth;  
         roomHeight = room.roomHeight;    
+        entrances = room.entrances;
     }
 }
 
@@ -21,6 +23,8 @@ struct Corridor
 {
     public PlacedRoom room1;
     public PlacedRoom room2;
+    public List<Vector2Int> xtilesPos;
+    public List<Vector2Int> ytilesPos;
 }
 
 //Creates the data representations.
@@ -57,9 +61,8 @@ public class Generator
         Random.InitState(seed);
     }
 
-    public Texture2D GenerateWithDebugTexture()
+    public Texture2D GenerateDebugTexture()
     {
-        GenerateRooms();
 
         Texture2D texture = DebugTexture();
 
@@ -93,9 +96,41 @@ public class Generator
 
     }
 
+    #region Grid Utilities
+
+    TileData GetTile(int x, int y)
+    {
+        TileData t = null ;
+
+        if (x < profile.gridSize && y < profile.gridSize)
+        {
+            //The tile attmepted to be accessed is within our grid so find it.
+            t = grid[x, y];
+        }
+
+        return t;
+    }
+
+    //Returns true if successful.
+    bool SetTile(int x, int y, TileData tile)
+    {
+        bool flag = false;
+
+        if (x < profile.gridSize && y < profile.gridSize)
+        {
+            //The tile attmepted to be accessed is within our grid so set it.
+            grid[x, y].UpdateTile(tile.type, false);
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    #endregion
+
     #region Placing Rooms
 
-    private void GenerateRooms()
+    public void GenerateRooms()
     {
         //Returns a random integer betweeen the min number of rooms and the max number of rooms.
         int numToSpawn = Random.Range(profile.minNumRooms,profile.maxNumRooms + 1);
@@ -124,8 +159,8 @@ public class Generator
         for (int i = 0; i < 5; i++)
         {
             //Work out the max possible x and y values which would allow the room to be placed on the grid.
-            int maxX = profile.gridSize - room.roomWidth;
-            int maxY = profile.gridSize - room.roomHeight;
+            int maxX = profile.gridSize - 1 - room.roomWidth;
+            int maxY = profile.gridSize - 1 - room.roomHeight;
 
             //Pick a random grid pos to spawn the room between 0 and the max x/y respectively. 
             int x = Random.Range(0, maxX + 1);
@@ -201,14 +236,279 @@ public class Generator
 
     #region Generating Corridoors
 
-    private void CorridorFloorWalk()
+    public void GenerateCorridors(int[,] mstTable)
     {
-
+        List<Corridor> corridors = CalculateCorridoorsPaths(mstTable);
+        PlaceCorridors(corridors);
     }
 
-    private void GenerateCorridorWalls()
+    //Calculate the corridor paths which need tracing and corridor rooms generated on..
+    private List<Corridor> CalculateCorridoorsPaths(int[,] mstTable)
     {
+        List<Corridor> corridors = new List<Corridor>();
 
+        //Make a list of corridors which need tracing.
+        for (int from = 0; from < placedRooms.Count; from++)
+        {
+            for (int to = 0; to < placedRooms.Count; to++)
+            {
+                //Is there a connection here?
+                if (mstTable[from,to] >= 1)
+                {
+                    //Remove this connection from the table since we'll be sorting this edge now.
+                    mstTable[from, to] = 0;
+                    mstTable[to, from] = 0;
+
+                    //For the 'from' room, get the point the corridor should aim for.
+                    Vector2Int fromCorridorPos = RoomCoridoorConnection(from);
+                    //For the 'to' room, get the point the corridor should aim for.
+                    Vector2Int toCorridorPos = RoomCoridoorConnection(to);
+
+                    //Create the corridor that needs tracing and add to the list of coridors we are making.
+                    Corridor corridor = new Corridor
+                    {
+                        room1 = placedRooms[from],
+                        room2 = placedRooms[to],
+                        xtilesPos = new List<Vector2Int>(),
+                        ytilesPos = new List<Vector2Int>()
+                    };
+
+                    //Work out if we are doing x or y first walk. 
+                    if (Random.Range(0,2) == 1)
+                    {
+                        //Completes the initial outline of the corridor for this edge.
+                        XWalk(fromCorridorPos, toCorridorPos, ref corridor);
+
+                        if (corridor.xtilesPos.Count > 0)
+                        {
+                            fromCorridorPos = corridor.xtilesPos[corridor.xtilesPos.Count - 1];
+                        }
+
+                        YWalk(fromCorridorPos,toCorridorPos, ref corridor);
+                    }
+                    else
+                    {
+                        //Completes the initial outline of the corridor for this edge.
+                        YWalk(fromCorridorPos, toCorridorPos, ref corridor);
+
+                        if (corridor.ytilesPos.Count > 0)
+                        {
+                            fromCorridorPos = corridor.ytilesPos[corridor.ytilesPos.Count - 1];
+                        }
+
+                        XWalk(fromCorridorPos, toCorridorPos, ref corridor);
+                    }
+
+                    corridors.Add(corridor);
+                }
+            }
+        } 
+
+        //Return the completed list of corridors.
+        return corridors;
+    }
+
+    void XWalk(Vector2Int fromCorridorPos, Vector2Int toCorridorPos, ref Corridor corridor)
+    {
+        //Do x first. //On the X, get the from pos to the to pos yk. 
+        if (fromCorridorPos.x != toCorridorPos.x)
+        {
+            //Work out if to pos is to the left or to the right...
+            if (fromCorridorPos.x > toCorridorPos.x)
+            {
+                //The 'to' room is on the left.
+                //Keep 'walking left' until we match with the target 'to' x.
+                //Calculate the difference between the current x pos and the target x pos.
+                int steps = Mathf.Abs(fromCorridorPos.x - toCorridorPos.x);
+
+                for (int i = 0; i <= steps; i++)
+                {
+                    //Walk left.
+                    int x = fromCorridorPos.x - i;
+                    int y = fromCorridorPos.y;
+
+                    corridor.xtilesPos.Add(new Vector2Int(x, y));
+                }
+            }
+            else
+            {
+                //The 'to' romm is on the right.
+                //Keep 'walking right' until we match with the target 'to' x.
+                int steps = Mathf.Abs(fromCorridorPos.x - toCorridorPos.x);
+
+                for (int i = 0; i < steps; i++)
+                {
+                    //Walk left.
+                    int x = fromCorridorPos.x + i;
+                    int y = fromCorridorPos.y;
+
+                    corridor.xtilesPos.Add(new Vector2Int(x, y));
+                }
+
+            }
+        }
+    }
+
+    void YWalk(Vector2Int fromCorridorPos, Vector2Int toCorridorPos, ref Corridor corridor)
+    {
+        //On the Y, get the from pos to the to pos yk. 
+        if (fromCorridorPos.y != toCorridorPos.y)
+        {
+            //Work out if 'to pos' is up or down...
+            if (fromCorridorPos.y > toCorridorPos.y)
+            {
+                //The 'to' room is below.
+                //Keep 'walking down' until we match with the target 'to' y.
+                int steps = Mathf.Abs(fromCorridorPos.y - toCorridorPos.y);
+
+                for (int i = 0; i < steps; i++)
+                {
+                    //Walk left.
+                    int x = fromCorridorPos.x;
+                    int y = fromCorridorPos.y - i;
+
+                    corridor.ytilesPos.Add(new Vector2Int(x, y));
+                }
+            }
+            else
+            {
+                //The 'to' romm is above.
+                //Keep 'walking up' until we match with the target 'to' y.
+                int steps = Mathf.Abs(fromCorridorPos.y - toCorridorPos.y);
+
+                for (int i = 0; i < steps; i++)
+                {
+                    //Walk left.
+                    int x = fromCorridorPos.x;
+                    int y = fromCorridorPos. y + i;
+
+                    corridor.ytilesPos.Add(new Vector2Int(x, y));
+                }
+
+            }
+        }
+    }
+
+    void PlaceCorridors(List<Corridor> corridors)
+    {
+        foreach(Corridor corridor in corridors)
+        {
+            Debug.Log("Corridors");
+
+            //Trace all the x-walk tiles.
+            foreach (Vector2Int pos in corridor.xtilesPos)
+            {
+                //The tile data to use for this pos.
+                TileData data = profile.floorTile[Random.Range(0, profile.floorTile.Count)];
+
+                //Set the tile of the position on the grid discovered drawing the base path of the corridor. 
+                TraceCorridorTile(pos, data);
+            }
+
+            //Trace all the y-walk tiles.
+            foreach (Vector2Int pos in corridor.ytilesPos)
+            {
+                TileData data = profile.floorTile[Random.Range(0, profile.floorTile.Count)];
+
+                //Set the tile of the position on the grid discovered drawing the base path of the corridor. 
+                TraceCorridorTile(pos, data);
+            }
+        }
+    }
+
+    void TraceCorridorTile(Vector2Int position, TileData data)
+    {
+        //Set the tile of the position on the grid discovered drawing the base path of the corridor. 
+        SetTile(position.x, position.y, data);
+
+        //Now trace around that position to make the corridor the desired width. 
+        //Trace the positions NESW.
+
+        //Set tile at the position on the acutal path.
+        if (position.x + 1 < profile.gridSize - 1 && position.y + 1 < profile.gridSize - 1)
+        {
+            SetTile(position.x, position.y, data);
+        }
+
+        Vector2Int tracePos;
+
+        //Try going each direction for the width of a corridor ( - 1 since we already set 1 tile wide to follow the path).
+
+        //Start with up 1.
+        for (int i = 1; i <= profile.corridorWidth-1; i++)
+        {
+            tracePos = new Vector2Int(position.x, position.y + i);
+
+            if (tracePos.x + 1 < profile.gridSize - 1 && tracePos.y + 1 < profile.gridSize - 1)
+            {
+                SetTile(tracePos.x, tracePos.y, profile.floorTile[0]);
+            }
+        }
+
+        //Then with down 1.
+        for (int i = 1; i <= profile.corridorWidth - 1; i++)
+        {
+            tracePos = new Vector2Int(position.x, position.y - i);
+
+            if (tracePos.x + 1 < profile.gridSize - 1 && tracePos.y + 1 < profile.gridSize - 1)
+            {
+                SetTile(tracePos.x, tracePos.y, profile.floorTile[0]);
+            }
+        }
+
+        //Then with left 1.
+        for (int i = 1; i <= profile.corridorWidth - 1; i++)
+        {
+            tracePos = new Vector2Int(position.x - i, position.y);
+
+            if (tracePos.x + 1 < profile.gridSize - 1 && tracePos.y + 1 < profile.gridSize - 1)
+            {
+                SetTile(tracePos.x, tracePos.y, profile.floorTile[0]);
+            }
+        }
+
+        //Then with right 1.
+        for (int i = 1; i <= profile.corridorWidth - 1; i++)
+        {
+            tracePos = new Vector2Int(position.x + i, position.y);
+
+            if (tracePos.x + 1 < profile.gridSize - 1 && tracePos.y + 1 < profile.gridSize - 1)
+            {
+                SetTile(tracePos.x, tracePos.y, profile.floorTile[0]);
+            }
+        }
+    }
+
+    private Vector2Int RoomCoridoorConnection(int fromIndex)
+    {
+        Vector2Int fromCorridorPos;
+        //Decide if we are using the room centre or a specific target.
+        if (placedRooms[fromIndex].entrances.Count > 0)
+        {
+            //Pick a target entrance if there is more than one entrance.
+            if (placedRooms[fromIndex].entrances.Count > 1)
+            {
+                //Pick a random index.
+                int index = Random.Range(0, placedRooms[fromIndex].entrances.Count);
+                //Calcuate the true grid relative position.
+                fromCorridorPos = placedRooms[fromIndex].entrances[index] + placedRooms[fromIndex].position;
+            }
+            else
+            {
+                //Calcuate the true grid relative position.
+                fromCorridorPos = placedRooms[fromIndex].entrances[0] + placedRooms[fromIndex].position;
+            }
+        }
+        else
+        {
+            //Work out where the room centre is, make that the corridor target.
+            Vector2Int roomCentre = placedRooms[fromIndex].position + new Vector2Int(Mathf.Abs(placedRooms[fromIndex].roomWidth / 2), Mathf.Abs(placedRooms[fromIndex].roomHeight / 2));
+
+            //Set the room centre as the corridor target.
+            fromCorridorPos = roomCentre;
+        }
+
+        return fromCorridorPos;
     }
     #endregion
 

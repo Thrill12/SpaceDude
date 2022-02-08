@@ -11,4 +11,7 @@ public class RoomData : ScriptableObject
     public int roomHeight;
     [Tooltip("The list of tiles that form that room.")]
     public List<TileData> roomTileData;
+    [HideInInspector]
+    public List<Vector2Int> entrances = new List<Vector2Int>();
+
 }

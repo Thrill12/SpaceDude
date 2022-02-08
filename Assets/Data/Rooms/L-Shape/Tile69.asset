@@ -15,3 +15,4 @@ MonoBehaviour:
   position: {x: 0, y: 2}
   type: 2
   hasObject: 0
+  spr: {fileID: 0}

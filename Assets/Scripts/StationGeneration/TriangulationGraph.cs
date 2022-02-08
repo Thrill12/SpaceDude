@@ -5,6 +5,8 @@ using System.Linq;
 
 public class TriangulationGraph
 {
+    #region Structs
+
     struct Triangle
     {
         //The array of vertices making up the triangle. 
@@ -44,52 +46,17 @@ public class TriangulationGraph
         public int rank;
     }
 
+    #endregion
+
     //The graphs which we want to create.
     public HashSet<Edge> graph = new HashSet<Edge>();
-    List<Vector2Int> rooms;
+    public List<Vector2Int> rooms;
     List<NodeEdge> nodeGraph;
     int[,] table;
 
+    //Using the Bowyer-Watson algorithm to complete Delenauy trigulation of the points.
     public List<Edge> DelenauyTriangulation(List<Vector2Int> roomPositions, int gridSize)
     {
-        ////Firstly, create the super triangle which will form basis of the algorithm.
-        //Triangle superTriangle = CreateSuperTriangle(gridSize);
-
-        ////Add the super triangle to our list and to the graph.
-        //triangles.Add(superTriangle);
-        //AddTriangleToGraph(superTriangle);
-
-        ////Now Completes the triangulation with the nodes and the super triangle.
-        //CheckVertices(roomPositions);
-
-        //#region Remove Duplicate Edges:
-
-        //List<Edge> edgeToCull = new List<Edge>();
-
-        ////Identifies any verts of the super triangle to remove.
-        //foreach (Edge edge in graph)
-        //{
-        //    if (edge.point1 == superTriangle.verts[0] || edge.point1 == superTriangle.verts[1] || edge.point1 == superTriangle.verts[2])
-        //    {
-        //        edgeToCull.Add(edge);
-        //    }
-        //    if (edge.point2 == superTriangle.verts[0] || edge.point2 == superTriangle.verts[1] || edge.point2 == superTriangle.verts[2])
-        //    {
-        //        edgeToCull.Add(edge);
-        //    }
-        //}
-
-        //foreach (Edge item in edgeToCull)
-        //{
-        //    graph.Remove(item);
-        //}
-
-        //#endregion
-
-        //rooms = roomPositions;
-
-        //return graph.ToList();
-
         if (roomPositions.Count <= 0)
         {
             return null;
@@ -136,8 +103,8 @@ public class TriangulationGraph
         return graph.ToList();
     }
 
-    //Create shortest path with Diskstra's algorithm.
-    public List<Edge> MinimumSoanningTree(List<Edge> graph)
+    //Create the minimum spanning tree of the graph using Kruskal's algorithm.
+    public List<Edge> MinimumSpanningTree(List<Edge> graph)
     {
         //Give weightings to the edges of the graph.
         graph = MakeGraphWeighted(graph);
@@ -154,32 +121,28 @@ public class TriangulationGraph
     #region Graph Functions
 
     //Creates and returns a boolean adjacency table using this indexing: [From, To]
-    int[,] GraphAdjacencyTable(List<Edge> graph, List<Vector2Int> nodes, bool weighted = false)
+    public int[,] GraphAdjacencyTable(List<Edge> graph, List<Vector2Int> nodes, bool weighted = false)
     {
         int[,] table = new int[nodes.Count, nodes.Count];
 
         //Work out which edge matches who. 
         foreach (Edge edge in graph)
         {
+            //Find the index of the rooms list of the rooms
             int fromIndex = nodes.IndexOf(new Vector2Int((int)edge.point1.x, ((int)edge.point1.y)));
             int toIndex = nodes.IndexOf(new Vector2Int((int)edge.point2.x, ((int)edge.point2.y)));
 
-            if (fromIndex == toIndex)
-            {
-                table[fromIndex, toIndex] = 0;
-                table[toIndex, fromIndex] = 0;
-            }
-            else if (weighted)
+            if (weighted) //the int value will be the graph weight as this graph is weighted - not a 0 or 1.
             {
                 //The graph is undirected thus set both to the value of the weight.
                 table[fromIndex, toIndex] = (int)edge.weight;
                 table[toIndex, fromIndex] = (int)edge.weight;
             }
-            else
+            else // The graph is unwighted so just use 0 or 1 to represnt
             {
-                //The graph is undirected thus set both to be true.
+                //The graph is undirected thus set both to be true (represented by 1)
                 table[fromIndex, toIndex] = 1;
-                table[toIndex, fromIndex] = 0;
+                table[toIndex, fromIndex] = 1;
             }
 
         }
@@ -188,6 +151,7 @@ public class TriangulationGraph
         return table;
     }
 
+    //Converts Edges (which contain two vector 2 points) to a Node Edge (which contains two nodes) for a list of Edges.
     List<NodeEdge> EdgeToNodeEdgeGraph(List<Edge> graph, bool weighted = true)
     {
         List<NodeEdge> edges = new List<NodeEdge>();
@@ -227,6 +191,7 @@ public class TriangulationGraph
         return edges;
     }
 
+    //Converts Node Edges (which contains two nodes) to Edges (which contain two vector 2 points) for a list of Edges.
     List<Edge> NodeEdgeToEdge(List<NodeEdge> graph)
     {
         List<Edge> edges = new List<Edge>();
@@ -246,7 +211,7 @@ public class TriangulationGraph
         return edges;
     }
 
-    //Gives a weight to each of the edges. 
+    //Gives a weight to each of the edges in a given graph. The eight will be the distance between the two points of the edge. 
     List<Edge> MakeGraphWeighted(List<Edge> graph)
     {
         List<Edge> weightedGraph = graph;
@@ -291,6 +256,7 @@ public class TriangulationGraph
         return superTriangle;
     }
 
+    //Caluclates the circum centre of the circum circle of a given triangle; the radius of this circle can then be found by getting the distance of any point of the triagnle and the circum centre.
     Vector2 CalculateCircumcentre(Triangle t)
     {
         Edge edge1 = CalculateEdgeFromPoints(t.verts[0], t.verts[1]);
@@ -305,10 +271,12 @@ public class TriangulationGraph
         return circumCentre;
     }
 
+    //Checks the vertice for Delanauy triangulation.
     void CheckVertice(Vector2Int point)
     {
         badTriangles = new List<Triangle>();
 
+        //Identify any 'bad triangles' - any triangle which this point lies in the circum circle of the traingle.
         foreach (Triangle t in triangles)
         {
             //Calculate the circumcircle.
@@ -328,37 +296,11 @@ public class TriangulationGraph
             }
         }
 
+        #region Identify boundaries of polyagonal hole.
+
         List<Edge> polygon = new List<Edge>();
 
-        ////Caclulate the edges of all the triangles in bad triangles.
-        //for (int i = 0; i < badTriangles.Count; i++)
-        //{
-        //    //Find the boundary of the polygonal hole.
-        //    Triangle tri = badTriangles[i];
-
-        //    tri.edges = new Edge[]
-        //    {
-        //            new Edge()
-        //            {
-        //                point1 = tri.verts[0],
-        //                point2 = tri.verts[1],
-        //            },
-        //            new Edge()
-        //            {
-        //                point1 = tri.verts[0],
-        //                point2 = tri.verts[2],
-        //            },
-        //            new Edge()
-        //            {
-        //                point1 = tri.verts[1],
-        //                point2 = tri.verts[2],
-        //            },
-        //    };
-
-
-        //    badTriangles[i] = tri;
-        //}
-
+        //For each of the verts of the bad triangles, work the edges out and add them to the list of edges.
         List<Edge> edges = new List<Edge>();
         foreach (Triangle tri in badTriangles)
         {
@@ -383,43 +325,6 @@ public class TriangulationGraph
         var boundaryEdges = edges.GroupBy(o => o).Where(o => o.Count() == 1).Select(o => o.First());
         polygon = boundaryEdges.ToList();
 
-        //foreach (Triangle tri in badTriangles)
-        //{
-        //    if (badTriangles.Count > 1)
-        //    {
-        //        foreach (Edge e in tri.edges)
-        //        {
-        //            //Work out what edges of the bad triangle which are not shared.
-        //            foreach (Triangle compTri in badTriangles)
-        //            {
-        //                if (compTri.verts != tri.verts)
-        //                {
-        //                    foreach (Edge compE in compTri.edges)
-        //                    {
-        //                        if (compE.point1 != e.point1 || compE.point2 != e.point1)
-        //                        {
-        //                            if (compE.point1 != e.point2 || compE.point2 != e.point2)
-        //                            {
-        //                                polygon.Add(e);
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (Edge e in tri.edges)
-        //        {
-
-        //            polygon.Add(e);
-
-        //        }
-        //    }
-
-        //}
-
         for (int i = 0; i < badTriangles.Count; i++)
         {
            Triangle t = badTriangles[i];
@@ -429,12 +334,9 @@ public class TriangulationGraph
 
         triangles.RemoveWhere(o => badTriangles.Contains(o));
 
-        //foreach (Triangle tri in badTriangles)
-        //{
-        //    //Failed to remove the bad triangle from triangles resulting in the infinite loop.
-        //    triangles.Remove(tri);  
-        //}
+        #endregion
 
+        //Create new trianlges between the point and the edges of the polyagonal hole.
         foreach (Edge e in polygon.Where(possEdge => possEdge.point1 != point && possEdge.point2 != point))
         {
             Triangle newTri = new Triangle
@@ -448,250 +350,6 @@ public class TriangulationGraph
             };
 
             triangles.Add(newTri);
-        }
-    }
-
-
-    void CheckVertices(List<Vector2Int> roomsPos)
-    {
-        // - Look for triangles whose circum circle contain our point
-        // - If inside, connect this vertex to the triangle - forming new edges - because it is NOT a delenauy triangle. 
-        // - Delete triangles who's circum circle contained our point.
-        // - This will create new triangles, add those to the list of triangles as these triangles need checking against in the future.
-
-        //Counter for knowing what room we are on.
-        int counter = 0;
-
-        List<Triangle> trisToRemove = new List<Triangle>();
-        List<Triangle> trisToAdd = new List<Triangle>();
-
-        bool delaunayVirginity = true;
-
-        foreach (Vector2Int roomPos in roomsPos)
-        {
-            trisToRemove.Clear();
-            trisToAdd.Clear();
-
-            foreach (Triangle t in triangles)
-            {
-                //Calculate the circumcircle.
-                Vector2 circumCentre = CalculateCircumcentre(t);
-                float radius = Vector2.Distance(circumCentre, t.verts[0]);
-
-                //Finds the room's distance from the circle centre.
-                float roomDist = Vector2.Distance(roomPos, circumCentre);
-
-                //Debug.Log("Triangle:");
-                //Debug.Log(t.verts[0]);
-                //Debug.Log(t.verts[1]);
-                //Debug.Log(t.verts[2]);
-                //Debug.Log("Circumcentre:" + circumCentre);
-
-                //Checks this against the radius of the circle. > then its outside, < then its inside.
-                if (roomDist > radius)
-                {
-                    //The room is outside the circle - this is a delenauy triangle.
-
-                    //Do nothing to edges.
-                }
-                else
-                {
-                    //The room is inside this circumcircle - this is not a delenauy triangle.
-
-                    //Create edges between this room and the vertices of the super triangle. 
-
-                    //New triangles will be made from verts of the triangle and then our node - creating 3 new edges, 3 new triangles.
-                    //Because circum circles contain our point we know each edge of the 'super t' will make a trangle
-
-                    //Basically for each edge of the triangle, make a traingle. 
-
-                    if (t.isSuperTriangle && delaunayVirginity)
-                    {
-                        #region Create the three edges of this triangle.
-                        Edge edge1 = new Edge()
-                        {
-                            point1 = t.verts[0],
-                            point2 = t.verts[1]
-                        };
-
-                        Edge edge2 = new Edge()
-                        {
-                            point1 = t.verts[0],
-                            point2 = t.verts[2]
-                        };
-
-                        Edge edge3 = new Edge()
-                        {
-                            point1 = t.verts[1],
-                            point2 = t.verts[2]
-                        };
-                        #endregion
-
-                        //Create the three new triangles.
-
-                        Triangle triangle1 = new Triangle();
-                        Triangle triangle2 = new Triangle();
-                        Triangle triangle3 = new Triangle();
-
-                        for (int i = 0; i < 3; i++)
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    triangle1 = new Triangle()
-                                    {
-                                        verts = new Vector2[] { edge1.point1, edge1.point2, roomPos }
-                                    };
-                                    break;
-                                case 1:
-                                    triangle2 = new Triangle()
-                                    {
-                                        verts = new Vector2[] { edge2.point1, edge2.point2, roomPos }
-                                    };
-                                    break;
-                                case 2:
-                                    triangle3 = new Triangle()
-                                    {
-                                        verts = new Vector2[] { edge3.point1, edge3.point2, roomPos }
-                                    };
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-
-                        //Now we have the three new triangles remove the old one. 
-                        RemoveTrianglesFromGraph(new List<Triangle> { t });
-                        trisToRemove.Add(t);
-
-                        //Add the new triangles to the graph.
-                        AddTriangleToGraph(triangle1);
-                        AddTriangleToGraph(triangle2);
-                        AddTriangleToGraph(triangle3);
-                        trisToAdd.Add(triangle1);
-                        trisToAdd.Add(triangle2);
-                        trisToAdd.Add(triangle3);
-                        delaunayVirginity = false;
-
-                    }
-                    else if (!t.isSuperTriangle)
-                    {
-                        #region Create the three edges of this triangle.
-                        Edge edge1 = new Edge()
-                        {
-                            point1 = t.verts[0],
-                            point2 = t.verts[1]
-                        };
-
-                        Edge edge2 = new Edge()
-                        {
-                            point1 = t.verts[0],
-                            point2 = t.verts[2]
-                        };
-
-                        Edge edge3 = new Edge()
-                        {
-                            point1 = t.verts[1],
-                            point2 = t.verts[2]
-                        };
-                        #endregion
-
-                        //Create the three new triangles.
-
-                        Triangle triangle1 = new Triangle();
-                        Triangle triangle2 = new Triangle();
-                        Triangle triangle3 = new Triangle();
-
-                        for (int i = 0; i < 3; i++)
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    triangle1 = new Triangle()
-                                    {
-                                        verts = new Vector2[] { edge1.point1, edge1.point2, roomPos }
-                                    };
-                                    break;
-                                case 1:
-                                    triangle2 = new Triangle()
-                                    {
-                                        verts = new Vector2[] { edge2.point1, edge2.point2, roomPos }
-                                    };
-                                    break;
-                                case 2:
-                                    triangle3 = new Triangle()
-                                    {
-                                        verts = new Vector2[] { edge3.point1, edge3.point2, roomPos }
-                                    };
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-
-                        //Now we have the three new triangles remove the old one. 
-                        RemoveTrianglesFromGraph(new List<Triangle> { t });
-                        trisToRemove.Add(t);
-
-                        //Add the new triangles to the graph.
-                        AddTriangleToGraph(triangle1);
-                        AddTriangleToGraph(triangle2);
-                        AddTriangleToGraph(triangle3);
-                        trisToAdd.Add(triangle1);
-                        trisToAdd.Add(triangle2);
-                        trisToAdd.Add(triangle3);
-
-                    }
-                }
-            }
-
-            foreach (Triangle item in trisToAdd)
-            {
-                triangles.Add(item);
-            }
-
-            foreach (Triangle item in trisToRemove)
-            {
-                triangles.Remove(item);
-            }
-
-            //Increment the counter.
-            counter++;
-        }
-    }
-
-    void RemoveTrianglesFromGraph(List<Triangle> triangles)
-    {
-        HashSet<Edge> edgeCull = new HashSet<Edge>();
-
-        //For each of the triangles to remove, add the edges to a hash set - so and duped edges are attempted to be removed once.
-        foreach (Triangle t in triangles)
-        {
-            #region Create and add the three edges to the hash set. 
-            edgeCull.Add(new Edge()
-            {
-                point1 = t.verts[0],
-                point2 = t.verts[1]
-            });
-
-            edgeCull.Add(new Edge()
-            {
-                point1 = t.verts[0],
-                point2 = t.verts[2]
-            });
-
-            edgeCull.Add(new Edge()
-            {
-                point1 = t.verts[1],
-                point2 = t.verts[2]
-            });
-            #endregion
-        }
-
-        //Remove all the edges identified from the graph.
-        foreach(Edge edge in edgeCull)
-        {
-            graph.Remove(edge);
         }
     }
 
