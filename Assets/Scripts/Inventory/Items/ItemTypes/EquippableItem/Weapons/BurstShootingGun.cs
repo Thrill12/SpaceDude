@@ -9,7 +9,7 @@ public class BurstShootingGun : StraightShootingGun
     public Stat bulletsInBurst;
     public Stat timeBetweenShots;
 
-    public override void Attack(GameObject weaponObject, PlayerInput playerInput, AudioSource audioSource, WeaponsHolder holder)
+    public override void Attack(GameObject weaponObject,  AudioSource audioSource, WeaponsHolder holder, PlayerInput playerInput = null)
     {
         UIManager.instance.StartCoroutine(AttackCoroutine(weaponObject, playerInput, audioSource, holder));
     }
@@ -19,7 +19,7 @@ public class BurstShootingGun : StraightShootingGun
         for (int i = 0; i < bulletsInBurst.Value; i++)
         {
             if (currentBullets == 0) yield return null;
-            base.Attack(weaponObject, playerInput, audioSource, holder);
+            base.Attack(weaponObject, audioSource, holder, playerInput);
             yield return new WaitForSeconds(timeBetweenShots.Value);
         }
     }

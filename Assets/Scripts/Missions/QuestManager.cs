@@ -17,6 +17,21 @@ public class QuestManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        LoadQuests();
+
+        foreach (var quest in activeQuests)
+        {
+            quest.Init();
+
+            foreach (var goal in quest.Goals)
+            {
+                goal.Init(quest);
+            }
+        }
+    }
+
     //Each quest giver will run this function at start up, having all the quests in one place will be useful later down the line
     public void AddQuestToOverallPool(Quest quest)
     {
@@ -27,7 +42,8 @@ public class QuestManager : MonoBehaviour
     public void AddQuest(Quest questToAdd)
     {
         activeQuests.Add(questToAdd);
-        
+        SaveQuests();
+
         questToAdd.Init();
 
         foreach (var item in questToAdd.Goals)
@@ -66,7 +82,7 @@ public class QuestManager : MonoBehaviour
     {
         activeQuests.Remove(questToRemove);
         completedQuests.Add(questToRemove);
-        Debug.Log("Quest with id " + questToRemove.id + " has been compelted, completed is now " + completedQuests.Count + " long");
+        SaveQuests();
     }
 
     public bool IsCompleted(Quest questToCheck)
@@ -102,6 +118,35 @@ public class QuestManager : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    public void SaveQuests()
+    {
+        GameManager.instance.progressSave.questsSaved = new QuestsSavedSO();
+        foreach (var item in activeQuests)
+        {
+            GameManager.instance.progressSave.questsSaved.questsActive.Add(item);
+        }
+        foreach (var item in completedQuests)
+        {
+            GameManager.instance.progressSave.questsSaved.questsCompleted.Add(item);
+        }
+
+        GameManager.instance.SaveProgress();
+        Debug.Log("Saved quests");
+    }
+
+    public void LoadQuests()
+    {
+        foreach (var item in GameManager.instance.progressSave.questsSaved.questsActive)
+        {
+            activeQuests.Add((Quest)item);
+        }
+
+        foreach (var item in GameManager.instance.progressSave.questsSaved.questsCompleted)
+        {
+            completedQuests.Add((Quest)item);
         }
     }
 }

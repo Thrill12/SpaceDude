@@ -18,4 +18,4 @@ MonoBehaviour:
   GoalCompleted: 0
   GoalCurrentAmount: 0
   GoalRequiredAmount: 0
-  EnemyId: 2
+  EnemyId: entity_exp_barrel

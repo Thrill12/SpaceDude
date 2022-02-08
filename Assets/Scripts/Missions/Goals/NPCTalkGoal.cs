@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Quests/Goals/NPC Talk Goal")]
+[CreateAssetMenu(menuName = "Quests/Goals/NPC Talk Goal"), System.Serializable]
 public class NPCTalkGoal : Goal
 {
     public string npcToTalkToName;

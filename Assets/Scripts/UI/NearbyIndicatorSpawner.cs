@@ -19,7 +19,7 @@ public class NearbyIndicatorSpawner : MonoBehaviour
 
         //Gets a list of all nearby objects that have the tag below, closer than the max distance
         nearbyObjects = Physics2D.OverlapCircleAll(playerObj.transform.position, maxDistance).ToList().Select(o => o.gameObject).Where(x => x.CompareTag("Player") || x.CompareTag("Enemy")
-         || x.CompareTag("Neutral") || x.CompareTag("Neutral")).ToList();
+         || x.CompareTag("Neutral")).ToList();
 
         foreach (var item in nearbyObjects)
         {

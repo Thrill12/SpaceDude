@@ -170,7 +170,6 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
         eqItemHeld.isEquipped = true;
         inventory.EquipItem(eqItemHeld);
-        Debug.Log(itemHeld.itemName + " equipped");
         UIManager.instance.SelectFirstItemHolder();
     }
 
@@ -179,6 +178,5 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
         eqItemHeld.isEquipped = false;
         inventory.UnequipItem(eqItemHeld);
-        Debug.Log(itemHeld.itemName + " unequipped");
     }
 }

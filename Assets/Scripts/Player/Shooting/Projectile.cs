@@ -15,7 +15,6 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
-        damage = weaponShotFrom.damage.Value * entityShotFrom.damageMultiplier.Value;
         Destroy(gameObject, 3);
     }
 
@@ -23,7 +22,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<BaseEntity>() && collision.GetComponent<BaseEntity>() != entityShotFrom || ((layerMask.value & (1 << collision.gameObject.layer)) > 0))
         {
-            if (collision.gameObject.GetComponent<BaseEntity>())
+            if (collision.gameObject.GetComponent<BaseEntity>() && collision.gameObject != entityShotFrom.gameObject)
             {
                 collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage);
             }

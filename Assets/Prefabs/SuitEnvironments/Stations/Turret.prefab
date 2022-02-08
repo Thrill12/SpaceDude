@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3315610593024403667}
   - component: {fileID: 3326020329182630223}
-  - component: {fileID: 3693977186725137605}
   m_Layer: 7
   m_Name: TurretLight
   m_TagString: Untagged
@@ -40,7 +39,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1772600871897164551}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -48,9 +47,9 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.638
+  m_FalloffIntensity: 0.615
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 2
+  m_Intensity: 4
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: a99992571beaae07110a6b09
@@ -100,7 +99,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 3
+  m_PointLightOuterRadius: 4
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -111,20 +110,6 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
---- !u!114 &3693977186725137605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772600871897164551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18b80740bf3f08e45ad25ee1f37a915a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minimum: 0.1
-  maximum: 0.4
 --- !u!1 &8108898495478855683
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,10 +121,12 @@ GameObject:
   - component: {fileID: 267936398896959468}
   - component: {fileID: 169896915747577712}
   - component: {fileID: 3043783526829755439}
-  - component: {fileID: 8422777376399373941}
   - component: {fileID: 7283469730192501926}
   - component: {fileID: 30635171378689541}
   - component: {fileID: 5658771444986775796}
+  - component: {fileID: 3192206770917268793}
+  - component: {fileID: 3908656142975873585}
+  - component: {fileID: 24476375699964608}
   m_Layer: 7
   m_Name: Turret
   m_TagString: Enemy
@@ -241,67 +228,7 @@ MonoBehaviour:
   - {x: -0.07486631, y: 0.09008035, z: 0}
   m_ShapePathHash: 849515421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 164370
---- !u!114 &8422777376399373941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8108898495478855683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44315e48b83d4e644b3c6703e15a1d73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: 1
-  entityName: Turret
-  health: 0
-  maxHealth:
-    BaseValue: 250
-    _value: 0
-    statModifiers: []
-    isDirty: 1
-  armour:
-    BaseValue: 0
-    _value: 0
-    statModifiers: []
-    isDirty: 1
-  damageMultiplier:
-    BaseValue: 0
-    _value: 0
-    statModifiers: []
-    isDirty: 1
-  healthRegeneration:
-    BaseValue: 0
-    _value: 0
-    statModifiers: []
-    isDirty: 1
-  energy: 0
-  maxEnergy:
-    BaseValue: 0
-    _value: 0
-    statModifiers: []
-    isDirty: 1
-  energyRegeneration:
-    BaseValue: 0
-    _value: 0
-    statModifiers: []
-    isDirty: 1
-  hitSound: {fileID: 8300000, guid: 65ff4c0466173e842a81e058c4a58fd4, type: 3}
-  pfMan: {fileID: 0}
-  isDead: 0
-  healthBar: {fileID: 0}
-  dropTable:
-  - item: {fileID: 11400000, guid: 5d06246f41a4cc045af6b8e7ec9f35ab, type: 2}
-    weight: 100
-  - item: {fileID: 11400000, guid: 4410b2826db5b0344b0949e04e95889b, type: 2}
-    weight: 5
-  - item: {fileID: 0}
-    weight: 500
-  - item: {fileID: 11400000, guid: 6dc306d756de8874fa58408aacb96e6b, type: 2}
-    weight: 54
-  healthBarYOffset: 0.5
+  m_InstanceId: 205030
 --- !u!61 &7283469730192501926
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -445,3 +372,147 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3192206770917268793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108898495478855683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b3f77b2a947f4d49807ccbea354a25f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: entity_turret
+  entityName: Turret
+  health: 100
+  maxHealth:
+    statName: Max Health
+    BaseValue: 100
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  armour:
+    statName: 
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  damageMultiplier:
+    statName: 
+    BaseValue: 1
+    _value: 1
+    statModifiers: []
+    isDirty: 1
+  healthRegeneration:
+    statName: 
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  energy: 0
+  maxEnergy:
+    statName: 
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  energyRegeneration:
+    statName: 
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  hitSound: {fileID: 8300000, guid: 65ff4c0466173e842a81e058c4a58fd4, type: 3}
+  pfMan: {fileID: 0}
+  isDead: 0
+  healthBar: {fileID: 0}
+  weaponUsed: {fileID: 0}
+  dropTable:
+  - item: {fileID: 11400000, guid: f5fa09290a5cf9c448a793adbeedcc75, type: 2}
+    amountMinMax: {x: 5, y: 15}
+    weight: 5
+  dropChance: 30
+  healthBarYOffset: 0.5
+  detectionRange: 4
+  nextFire: 0
+  holder: {fileID: 3908656142975873585}
+--- !u!114 &3908656142975873585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108898495478855683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bae6ae3ec4c2f74988b5d9b61ffdc06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainWeapon: {fileID: 11400000, guid: e3dcde30c608f5f48a29f3687795770a, type: 2}
+  secondaryWeapon: {fileID: 11400000, guid: e3dcde30c608f5f48a29f3687795770a, type: 2}
+  playerInput: {fileID: 0}
+  inventory: {fileID: 0}
+  currentlyEquippedWeapon: {fileID: 0}
+  weaponObjectPosition: {fileID: 267936398896959468}
+  weaponObject: {fileID: 0}
+  ammoDisplay: {fileID: 0}
+  currentBullets: {fileID: 0}
+  totalBulletsInInventory: {fileID: 0}
+  weaponEquippedIcon: {fileID: 0}
+  cooldownIndicator: {fileID: 0}
+  audioSource: {fileID: 0}
+--- !u!114 &24476375699964608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108898495478855683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_ImpulseShape: 2
+    m_CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_ImpulseDuration: 0.2
+    m_ImpulseType: 3
+    m_DissipationRate: 0.25
+    m_RawSignal: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+    m_AmplitudeGain: 0.2
+    m_FrequencyGain: 0.2
+    m_RepeatMode: 0
+    m_Randomize: 1
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0
+      m_SustainTime: 0.2
+      m_DecayTime: 0.7
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 100
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 100
+    m_PropagationSpeed: 343
+  m_DefaultVelocity: {x: 0, y: -1, z: 0}

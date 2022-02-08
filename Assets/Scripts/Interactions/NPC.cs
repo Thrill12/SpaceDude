@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(DialogueParser))]
@@ -8,14 +9,15 @@ public class NPC : Interactable
     public string npcName;
     public bool AssignedQuest { get; set; } = false;
 
-    [Tooltip("Graph used for interactions with the NPC. Place any quests you want to give out in the graph itself - got rid of the weird old way of doing it")]
+    [Tooltip("Graph used for interactions with the NPC. Place any quests you want to give out in the graph itself.")]
     public DialogueGraph dialogueGraph;
     public Quest activeQuest;
 
     private void Start()
     {
         GetComponent<DialogueParser>().graph = dialogueGraph;
-        NPCManager.instance.allNPCs.Add(this);
+        
+        GameManager.instance.progressSave.npcStates[this] = dialogueGraph;
     }
 
     public override void Interact()

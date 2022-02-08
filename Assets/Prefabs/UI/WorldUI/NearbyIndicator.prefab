@@ -53,13 +53,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyColour: {r: 1, g: 0, b: 0, a: 0.27450982}
-  enemyRadius: 1
+  enemyRadius: 0.7
   playerColour: {r: 0, g: 0.46073484, b: 1, a: 0.27450982}
-  playerRadius: 0.7
+  playerRadius: 0.5
   friendlyColour: {r: 0, g: 1, b: 0, a: 0.27450982}
-  friendlyRadius: 0.8
-  neutralColour: {r: 1, g: 1, b: 1, a: 0.27450982}
-  neutralRadius: 0.9
+  friendlyRadius: 0.5
+  neutralColour: {r: 0.9837978, g: 1, b: 0, a: 0.27450982}
+  neutralRadius: 0.6
   playerObj: {fileID: 0}
   maxDistance: 15
   objToRotateTo: {fileID: 0}
@@ -95,7 +95,7 @@ SortingGroup:
   m_GameObject: {fileID: 3163290981164599597}
   m_Enabled: 1
   m_SortingLayerID: -882785735
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 5000
 --- !u!1 &3786755954323831257
 GameObject:

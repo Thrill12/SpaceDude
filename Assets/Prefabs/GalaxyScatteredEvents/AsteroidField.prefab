@@ -82,4 +82,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minNumOfAsteroids: 50
   maxNumOfAsteroids: 75
-  asteroidPrefab: {fileID: 3155831606309202546, guid: 88e22ffd2e932154fb6ba9557b691a51, type: 3}
+  asteroidPrefab: {fileID: 7339959309768307849, guid: 388f7e0cafd26c247babdce0b9e5d1ff, type: 3}

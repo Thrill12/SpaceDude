@@ -184,6 +184,11 @@ public class Inventory : MonoBehaviour
             }
         }
 
+        if(UIManager.instance.playerInput.currentActionMap.name == "GamePad")
+        {
+            UIManager.instance.SelectFirstItemHolder();
+        }
+
         slot.itemInSlot = itemToEquip;
 
         Debug.Log("Placed in slot " + slot.slotName);

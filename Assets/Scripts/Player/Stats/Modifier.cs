@@ -6,6 +6,7 @@ using UnityEngine;
 public class Modifier
 {
     //Name of the stat to change - it has to be the exact same as the IN-CODE property name, eg maxHealth
+    public string statStringName;
     [Tooltip("Display name that the player will see in-game")]
     public string statDisplayStringName;
     public float Value;

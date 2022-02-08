@@ -2,12 +2,14 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class PlayerShipMovement : MonoBehaviour
@@ -27,6 +29,14 @@ public class PlayerShipMovement : MonoBehaviour
     public bool canWarp;
     public bool inWarp = false;
     public bool isChargingWarp = false;
+    public int aspiteRequiredForJump;
+
+    public Image fuelLevelImage;
+    public TMP_Text fuelLevelText;
+    public GameObject fuelLevel;
+
+    [Space(5)]
+
     public AudioClip warpInSound;
     public AudioClip warpOutSound;
     public AudioSource warpSource;
@@ -96,6 +106,7 @@ public class PlayerShipMovement : MonoBehaviour
 
     private bool isTweening = false;
     private bool isUISpeedNumberRandom = false;
+    private int aspiteStack;
 
     private void Start()
     {
@@ -121,7 +132,9 @@ public class PlayerShipMovement : MonoBehaviour
 
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
 
-        if(currentSpeed > minSpeedForWarp)
+        aspiteStack = UIManager.instance.inv.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).Sum(x => x.itemStack);
+
+        if (currentSpeed > minSpeedForWarp && aspiteStack > aspiteRequiredForJump)
         {
             canWarp = true;
         }
@@ -145,6 +158,23 @@ public class PlayerShipMovement : MonoBehaviour
         {
             inputY = 0;
             inputX = 0;
+
+            fuelLevel.SetActive(false);
+        }
+        else
+        {
+            fuelLevel.SetActive(true);
+            
+            if(aspiteStack / aspiteRequiredForJump > 9)
+            {
+                fuelLevelText.text = "Jumps available: 9+";
+                fuelLevelImage.fillAmount = 1;
+            }
+            else
+            {
+                fuelLevelText.text = "Jumps available: " + Mathf.Floor(aspiteStack / aspiteRequiredForJump);
+                fuelLevelImage.fillAmount = ((float)aspiteStack / (float)aspiteRequiredForJump) / (float)9;
+            }
         }
 
         ManageThrustVolume(0.001f);
@@ -238,6 +268,7 @@ public class PlayerShipMovement : MonoBehaviour
         rb.freezeRotation = true;
         shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), maxWarpEffectRate / 2);
         isChargingWarp = true;
+        Inventory.instance.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).First().itemStack -= aspiteRequiredForJump;
         warpSource.PlayOneShot(warpInSound);
         GetComponent<CinemachineImpulseSource>().GenerateImpulse();
         Invoke("DropInWarp", 1.6f);
@@ -354,9 +385,7 @@ public class PlayerShipMovement : MonoBehaviour
     {
         if (!inWarp && !isChargingWarp)
         {
-            Debug.DrawLine(transform.position, rb.velocity.normalized * 5);
-            rb.AddForce(-transform.up * moveSpeed * inputY);
-            
+            rb.AddForce(-transform.up * moveSpeed * inputY);          
         }       
 
         if (!inWarp && !isChargingWarp)

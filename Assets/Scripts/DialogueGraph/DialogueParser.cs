@@ -117,11 +117,12 @@ public class DialogueParser : MonoBehaviour
         {
             ChangeToGraphNode node = graph.current as ChangeToGraphNode;
             DialogueGraph newGraph = node.GetGraph();
-            graph = newGraph;
+            NPCManager.instance.SetNPCToGraph(GetComponent<NPC>().npcName, newGraph);
 
             isPlaying = false;
+            GameManager.instance.progressSave.npcStates = NPCManager.instance.allNPCs;
             //If we start the new graph immediately
-            if(parts[1].Trim() == "True")
+            if (parts[1].Trim() == "True")
             {
                 StartDialogueGraph();
             }
@@ -129,12 +130,13 @@ public class DialogueParser : MonoBehaviour
             {
                 UIManager.instance.playerInput.SwitchCurrentActionMap("PlayerSuit");
             }
+            
         }
         else if (parts[0].Trim() == "SetNPCToGraph")
         {
             SetNPCToGraphNode node = graph.current as SetNPCToGraphNode;
             NPCManager.instance.SetNPCToGraph(node.npcToChange, node.graphToChangeTo);
-
+            GameManager.instance.progressSave.npcStates = NPCManager.instance.allNPCs;
             NextNode("exit");
         }
     }
