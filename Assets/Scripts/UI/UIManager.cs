@@ -145,7 +145,29 @@ public class UIManager : MonoBehaviour
             //Displaying the current item selected in the inventory
             if (currentlySelectedItemToDisplay != null && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<UIItemHolder>())
             {
-                DisplayItemStatsInItemStatDisplayer();
+                if (currentlySelectedItemToDisplay as BaseEquippable)
+                {
+                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                    if (equip.isEquipped)
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
             }
             else
             {
@@ -159,7 +181,29 @@ public class UIManager : MonoBehaviour
             //Displaying the current item selected in the inventory
             if (currentlySelectedItemToDisplay != null)
             {
-                DisplayItemStatsInItemStatDisplayer();
+                if (currentlySelectedItemToDisplay as BaseEquippable)
+                {
+                    BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                    if (equip.isEquipped)
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
             }
             else
             {
@@ -226,7 +270,7 @@ public class UIManager : MonoBehaviour
         }
 
         #endregion
-    }
+    }   
 
     private void DisplayItemStatsInItemStatDisplayer()
     {
@@ -796,7 +840,7 @@ public class UIManager : MonoBehaviour
     //tell the node parser what choice they chose
     public void DisplayChoices(List<string> choices)
     {
-        playerInput.SwitchCurrentActionMap("Dialogue");
+        playerInput.SwitchCurrentActionMap("UI");
 
         choiceDisplayer.SetActive(true);
 
@@ -1080,3 +1124,4 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 }
+

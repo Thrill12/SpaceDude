@@ -20,6 +20,11 @@ public class GeneratorProfile : ScriptableObject
     public int minNumRooms;
     [Tooltip("The maximum number of rooms that must could be generated.")]
     public int maxNumRooms;
+    public int corridorWidth;
+    [Tooltip("The first item should be the default - any other items should thus be variations of the default.")]
+    public List<TileData> floorTile;
+    [Tooltip("The first item should be the default - any other items should thus be variations of the default.")]
+    public List<TileData> wallTiles;
     
     //Rooms this profile can use.
     public List<RoomData> rooms = new List<RoomData>();

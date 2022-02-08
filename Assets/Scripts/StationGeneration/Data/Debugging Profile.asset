@@ -15,7 +15,11 @@ MonoBehaviour:
   craftType: 1
   gridSize: 50
   minNumRooms: 3
-  maxNumRooms: 10
+  maxNumRooms: 20
+  corridorWidth: 1
+  floorTile:
+  - {fileID: 11400000, guid: 514c5851d53340f48a5a18422a16c8c0, type: 2}
+  wallTiles: []
   rooms:
   - {fileID: 11400000, guid: 7b2d5df073976014ca8b798c56fc1eb7, type: 2}
   - {fileID: 11400000, guid: 6e3a41dda0ba41a469d431dbb2c7a0e6, type: 2}

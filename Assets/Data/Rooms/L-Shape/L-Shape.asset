@@ -95,3 +95,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e392ed87a95c3ac489cb81f74f1be589, type: 2}
   - {fileID: 11400000, guid: ba21b1fc490aa124496dcd2a377925c9, type: 2}
   - {fileID: 11400000, guid: 359a1fdf2068244468958f848814ce2c, type: 2}
+  entrances:
+  - {x: 2, y: 0}
+  - {x: 9, y: 2}
+  - {x: 2, y: 10}

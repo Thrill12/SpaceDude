@@ -5,12 +5,13 @@ using UnityEngine;
 //The differem
 public enum TileType { empty, floor, wall }
 
-[System.Serializable]
+[System.Serializable, CreateAssetMenu(menuName = "Generation/Create Tile Data")]
 public class TileData : ScriptableObject
 {
     public Vector2Int position;
     public TileType type;
     public bool hasObject;
+    public Sprite spr;
 
     //For creating tile data from a tile componenet within the editor.
     public void CreateDataFromTile(Tile tile)
