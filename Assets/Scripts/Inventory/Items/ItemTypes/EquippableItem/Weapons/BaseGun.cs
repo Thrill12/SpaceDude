@@ -9,8 +9,8 @@ public class BaseGun : BaseWeapon
     public int currentBullets;
     public AudioClip outOfAmmoSound;
     public ItemType ammoType;
-
-    public override void Attack(GameObject weaponObject, PlayerInput playerInput, AudioSource audioSource, WeaponsHolder holder)
+    public bool ignoreAmmo = false;
+    public override void Attack(GameObject weaponObject, AudioSource audioSource, WeaponsHolder holder, PlayerInput playerInput = null)
     {
         if (currentBullets > 0)
         {

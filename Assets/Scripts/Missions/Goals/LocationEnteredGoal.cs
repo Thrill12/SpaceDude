@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="Quests/Goals/Location Goal")]
+[CreateAssetMenu(menuName ="Quests/Goals/Location Goal"), System.Serializable]
 public class LocationEnteredGoal : Goal
 {
     public string locationToEnterName;

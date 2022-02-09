@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class BaseEnemy : BaseEntity
 {
     public Image healthBar;
+    public BaseWeapon weaponUsed;
     public List<ItemDrop> dropTable;
+    public float dropChance = 30;
 
     public float healthBarYOffset = 0.5f;
 
@@ -36,11 +38,20 @@ public class BaseEnemy : BaseEntity
 
         if (healthBarObject == null) return;
         healthBar.fillAmount = health / maxHealth.Value;
+
+        if(health < maxHealth.Value)
+        {
+            healthBarObject.SetActive(true);
+        }
+        else
+        {
+            healthBarObject.SetActive(false);
+        }
     }
 
     public override void Die()
     {
-        if(dropTable.Count > 0)
+        if(dropTable.Count > 0 && Random.Range(0, 101) < dropChance)
         {
             pfMan.SpawnItem(gameObject, GetRandomItem());
         }
@@ -72,7 +83,14 @@ public class BaseEnemy : BaseEntity
         {
             if (item.weight >= diceRoll)
             {
-                return item.item;
+                BaseItem itemToDrop = item.item;
+                if (item != null)
+                {
+                    
+                    itemToDrop.itemStack = Random.Range((int)item.amountMinMax.x, (int)item.amountMinMax.y);
+                }
+                
+                return itemToDrop;
             }
 
             diceRoll -= item.weight;

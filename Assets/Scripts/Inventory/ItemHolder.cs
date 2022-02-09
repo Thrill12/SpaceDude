@@ -38,6 +38,7 @@ public class ItemHolder : MonoBehaviour
         {
             BaseEquippable equippable = (BaseEquippable)itemHeld;
             equippable.isEquipped = false;
+            equippable.hostEntity = UIManager.instance.playerEntity;
 
             //Only generate random mods if the item is flagged for it
             if (generateStats)

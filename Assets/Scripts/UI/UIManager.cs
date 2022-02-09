@@ -7,10 +7,14 @@ using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
+using System.Reflection;
+using System;
+using System.Globalization;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+    public PlayerEntity playerEntity;
 
     public GameObject firstSelectedInPauseMenu;
     public PlayerInput playerInput;
@@ -81,6 +85,8 @@ public class UIManager : MonoBehaviour
 
     public ItemStatDisplayer leftItemStatDisplay;
     public ItemStatDisplayer rightItemStatDisplay;
+    public GameObject characterStatDisplayPrefab;
+    public GameObject characterStatDisplay;
     public GameObject invisSelectButton;
     public BaseItem currentlySelectedItemToDisplay;
 
@@ -107,6 +113,7 @@ public class UIManager : MonoBehaviour
     public AudioClip typingClip;
     public float letterTypingPause;
 
+    private List<GameObject> drawnCharacterStats = new List<GameObject>();
     private void Awake()
     {
         instance = this;
@@ -230,13 +237,13 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            if(Random.Range(0, 2) == 0)
+            if(UnityEngine.Random.Range(0, 2) == 0)
             {
-                speedIndicator.text = int.Parse(Random.Range(1000, 10000000).ToString("X"), System.Globalization.NumberStyles.HexNumber) + " m/s";
+                speedIndicator.text = int.Parse(UnityEngine.Random.Range(1000, 10000000).ToString("X"), System.Globalization.NumberStyles.HexNumber) + " m/s";
             }
             else
             {
-                speedIndicator.text = Random.Range(1000, 10000000)+ " m/s";
+                speedIndicator.text = UnityEngine.Random.Range(1000, 10000000)+ " m/s";
             }           
         }       
 
@@ -249,6 +256,11 @@ public class UIManager : MonoBehaviour
             dampenersImage.enabled = false;
         }
 
+        if (inventory.activeInHierarchy)
+        {
+            DrawCharacterStats();
+        }        
+
         #region RandomCheckStuff
 
         if(commSelectedInMarketWindow == null)
@@ -259,6 +271,51 @@ public class UIManager : MonoBehaviour
 
         #endregion
     }   
+
+    private void DisplayItemStatsInItemStatDisplayer()
+    {
+        if (shipInventory.activeInHierarchy)
+        {
+            if (inv.playerInventoryItems.Contains(currentlySelectedItemToDisplay))
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(true);
+                rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(true);
+                rightItemStatDisplay.gameObject.SetActive(false);
+                leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+            }
+        }
+        else
+        {
+            if (currentlySelectedItemToDisplay as BaseEquippable)
+            {
+                BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
+
+                if (equip.isEquipped)
+                {
+                    leftItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.gameObject.SetActive(false);
+                    leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
+                else
+                {
+                    leftItemStatDisplay.gameObject.SetActive(false);
+                    rightItemStatDisplay.gameObject.SetActive(true);
+                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                }
+            }
+            else
+            {
+                leftItemStatDisplay.gameObject.SetActive(false);
+                rightItemStatDisplay.gameObject.SetActive(true);
+                rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+            }
+        }
+    }
 
     #region NormalUI
 
@@ -630,18 +687,66 @@ public class UIManager : MonoBehaviour
             if (inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).Count() > 0)
             {
                 EventSystem.current.SetSelectedGameObject(inv.uiItemHolders.Where(x => inv.itemsEquipped.Contains(x.itemHeld) != true).First().gameObject);
-                Debug.Log("Currently selected is " + EventSystem.current.gameObject.name);
             }
             else
             {
-                EventSystem.current.SetSelectedGameObject(inv.uiItemHolders[0].gameObject);
-                Debug.Log("Currently selected is " + EventSystem.current.gameObject.name);
+                EventSystem.current.SetSelectedGameObject(null);
             }
         }
         else
         {
             EventSystem.current.SetSelectedGameObject(invisSelectButton);
         }
+    }
+
+    private void DrawCharacterStats()
+    {
+        foreach (var item in drawnCharacterStats)
+        {
+            Destroy(item);
+        }
+
+        List<string> itemStatsStrings = playerEntity.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
+                .Where(x => x.FieldType == typeof(Stat)).Select(x => x.Name).ToList();
+
+        List<Stat> allItemStats = new List<Stat>();
+
+        foreach (var str in itemStatsStrings)
+        {
+            allItemStats.Add(GetFieldValue<Stat>(playerEntity, str));
+        }
+
+        allItemStats.Reverse();
+
+        foreach (var stat in allItemStats)
+        {
+            GameObject displayer = Instantiate(characterStatDisplayPrefab, characterStatDisplay.transform);
+            TMP_Text statText = displayer.GetComponent<TMP_Text>();
+
+            TextInfo info = new CultureInfo("en-US", false).TextInfo;
+
+            statText.text = stat.Value + " " + stat.statName;
+
+            drawnCharacterStats.Add(displayer);
+        }
+    }
+
+    private static T GetFieldValue<T>(object obj, string fieldName)
+    {
+        if (obj == null)
+            throw new ArgumentNullException("obj");
+
+        var field = obj.GetType().GetField(fieldName, BindingFlags.Public |
+                                                      BindingFlags.NonPublic |
+                                                      BindingFlags.Instance);
+
+        if (field == null)
+            throw new ArgumentException("fieldName", "No such field was found.");
+
+        if (!typeof(T).IsAssignableFrom(field.FieldType))
+            throw new InvalidOperationException("Field type and requested type are not compatible.");
+
+        return (T)field.GetValue(obj);
     }
 
     //Displays active quest in the quest log

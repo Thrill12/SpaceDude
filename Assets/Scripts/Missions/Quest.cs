@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-[CreateAssetMenu(menuName ="Quests/Quest")]
+[CreateAssetMenu(menuName ="Quests/Quest"), System.Serializable]
 public class Quest : ScriptableObject
 {
     public int id;
@@ -37,6 +37,7 @@ public class Quest : ScriptableObject
         }
         UIManager.instance.DrawQuest(this);
         UIManager.instance.audioSource.PlayOneShot(PrefabManager.instance.questAssignedSound);
+        QuestManager.instance.SaveQuests();
     }
 
     public bool CheckGoals()

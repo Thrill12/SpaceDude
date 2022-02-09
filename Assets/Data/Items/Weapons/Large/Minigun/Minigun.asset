@@ -20,7 +20,7 @@ MonoBehaviour:
   itemValue: 521
   itemStack: 1
   itemMaxStack: 1
-  itemType: 6
+  itemType: 8
   itemSlot: Primary Weapon
   itemMods: []
   itemLevel: 1
@@ -50,20 +50,21 @@ MonoBehaviour:
   attackCooldown:
     statName: s Cooldown
     BaseValue: 0.1
-    _value: 0
+    _value: 0.1
     statModifiers: []
-    isDirty: 1
+    isDirty: 0
   large: 1
   attackSound: {fileID: 8300000, guid: 49327b1c50a15f04eb0ce7d2d2bc4dfa, type: 3}
   maxBulletsInClip:
     statName: Bullets In Belt
-    BaseValue: 0
+    BaseValue: 99
     _value: 0
     statModifiers: []
     isDirty: 1
   currentBullets: 0
   outOfAmmoSound: {fileID: 8300000, guid: 71e70adc1032ba94cb5a6b6da319846c, type: 3}
   ammoType: 9
+  ignoreAmmo: 1
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
     statName: Projectile Speed

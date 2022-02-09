@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GoalName: Kill turrets
   GoalDescription: Kill the turrets for Mickey
-  GoalQuestLogDisplay: 
+  GoalQuestLogDisplay: Turrets killed
   GoalCompleted: 0
   GoalCurrentAmount: 0
   GoalRequiredAmount: 5
-  EnemyId: 1
+  EnemyId: entity_turret

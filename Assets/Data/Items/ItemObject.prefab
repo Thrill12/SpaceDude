@@ -49,20 +49,20 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 0.8442702, b: 0, a: 1}
-  m_Intensity: 1
-  m_LightVolumeIntensity: 0.5
+  m_Intensity: 0.67
+  m_LightVolumeIntensity: 0.18
   m_LightVolumeIntensityEnabled: 1
-  m_ApplyToSortingLayers: 1beaae07a9999257110a6b0900000000
+  m_ApplyToSortingLayers: 1beaae07110a6b0900000000a9999257
   m_LightCookieSprite: {fileID: 418924358, guid: 02ee8f22f8674134c9c7635511d0914a, type: 3}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
-  m_OverlapOperation: 0
+  m_OverlapOperation: 1
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
   m_ShadowIntensityEnabled: 1
   m_ShadowIntensity: 1
-  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensityEnabled: 1
   m_ShadowVolumeIntensity: 0.75
   m_Vertices:
   - position: {x: 0.9985302, y: 0.9985302, z: 0}
@@ -98,7 +98,7 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0
+  m_PointLightInnerRadius: 0.5
   m_PointLightOuterRadius: 1
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
@@ -212,6 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemHeld: {fileID: 0}
   generateStats: 0
+  stack: 1
 --- !u!61 &7586748493077307551
 BoxCollider2D:
   m_ObjectHideFlags: 0

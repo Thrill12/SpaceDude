@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using FullSerializer;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,14 +15,18 @@ public class GameManager : MonoBehaviour
     public Image loadingBar;
     public TMP_Text fpsCounter;
 
-    public string saveFile = "/SpaceDudeOptions.spsv";
+    public string optionsFilePath = "/SpaceDudeOptions.ini";
+    public string saveFilePath = "/SpaceDudeSave.spsv";
     public InputActionAsset inputActions;
-    public OptionsSO options;  
+
+    public OptionsSO options;
+    public ProgressSave progressSave;
 
     private void Awake()
     {
         instance = this;
-        saveFile = Application.persistentDataPath + saveFile;
+        optionsFilePath = Application.persistentDataPath + optionsFilePath;
+        saveFilePath = Application.persistentDataPath + saveFilePath;
 
         HandleSaveInit();
 
@@ -31,16 +36,21 @@ public class GameManager : MonoBehaviour
     //Function to check if we should load current settings or create new ones for first startup
     public void HandleSaveInit()
     {
-        if (File.Exists(saveFile))
+        if (File.Exists(optionsFilePath))
         {
             LoadOptions();
-            Debug.Log("Loaded options from " + saveFile);
+            Debug.Log("Loaded options from " + optionsFilePath);
         }
         else
         {
-            Debug.Log("Created options " + saveFile);
+            Debug.Log("Created options " + optionsFilePath);
             options = new OptionsSO();
             SaveOptions();
+        }
+
+        if (File.Exists(saveFilePath))
+        {
+            LoadProgress();
         }
     }
 
@@ -115,15 +125,31 @@ public class GameManager : MonoBehaviour
     public void SaveOptions()
     {
         string optionsJson = JsonUtility.ToJson(options);
-        File.WriteAllText(saveFile, optionsJson);
+        
+        File.WriteAllText(optionsFilePath, optionsJson);
     }
 
     public void LoadOptions()
     {
-        options = JsonUtility.FromJson<OptionsSO>(File.ReadAllText(saveFile));
+        options = JsonUtility.FromJson<OptionsSO>(File.ReadAllText(optionsFilePath));
         inputActions.LoadBindingOverridesFromJson(options.keybindsJson);
     }
-    #endregion    
+
+    public void SaveProgress()
+    {
+        string questString = Serialization.Serialize(progressSave.GetType(), progressSave);
+
+        File.WriteAllText(saveFilePath, questString);
+    }
+
+    public void LoadProgress()
+    {
+        ProgressSave empty = new ProgressSave();
+        progressSave = (ProgressSave)Serialization.Deserialize(empty.GetType(), File.ReadAllText(saveFilePath));
+    }
+
+
+    #endregion
 }
 
 //Enum to hold all the scenes we need for easy reference to switch between them.

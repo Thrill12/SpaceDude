@@ -1,6 +1,3 @@
-using MyBox;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour
@@ -11,12 +8,12 @@ public class Interactable : MonoBehaviour
 
     public virtual void Interact()
     {
-        Debug.Log(gameObject.name + " interacted with");
+        Debug.Log(gameObject.name + " interacted with");      
     }
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {   
-        if(collision.CompareTag("Player") || collision.CompareTag("PlayerSuit"))
+        if(collision.CompareTag("PlayerSuit"))
         {
             canInteract = true;
             interactPromptObject.SetActive(true);
@@ -25,7 +22,7 @@ public class Interactable : MonoBehaviour
 
     public virtual void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") || collision.CompareTag("PlayerSuit"))
+        if (collision.CompareTag("PlayerSuit"))
         {
             canInteract = false;
             interactPromptObject.SetActive(false);

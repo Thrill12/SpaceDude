@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6fa1e2e87791204aaec6538f456b3d2, type: 3}
+  m_Name: UnionJacket
+  m_EditorClassIdentifier: 
+  itemName: Union Standard Jacket
+  itemDescription: The standard jacket worn by Union soldiers and police. Not very
+    well armored.
+  itemIcon: {fileID: -1262550121, guid: 1c230715b181fcd4c920dfbd109c85b7, type: 3}
+  itemRarity: {fileID: 11400000, guid: 832344019b921514faeab9a22f4c5cfb, type: 2}
+  itemValue: 15
+  itemStack: 1
+  itemMaxStack: 1
+  itemType: 2
+  itemSlot: Chest
+  itemMods: []
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0

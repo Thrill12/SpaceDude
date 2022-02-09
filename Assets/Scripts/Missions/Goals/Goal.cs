@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Goal : ScriptableObject
 {
-    public Quest goalQuest { get; set; }
+    [SerializeReference] public Quest goalQuest;
     public string GoalName;
     public string GoalDescription;
     [Header("This is what will display in the quest log - if you set a required amount it will do current/req + below")]
@@ -23,6 +23,7 @@ public class Goal : ScriptableObject
 
     public void Evaluate()
     {
+        QuestManager.instance.SaveQuests();
         if(GoalCurrentAmount >= GoalRequiredAmount)
         {
             Complete();
@@ -36,6 +37,7 @@ public class Goal : ScriptableObject
             UIManager.instance.audioSource.PlayOneShot(PrefabManager.instance.questGoalCompletedSound);
             GoalCompleted = true;
             goalQuest.CheckGoals();
+            QuestManager.instance.SaveQuests();
         }       
     }
 }

@@ -12,22 +12,31 @@ public class BlinkingLights : MonoBehaviour
     private float nextFire = 0;
 
     private Light2D lightt;
+    private float startIntensity;
 
-    private void Start()
-    {
-        lightt = GetComponent<Light2D>();
-    }
+    //private void Awake()
+    //{
+    //    lightt = GetComponent<Light2D>();
+    //    startIntensity = lightt.intensity;
+    //}
 
-    private void Update()
-    {
-        if (nextFire <= 0)
-        {
-            if (lightt == null) return;
-            lightt.enabled = !lightt.enabled;
-            nextFire = cooldown;
-            cooldown = Random.Range(0.1f, 0.7f);
-        }
+    //private void Update()
+    //{
+    //    if (nextFire <= 0)
+    //    {
+    //        if (lightt == null) return;
+    //        if(lightt.intensity == startIntensity)
+    //        {
+    //            lightt.intensity = 0;
+    //        }
+    //        else
+    //        {
+    //            lightt.intensity = startIntensity;
+    //        }
+    //        nextFire = cooldown;
+    //        cooldown = Random.Range(0.1f, 0.7f);
+    //    }
 
-        nextFire -= Time.deltaTime;
-    }
+    //    nextFire -= Time.deltaTime;
+    //}
 }

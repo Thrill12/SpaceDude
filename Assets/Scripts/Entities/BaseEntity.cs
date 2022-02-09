@@ -6,7 +6,7 @@ using System;
 [RequireComponent(typeof(AudioSource))]
 public class BaseEntity : MonoBehaviour
 {
-    public int ID;
+    public string ID;
     public string entityName;
 
     public float health;

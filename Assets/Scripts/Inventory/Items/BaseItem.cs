@@ -18,7 +18,9 @@ public enum ItemType
 {
     None,
     Food,
+    Armour,
     Electronic,
+    Aspite,
     Building_Supply,
     Breathing,
     Waste,

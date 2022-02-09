@@ -21,7 +21,7 @@ MonoBehaviour:
   itemValue: 531
   itemStack: 0
   itemMaxStack: 1
-  itemType: 6
+  itemType: 8
   itemSlot: Primary Weapon
   itemMods: []
   itemLevel: 1
@@ -65,6 +65,7 @@ MonoBehaviour:
   currentBullets: 0
   outOfAmmoSound: {fileID: 8300000, guid: 71e70adc1032ba94cb5a6b6da319846c, type: 3}
   ammoType: 8
+  ignoreAmmo: 0
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectileSpeed:
     statName: Projectile Speed

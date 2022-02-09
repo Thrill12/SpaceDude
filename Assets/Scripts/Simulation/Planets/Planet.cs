@@ -301,7 +301,7 @@ public class Planet : MonoBehaviour
     // Calculate stats for the other planet as well, and will return true or false for a few reasons.
     public bool RequestTradeRoute(Planet asker, Planet giver, ItemType type, float amountRequested)
     {
-        Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + amountRequested + " " + type.ToString());
+        //Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + amountRequested + " " + type.ToString());
         float spare = IncomeDeficit.CalculateProfit(giver, type);
 
         if (spare > 0)
@@ -328,7 +328,7 @@ public class Planet : MonoBehaviour
     // Calculate stats for the other planet as well, and will return true or false for a few reasons.
     public bool RequestTradeRoute(Planet asker, Planet giver, BaseItem comm, float amountRequested)
     {
-        Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + Mathf.Abs(amountRequested) + " " + comm.itemName);
+        //Debug.Log(asker.planetName + " asking for trade route with " + giver.planetName + " for " + Mathf.Abs(amountRequested) + " " + comm.itemName);
         float spare = IncomeDeficit.CalculateProfit(giver, comm);
 
         if (spare > 0)

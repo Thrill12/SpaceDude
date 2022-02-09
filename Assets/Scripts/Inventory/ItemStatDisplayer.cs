@@ -113,6 +113,20 @@ public class ItemStatDisplayer : MonoBehaviour
                 activatedStats.Add(displayer);
             }
 
+            if (equip.GetType().GetField("ammoType") != null)
+            {
+                GameObject displayer = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                
+                TMP_Text statText = displayer.GetComponent<TMP_Text>();
+
+                TextInfo info = new CultureInfo("en-US", false).TextInfo;
+
+                statText.text = "\n(Uses " + equip.GetType().GetField("ammoType").GetValue(equip).ToString().Replace("_", " ") + "s for ammo)";
+                statText.fontSize -= 2;
+
+                activatedStats.Add(displayer);
+            }
+
             itemName.text = item.itemName;
             itemModifiersBar.enabled = true;
         }

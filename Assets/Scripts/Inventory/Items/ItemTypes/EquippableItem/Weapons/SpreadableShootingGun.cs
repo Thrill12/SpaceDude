@@ -9,8 +9,16 @@ public class SpreadableShootingGun : StraightShootingGun
     public Stat numberOfPelletsToShoot;
     public Stat spreadAngleFromCenterBarrel;
 
-    public override void Attack(GameObject weaponObject, PlayerInput playerInput, AudioSource audioSource, WeaponsHolder holder)
+    public override void Attack(GameObject weaponObject, AudioSource audioSource, WeaponsHolder holder, PlayerInput playerInput)
     {
+        if (currentBullets > 0)
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
+        else
+        {
+            hostEntity.GetComponent<WeaponsHolder>().audioSource.PlayOneShot(outOfAmmoSound);
+        }
         GameObject shootSource = weaponObject.transform.Find("AttackSource").gameObject;
         for (int i = 0; i < numberOfPelletsToShoot.Value; i++)
         {
@@ -29,13 +37,6 @@ public class SpreadableShootingGun : StraightShootingGun
             holder.ShakeCamera();
             Destroy(pellet, 3);
         }
-        if(currentBullets > 0)
-        {
-            audioSource.PlayOneShot(attackSound);
-        }
-        else
-        {
-            hostEntity.GetComponent<WeaponsHolder>().audioSource.PlayOneShot(outOfAmmoSound);
-        }
+        
     }
 }
