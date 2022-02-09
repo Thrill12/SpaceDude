@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4147862919609740608}
   - component: {fileID: 3489077096998805692}
   - component: {fileID: 2668196649910166111}
+  - component: {fileID: 5078457141519755813}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -132,6 +133,19 @@ MonoBehaviour:
   m_MaximumFOV: 60
   m_MinimumOrthoSize: 1
   m_MaximumOrthoSize: 5000
+--- !u!114 &5078457141519755813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4147862919609740605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Damping: 0
 --- !u!1 &4147862919917846469
 GameObject:
   m_ObjectHideFlags: 0
@@ -143,6 +157,7 @@ GameObject:
   - component: {fileID: 4147862919917846475}
   - component: {fileID: 4147862919917846474}
   - component: {fileID: 4147862919917846472}
+  - component: {fileID: -3573258141650176365}
   m_Layer: 0
   m_Name: PlayerSuitCam
   m_TagString: Untagged
@@ -211,7 +226,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4147862919917846469}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
   m_Name: 
@@ -227,3 +242,15 @@ MonoBehaviour:
     m_FrequencyGain: 0
     m_Duration: 0
     m_NoiseOffsets: {x: -210.07571, y: 841.3281, z: 169.46207}
+--- !u!114 &-3573258141650176365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4147862919917846469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f640f458e6da3042880457129b428c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

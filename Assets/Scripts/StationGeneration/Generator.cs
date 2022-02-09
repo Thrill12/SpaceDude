@@ -36,6 +36,8 @@ public class Generator
     public TileData[,] grid { get; protected set; }
     private List<PlacedRoom> placedRooms;
 
+    TriangulationGraph tGraph;
+
     public Generator(GeneratorProfile generatorProfile, int generatorSeed)
     {
         //Assigning the arguements for generation.
@@ -61,17 +63,22 @@ public class Generator
         Random.InitState(seed);
     }
 
-    public Texture2D GenerateDebugTexture()
+    public Texture2D GenerateForDebugging()
     {
+        List<Vector2Int> rooms = new List<Vector2Int>();
+        tGraph = new TriangulationGraph();
+
+        GenerateRooms();
+
+        List<TriangulationGraph.Edge> graph = tGraph.DelenauyTriangulation(RoomPositions(), profile.gridSize);
+
+        List<TriangulationGraph.Edge> mstGraph = tGraph.MinimumSpanningTree(graph);
+
+        //Add corridors.
+        int[,] mstTable = tGraph.GraphAdjacencyTable(mstGraph, tGraph.rooms, false);
+        GenerateCorridors(mstTable);
 
         Texture2D texture = DebugTexture();
-
-        List<Vector2Int> rooms = new List<Vector2Int>();    
-
-        foreach(PlacedRoom room in placedRooms)
-        {
-            rooms.Add(room.position);
-        }
 
         return texture;
     }
@@ -512,6 +519,51 @@ public class Generator
     }
     #endregion
 
+    #region Gameplay Mechanics
+
+    //Will identify branches in the minimum spanning tree which can be locked.
+    void FindAndLockRooms()
+    {
+        //Start by finding which room is our start room, this will be a room which is most near the outer edges of the grid.
+
+        int startRoomIndex = FindStartRoom();
+
+        //Any room can be lockable...
+        //but weighting should make branched rooms least likely to be locked as this quickly locks large portions of a stations and makes key placements less interesting and exploration more linear.
+        //Locked rooms effectively create subtrees which we can use to hide keys in.
+
+        //Identify which rooms to lock then lock them.
+    }
+
+    //Will for a given room place a locked door, and find a suitable place to put a key earlier in the tree based on a given start room.
+    void PlaceLockKey(PlacedRoom room, int startRoomIndex)
+    {
+
+    }
+
+    //Picks a starting rooom which is furthest from the grid centre (so we know it is accessible with the ship).
+    int FindStartRoom()
+    {
+        int index = 0;
+        int highestDist = 0;
+
+        //Find room distance from the centre of the grid, we want the most outside.
+        foreach (PlacedRoom room in placedRooms)
+        {
+            int dist = (int)Vector2.Distance(room.position, new Vector2(profile.gridSize / 2, profile.gridSize / 2));
+
+            if (dist > highestDist) 
+            { 
+                highestDist = dist;
+                index = placedRooms.IndexOf(room);
+            } 
+        }
+
+        return index;
+    }
+
+    #endregion
+
     #region Outputs 
 
     //Generates a debug texture from a generated grid.
@@ -546,7 +598,7 @@ public class Generator
         return tex;
     }
 
-    //Returns a list of vertices (rooms).
+    //Returns a list of nodes (rooms).
     public List<Vector2Int> RoomPositions()
     {
         List<Vector2Int> pos = new List<Vector2Int>();

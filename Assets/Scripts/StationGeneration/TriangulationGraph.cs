@@ -52,7 +52,7 @@ public class TriangulationGraph
     public HashSet<Edge> graph = new HashSet<Edge>();
     public List<Vector2Int> rooms;
     List<NodeEdge> nodeGraph;
-    int[,] table;
+    int[,] graphAdjacencyTable;
 
     //Using the Bowyer-Watson algorithm to complete Delenauy trigulation of the points.
     public List<Edge> DelenauyTriangulation(List<Vector2Int> roomPositions, int gridSize)
@@ -146,6 +146,8 @@ public class TriangulationGraph
             }
 
         }
+
+        graphAdjacencyTable = table;
 
         //Return the populated adjacency table.
         return table;

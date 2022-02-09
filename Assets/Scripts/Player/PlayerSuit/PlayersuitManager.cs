@@ -130,8 +130,8 @@ public class PlayersuitManager : MonoBehaviour
         suitVolume.SetActive(true);
         //Set the vCam to follow the ship.
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = shipInt.gameObject.transform;
-        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_XDamping = 0;
-        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 0;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_XDamping = 0f;
+        instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 0f;
 
         #region Update Ship
         ship.isPlayerPiloting = false;
