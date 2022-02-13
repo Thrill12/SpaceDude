@@ -181,7 +181,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (!isPlayerPiloting) return;
 
-        //GetComponent<CinemachineImpulseSource>().GenerateImpulseWithForce(currentSpeed / (maxWarpSpeed * 100));              
+     
 
         //if (Input.GetMouseButton(0))
         //{
