@@ -149,23 +149,30 @@ public class TriangulationGraph
         //The node counts is the number of rooms that the station has. 
         nodeCount = rooms.Count;
 
+        //Init the data we need.
         for (int i = 0; i < nodeCount; i++)
         {
+            //Init the graph routes.
             GraphRoute route = new GraphRoute();
-
+            //Set all the first rooms of the room indexes to the entrance room, which is index 0.
             route.roomIndexes = new List<int> { 0 };
-
+            //Add the route to the array of routes.
             routes[i] = route;
 
+            //Init nodeFixed array all to false.
             nodeFixed[i] = false;
 
+            //Set all the min distances to 999 - technically infinity but for all extents and purposes 999.
             minDist[i] = 999;
         }
         
+        //Set the min dist of the 1st room to 0.
         minDist[1] = 0;
 
+        //Start the recursion - Diskstra's algorithm.
         CurrentNode(1);
 
+        //Return all of the discovered routes.
         return routes;
     }
 
