@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XNode;
 
-[CreateAssetMenu]
+[CreateAssetMenu, System.Serializable]
 public class DialogueGraph : NodeGraph 
 {
 	public BaseNode current;

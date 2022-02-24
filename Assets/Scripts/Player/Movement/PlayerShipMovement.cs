@@ -132,7 +132,10 @@ public class PlayerShipMovement : MonoBehaviour
 
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
 
-        aspiteStack = UIManager.instance.inv.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).Sum(x => x.itemStack);
+        if(Inventory.instance.shipInventoryItems.Any(x => x.itemType == ItemType.Aspite))
+        {
+            aspiteStack = Inventory.instance.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).Sum(x => x.itemStack);
+        }     
 
         if (currentSpeed > minSpeedForWarp && aspiteStack > aspiteRequiredForJump)
         {

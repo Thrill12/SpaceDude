@@ -7,8 +7,8 @@ using XNode;
 [NodeTint("#8c7ae6")]
 public class QuestNode : BaseNode {
 
-	[Input] public int entry;
-	[Output] public int exit;
+	[Input, SerializeField] public int entry;
+	[Output, SerializeField] public int exit;
 
 	public Quest questToGive;
 

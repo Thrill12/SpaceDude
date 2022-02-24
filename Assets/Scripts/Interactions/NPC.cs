@@ -1,3 +1,5 @@
+using FullSerializer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +9,48 @@ using UnityEngine;
 public class NPC : Interactable
 {
     public string npcName;
-    public bool AssignedQuest { get; set; } = false;
+    public bool AssignedQuest = false;
 
     [Tooltip("Graph used for interactions with the NPC. Place any quests you want to give out in the graph itself.")]
     public DialogueGraph dialogueGraph;
+    [fsIgnore]
+    private DialogueGraph defaultDialogueGraph;
     public Quest activeQuest;
+
+    public string dialogueGraphPath;
 
     private void Start()
     {
-        GetComponent<DialogueParser>().graph = dialogueGraph;
-        
-        GameManager.instance.progressSave.npcStates[this] = dialogueGraph;
+        defaultDialogueGraph = dialogueGraph;        
+
+        ProgressSave progressSave = GameManager.instance.progressSave;
+
+        if (progressSave.npcStates.npcList.Any(x => x.npcName == npcName))
+        {
+            if (GameManager.instance.progressSave != null)
+            {
+                NPC thisNPCSave = progressSave.npcStates.npcList.First(x => x.npcName == npcName);
+                AssignedQuest = thisNPCSave.AssignedQuest;
+                dialogueGraph = thisNPCSave.dialogueGraph;
+                activeQuest = thisNPCSave.activeQuest;
+            }
+
+            GetComponent<DialogueParser>().graph = dialogueGraph;
+            GetComponent<DialogueParser>().isPlaying = false;
+        }
+        else
+        {
+            NPCManager.instance.allNPCs.Add(this);
+        }
+    }    
+
+    private void Update()
+    {
+        if(activeQuest == null && GetComponent<DialogueParser>().isPlaying == false)
+        {
+            dialogueGraph = defaultDialogueGraph;
+            GetComponent<DialogueParser>().graph = dialogueGraph;
+        }
     }
 
     public override void Interact()
@@ -26,13 +59,14 @@ public class NPC : Interactable
         GameEvents.instance.OnNPCCommunicate(this);
         if (!AssignedQuest)
         {
-            
+            Debug.Log("Starting default graph");
             GetComponent<DialogueParser>().StartDialogueGraph();
         }
         else
         {
+            Debug.Log("Starting quest graph");
             CheckQuestCompletion(activeQuest);
-            GetComponent<DialogueParser>().StartDialogueGraph();
+            
         }
     }
 
@@ -44,14 +78,14 @@ public class NPC : Interactable
         {
             questToCheck.GiveReward(gameObject);
             AssignedQuest = false;
-            GetComponent<DialogueParser>().graph = activeQuest.questCompletedDialogue;
+            GetComponent<DialogueParser>().graph = Resources.Load(GameManager.instance.questsPath + "/" + activeQuest.questCompletedDialoguePath) as DialogueGraph;
             activeQuest = null;
-            Debug.Log("Finished");
+            GetComponent<DialogueParser>().StartDialogueGraph();
         }
         else
         {
-            Debug.Log("Not Finishjed");
-            GetComponent<DialogueParser>().graph = activeQuest.questInProgressDialogue;
+            GetComponent<DialogueParser>().graph = Resources.Load(GameManager.instance.questsPath + "/" + activeQuest.questInProgressDialoguePath) as DialogueGraph;
+            GetComponent<DialogueParser>().StartDialogueGraph();
         }
     }
 }

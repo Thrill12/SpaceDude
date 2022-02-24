@@ -319,7 +319,7 @@ public class UIManager : MonoBehaviour
 
     #region NormalUI
 
-    public void SelectUIObject(GameObject objToSelect)
+    public void SelectUIObject(GameObject objToSelect = null)
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(objToSelect);
@@ -646,12 +646,10 @@ public class UIManager : MonoBehaviour
         if (Time.timeScale == 0)
         {
             Time.timeScale = 1;
-            Debug.Log("Turned off ");
         }
         else
         {
             Time.timeScale = 0;
-            Debug.Log("Turned off ");
         }
 
         if (pauseMenu.activeInHierarchy)
@@ -752,6 +750,8 @@ public class UIManager : MonoBehaviour
     //Displays active quest in the quest log
     public void DrawQuest(Quest quest)
     {
+        if (activeMissionsLog.GetComponentsInChildren<QuestDisplayHolder>().Any(x => x.questHeld.QuestName == quest.QuestName)) return;
+
         GameObject questDisplay = Instantiate(PrefabManager.instance.questDisplay, activeMissionsLog.transform);
         questDisplay.GetComponent<QuestDisplayHolder>().questHeld = quest;    
     }
@@ -833,9 +833,9 @@ public class UIManager : MonoBehaviour
 
     #region DialogueChoices
     [HideInInspector]
-    public bool hasChosen = false;
+    public bool hasChosenDialogueChoice = false;
     [HideInInspector]
-    public int chosenChoice;
+    public int chosenDialogueChoice;
     //Pass in a list of strings to display as choices in each button, returns an int to
     //tell the node parser what choice they chose
     public void DisplayChoices(List<string> choices)
@@ -848,6 +848,7 @@ public class UIManager : MonoBehaviour
         GameObject firstOption = Instantiate(choiceOption, choiceDisplayer.transform);
         firstOption.GetComponentInChildren<TMP_Text>().text = firstItem;
         firstOption.GetComponent<Button>().onClick.AddListener(() => SelectChoice(0));
+
         if(playerInput.currentControlScheme == "GamePad")
         {
             SelectUIObject(firstOption);
@@ -868,8 +869,8 @@ public class UIManager : MonoBehaviour
     public int SelectChoice(int choiceNumber)
     {
         Debug.Log("Chose number " + choiceNumber);
-        chosenChoice = choiceNumber;
-        hasChosen = true;
+        chosenDialogueChoice = choiceNumber;
+        hasChosenDialogueChoice = true;
 
         choiceDisplayer.SetActive(false);
 

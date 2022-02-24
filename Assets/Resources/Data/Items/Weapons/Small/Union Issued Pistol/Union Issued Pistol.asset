@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6959a5f84b1d93745babd28f5ae84f17, type: 3}
+  m_Name: Union Issued Pistol
+  m_EditorClassIdentifier: 
+  GUID: 90a9151a-ed85-4c6a-8831-8abf565f10d2
+  itemName: Union Issued Pistol
+  itemDescription: The standard sidearm issued to Union troops, both army and police
+    alike.
+  itemIcon: {fileID: 21300000, guid: cfa7c163db02af7498a230035072f686, type: 3}
+  itemIconPath: Data/Items/ItemSprites/OphtalsEye
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemValue: 751
+  itemStack: 1
+  itemMaxStack: 1
+  itemType: 8
+  itemSlot: Secondary Weapon
+  itemMods: []
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0
+  weaponObject: {fileID: 7326627345084724259, guid: d81c191e5961823499de38367d1354c6, type: 3}
+  weaponObjectPath: Data/Items/Weapons/Small/Union Issued Pistol/Union Pistol
+  attackSound: {fileID: 8300000, guid: f35a6ee92d4ebd047a737468dd3b6985, type: 3}
+  attackSoundPath: Data/Items/Weapons/Small/Union Issued Pistol/Union Pistol
+  damage:
+    statName: Damage
+    BaseValue: 25
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalChance:
+    statName: Critical Hit Chance
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalDamage:
+    statName: Critical Hit Damage
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  attackCooldown:
+    statName: s Cooldown
+    BaseValue: 1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  large: 0
+  maxBulletsInClip:
+    statName: Bullets In Clip
+    BaseValue: 16
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  currentBullets: 0
+  outOfAmmoSound: {fileID: 8300000, guid: 71e70adc1032ba94cb5a6b6da319846c, type: 3}
+  outOfAmmoSoundFilePath: Sounds/Files/OutOfAmmoSound
+  projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
+  projectilePath: Data/Projectiles/SmallBullet
+  ammoType: 13
+  ignoreAmmo: 0
+  projectileSpeed:
+    statName: Projectile Speed
+    BaseValue: 50000
+    _value: 0
+    statModifiers: []
+    isDirty: 1

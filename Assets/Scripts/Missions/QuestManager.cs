@@ -19,6 +19,11 @@ public class QuestManager : MonoBehaviour
 
     private void Start()
     {
+        InitializeQuests();
+    }
+
+    public void InitializeQuests()
+    {
         LoadQuests();
 
         foreach (var quest in activeQuests)
@@ -38,34 +43,16 @@ public class QuestManager : MonoBehaviour
         allQuests.Add(quest);
     }
 
-    //Ads a quest to the active quests list
-    public void AddQuest(Quest questToAdd)
-    {
-        activeQuests.Add(questToAdd);
-        SaveQuests();
-
-        questToAdd.Init();
-
-        foreach (var item in questToAdd.Goals)
-        {
-            item.Init(questToAdd);
-        }
-
-        if(questToAdd.Goals.Count == 0)
-        {
-            Debug.Log("Uhm good sir, there seems to be no goal on the " + questToAdd.QuestName + " quest.");
-        }
-    }
-
     public void AddQuest(Quest questToAdd, NPC questGiver)
     {       
         Quest newQuest = Instantiate(questToAdd);
+        newQuest.npcAssignedTo = questGiver.npcName;
         questGiver.activeQuest = newQuest;
         activeQuests.Add(newQuest);
         questGiver.AssignedQuest = true;
 
         newQuest.Init();
-
+        
         foreach (var item in newQuest.Goals)
         {
             item.Init(newQuest);
@@ -75,6 +62,8 @@ public class QuestManager : MonoBehaviour
         {
             Debug.Log("Uhm good sir, there seems to be no goal on the " + newQuest.QuestName + " quest.");
         }
+
+        SaveQuests();
     }
 
     //Removes a quest from active and places it in completed quests
@@ -123,30 +112,67 @@ public class QuestManager : MonoBehaviour
 
     public void SaveQuests()
     {
-        GameManager.instance.progressSave.questsSaved = new QuestsSavedSO();
-        foreach (var item in activeQuests)
+        try
         {
-            GameManager.instance.progressSave.questsSaved.questsActive.Add(item);
-        }
-        foreach (var item in completedQuests)
-        {
-            GameManager.instance.progressSave.questsSaved.questsCompleted.Add(item);
-        }
+            QuestsSavedSO save = new QuestsSavedSO();
 
-        GameManager.instance.SaveProgress();
-        Debug.Log("Saved quests");
+            foreach (var item in activeQuests)
+            {
+                save.questsActive.Add(item);
+            }
+            foreach (var item in completedQuests)
+            {
+                save.questsCompleted.Add(item);
+            }
+
+            ProgressSave progressSavee = GameManager.instance.progressSave as ProgressSave;
+            progressSavee.questsSaved = save;
+            Debug.Log("Saved quests");
+        }
+        catch
+        {
+            Debug.LogWarning("No Game Manager");
+        }      
     }
 
     public void LoadQuests()
     {
-        foreach (var item in GameManager.instance.progressSave.questsSaved.questsActive)
+        var save = GameManager.instance.progressSave as ProgressSave;
+
+        if (save == null) return;
+
+        if (save.questsSaved == null) return;
+
+        QuestsSavedSO savee = save.questsSaved as QuestsSavedSO;
+        List<NPC> npcSaves = save.npcStates.npcList.Cast<NPC>().ToList();
+
+        foreach (var item in savee.questsActive)
         {
-            activeQuests.Add((Quest)item);
+            Quest questToAdd = (Quest)item;
+            NPC questGiver = NPCManager.instance.allNPCs.First(x => x.npcName == questToAdd.npcAssignedTo);
+
+            Quest newQuest = Instantiate(questToAdd);
+            newQuest.npcAssignedTo = questGiver.npcName;
+            questGiver.activeQuest = newQuest;
+            questGiver.AssignedQuest = true;
+
+            newQuest.Init();
+
+            foreach (var goal in newQuest.Goals)
+            {
+                goal.Init(newQuest);
+            }
+
+            if (newQuest.Goals.Count == 0)
+            {
+                Debug.Log("Uhm good sir, there seems to be no goal on the " + newQuest.QuestName + " quest.");
+            }            
         }
 
-        foreach (var item in GameManager.instance.progressSave.questsSaved.questsCompleted)
+        foreach (var item in savee.questsCompleted)
         {
-            completedQuests.Add((Quest)item);
+            Quest questToAdd = (Quest)item;
+            completedQuests.Add(questToAdd);
         }
     }
 }

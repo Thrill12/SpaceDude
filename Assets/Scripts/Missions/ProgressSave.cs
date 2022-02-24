@@ -6,5 +6,20 @@ using UnityEngine;
 public class ProgressSave
 {
     public QuestsSavedSO questsSaved;
-    public Dictionary<NPC, DialogueGraph> npcStates = new Dictionary<NPC, DialogueGraph>();
+    public NPCStatesSave npcStates;
+    public InventorySave inventorySave;
+}
+
+[System.Serializable]
+public class NPCStatesSave
+{
+    public List<NPC> npcList = new List<NPC>();
+}
+
+[System.Serializable]
+public class InventorySave
+{
+    public BaseItem[] playerInventoryItems;
+    public BaseItem[] shipInventoryItems;
+    public BaseItem[] itemsEquipped;
 }

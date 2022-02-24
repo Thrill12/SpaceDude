@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using FullSerializer;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,22 +15,31 @@ public class GameManager : MonoBehaviour
     public Image loadingBar;
     public TMP_Text fpsCounter;
 
+    [Header("Paths")]
+
     public string optionsFilePath = "/SpaceDudeOptions.ini";
     public string saveFilePath = "/SpaceDudeSave.spsv";
+    public string questsPath = "/Data/Quests";
+
+    [Space(15)]
+
     public InputActionAsset inputActions;
 
     public OptionsSO options;
     public ProgressSave progressSave;
+
+    public float autosaveInterval = 300;
+    private float autosavingTimer = 0;
 
     private void Awake()
     {
         instance = this;
         optionsFilePath = Application.persistentDataPath + optionsFilePath;
         saveFilePath = Application.persistentDataPath + saveFilePath;
+        
+        SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive);
 
-        HandleSaveInit();
-
-        SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive);        
+        HandleSaveInit();     
     }
 
     //Function to check if we should load current settings or create new ones for first startup
@@ -52,6 +61,13 @@ public class GameManager : MonoBehaviour
         {
             LoadProgress();
         }
+        else
+        {
+            progressSave = new ProgressSave();
+            progressSave.npcStates = new NPCStatesSave();
+            progressSave.questsSaved = new QuestsSavedSO();
+            progressSave.inventorySave = new InventorySave();
+        }
     }
 
     //Handles loading bar progress when loading scenes
@@ -64,9 +80,17 @@ public class GameManager : MonoBehaviour
             loadingBar.fillAmount = displayLoadingBarLoadingValue;
         }
 
-        if (fpsCounter.enabled)
+        if (fpsCounter.gameObject.activeInHierarchy)
         {
             fpsCounter.text = "FPS: " + Mathf.RoundToInt(1 / Time.deltaTime);
+        }
+
+        autosavingTimer += Time.deltaTime;
+
+        if(autosavingTimer >= autosaveInterval)
+        {
+            autosavingTimer = 0;
+            SaveProgress();
         }
     }
 
@@ -76,7 +100,7 @@ public class GameManager : MonoBehaviour
     float timer, displayLoadingBarLoadingValue;
     List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
     public void LoadGame()
-    {
+    {      
         loadingScreen.SetActive(true);
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.TITLE_SCREEN));
         scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.MAIN_GAME, LoadSceneMode.Additive));
@@ -87,10 +111,11 @@ public class GameManager : MonoBehaviour
     //Loads the main menu scene from anywhere else
     public void LoadMainMenu()
     {
+        SaveProgress();
         loadingScreen.SetActive(true);
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.MAIN_GAME));
         scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive));
-
+        
         StartCoroutine(GetSceneLoadProgress());
     }
 
@@ -132,22 +157,107 @@ public class GameManager : MonoBehaviour
     public void LoadOptions()
     {
         options = JsonUtility.FromJson<OptionsSO>(File.ReadAllText(optionsFilePath));
+        fpsCounter.gameObject.SetActive(options.fpsCounter);
         inputActions.LoadBindingOverridesFromJson(options.keybindsJson);
+    }
+
+    public void SaveNPCStates()
+    {
+        if (NPCManager.instance == null) return;
+
+        NPCStatesSave save = new NPCStatesSave();
+
+        foreach (var item in NPCManager.instance.allNPCs)
+        {
+            save.npcList.Add(item);
+        }
+
+        progressSave.npcStates = save;
+    }
+
+    public void LoadNPCStates()
+    {
+        if (NPCManager.instance == null) return;
+
+        ProgressSave progressSavee = progressSave as ProgressSave;
+        NPCStatesSave save = progressSavee.npcStates as NPCStatesSave;
+
+        foreach (var item in save.npcList)
+        {
+            NPCManager.instance.allNPCs.Add(item);
+        }
+    }
+
+    public void SaveInventory()
+    {
+        if (Inventory.instance == null) return;
+
+        progressSave.inventorySave = new InventorySave();
+
+        List<BaseItem> itemsEquipped = new List<BaseItem>();
+        List<BaseItem> playerItems = new List<BaseItem>();
+        List<BaseItem> shipItems = new List<BaseItem>();
+
+        for (int i = 0; i < Inventory.instance.itemsEquipped.Count; i++)
+        {
+            BaseItem item = Inventory.instance.itemsEquipped[i];
+            itemsEquipped.Add(item);
+            Debug.Log("Saving " + item.itemName);
+        }
+
+        for (int i = 0; i < Inventory.instance.playerInventoryItems.Count; i++)
+        {
+            BaseItem item = Inventory.instance.playerInventoryItems[i];
+            playerItems.Add(item);
+            Debug.Log("Saving " + item.itemName);
+        }
+
+        for (int i = 0; i < Inventory.instance.shipInventoryItems.Count; i++)
+        {
+            BaseItem item = Inventory.instance.shipInventoryItems[i];
+            shipItems.Add(item);
+            Debug.Log("Saving " + item.itemName);
+        }
+
+        progressSave.inventorySave.itemsEquipped = itemsEquipped.ToArray();
+        progressSave.inventorySave.playerInventoryItems = playerItems.ToArray();
+        progressSave.inventorySave.shipInventoryItems = shipItems.ToArray();
     }
 
     public void SaveProgress()
     {
-        string questString = Serialization.Serialize(progressSave.GetType(), progressSave);
+        SaveNPCStates();
+        SaveInventory();
 
-        File.WriteAllText(saveFilePath, questString);
+        string json = Serialization.Serialize(progressSave.GetType(), progressSave);
+        File.WriteAllText(saveFilePath, json);
     }
 
     public void LoadProgress()
     {
-        ProgressSave empty = new ProgressSave();
-        progressSave = (ProgressSave)Serialization.Deserialize(empty.GetType(), File.ReadAllText(saveFilePath));
+        Debug.Log("Loading progress Data");
+
+        progressSave = Serialization.Deserialize(progressSave.GetType(), File.ReadAllText(saveFilePath)) as ProgressSave;
+
+        LoadNPCStates();
     }
 
+    //public void SaveProgress()
+    //{
+    //    SaveNPCStates();
+    //    SaveInventory();
+
+    //    Serialization.Serialize(progressSave, saveFilePath);
+    //}
+
+    //public void LoadProgress()
+    //{
+    //    Debug.Log("Loading progress Data");
+
+    //    progressSave = Serialization.Deserialize(File.ReadAllText(saveFilePath)) as ProgressSave;
+
+    //    LoadNPCStates();
+    //}
 
     #endregion
 }

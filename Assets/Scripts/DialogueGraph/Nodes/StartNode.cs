@@ -6,7 +6,7 @@ using XNode;
 [NodeTint("#0097e6")]
 public class StartNode : BaseNode {
 
-	[Output] public int exit;
+	[Output, SerializeField] public int exit;
 
 	public override string GetString()
     {

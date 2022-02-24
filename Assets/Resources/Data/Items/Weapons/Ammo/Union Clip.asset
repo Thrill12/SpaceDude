@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ecf52a29391a5a46858170f39368dd1, type: 3}
+  m_Name: Union Clip
+  m_EditorClassIdentifier: 
+  itemName: Union Clip
+  itemDescription: Union's proprietary clip system, used in most of their weapons
+  itemIcon: {fileID: 21300000, guid: f09772f5afb23c640b250bcb072a8f60, type: 3}
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemValue: 0
+  itemStack: 30
+  itemMaxStack: 999
+  itemType: 13

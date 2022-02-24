@@ -5,6 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class QuestsSavedSO
 {
-    public List<object> questsCompleted = new List<object>();
-    public List<object> questsActive = new List<object>();
+    public List<Quest> questsCompleted = new List<Quest>();
+    public List<Quest> questsActive = new List<Quest>();
 }

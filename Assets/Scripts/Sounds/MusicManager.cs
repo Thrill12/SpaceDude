@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
+    public static MusicManager instance;
+
     public List<AudioClip> songs = new List<AudioClip>();
 
     private bool isPlaying;
     public AudioSource musicSource;
 
     private int lastSong;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Update()
     {

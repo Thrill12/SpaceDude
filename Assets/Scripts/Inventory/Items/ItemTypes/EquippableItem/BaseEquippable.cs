@@ -1,8 +1,10 @@
+using FullSerializer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Items/Equippable Item"), System.Serializable]
+[CreateAssetMenu(menuName = "Items/Equippable Item"), Serializable]
 public class BaseEquippable : BaseItem
 {
     public const int MAXMODLIMIT = 4;
@@ -18,8 +20,9 @@ public class BaseEquippable : BaseItem
     public float itemXPToNextLevel = 1000;
     private float xpBacklog;
 
+    [fsIgnore]
     public BaseEntity hostEntity;
-    public bool isEquipped = false;
+    public bool isEquipped;
 
     public virtual void OnEquip(BaseEntity hostEntity)
     {

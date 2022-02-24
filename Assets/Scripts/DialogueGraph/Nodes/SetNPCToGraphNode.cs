@@ -5,15 +5,15 @@ using XNode;
 
 public class SetNPCToGraphNode : BaseNode {
 
-	[Input] public int entry;
+	[Input, SerializeField] public int entry;
 
 	public string npcToChange;
-	public DialogueGraph graphToChangeTo;
+	public string graphToChangeTo;
 
-	[Output] public int exit;
+	[Output, SerializeField] public int exit;
 
     public override string GetString()
     {
-        return "SetNPCToGraph";
+        return "SetNPCToGraph/" + graphToChangeTo;
     }
 }

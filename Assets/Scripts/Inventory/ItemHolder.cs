@@ -18,6 +18,8 @@ public class ItemHolder : MonoBehaviour
 
     private void Start()
     {
+        Inventory.instance.LoadResourcesForItem(itemHeld);
+
         prefabManager = PrefabManager.instance;
         itemHeld = ScriptableObject.Instantiate(itemHeld);
         playerInventory = Inventory.instance;
@@ -50,7 +52,6 @@ public class ItemHolder : MonoBehaviour
 
     public void ClickedOn()
     {
-        Debug.Log("Clicked ON");
         Destroy(gameObject);
     }
 
@@ -60,7 +61,6 @@ public class ItemHolder : MonoBehaviour
         {
             if (Inventory.instance.AddItem(itemHeld))
             {
-                Debug.Log("Trigger");
                 ClickedOn();
             }
         }

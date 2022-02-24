@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
+using FullSerializer;
 
 [CreateAssetMenu(menuName ="Quests/Quest"), System.Serializable]
 public class Quest : ScriptableObject
@@ -9,8 +11,12 @@ public class Quest : ScriptableObject
     public int id;
     public string QuestName;
     public string QuestDescription;
-    public DialogueGraph questCompletedDialogue;
-    public DialogueGraph questInProgressDialogue;
+    public string npcAssignedTo;
+
+    public string questCompletedDialoguePath;
+
+    public string questInProgressDialoguePath;
+
     public List<Goal> Goals = new List<Goal>();
 
     [Space(10)]
@@ -37,7 +43,6 @@ public class Quest : ScriptableObject
         }
         UIManager.instance.DrawQuest(this);
         UIManager.instance.audioSource.PlayOneShot(PrefabManager.instance.questAssignedSound);
-        QuestManager.instance.SaveQuests();
     }
 
     public bool CheckGoals()

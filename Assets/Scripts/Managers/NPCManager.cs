@@ -7,17 +7,30 @@ public class NPCManager : MonoBehaviour
 {
     public static NPCManager instance;
 
-    public Dictionary<NPC, DialogueGraph> allNPCs = new Dictionary<NPC, DialogueGraph>();
+    public List<NPC> allNPCs = new List<NPC>();
 
     private void Awake()
     {
         instance = this;
-        allNPCs = GameManager.instance.progressSave.npcStates;
-    }    
+        try
+        {
+            GameManager.instance.LoadNPCStates();
+        }
+        catch
+        {
+            Debug.Log("No save or no game manager");
+        }
+    }
 
-    public void SetNPCToGraph(string npcName, DialogueGraph graphToChangeTo)
+    private void Start()
+    {      
+        QuestManager.instance.InitializeQuests();
+    }
+
+    public void SetNPCToGraph(string npcName, string graphPath)
     {
-        allNPCs.First(x => x.Key.npcName == npcName).Key.dialogueGraph = graphToChangeTo;
-        allNPCs[allNPCs.First(x => x.Key.npcName == npcName).Key] = graphToChangeTo;
+        allNPCs.First(x => x.npcName == npcName).dialogueGraph = Resources.Load<DialogueGraph>(graphPath);
+
+        GameManager.instance.SaveNPCStates();
     }
 }

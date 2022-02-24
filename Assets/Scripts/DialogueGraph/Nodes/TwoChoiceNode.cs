@@ -8,14 +8,14 @@ using XNode;
 [NodeTint("#c23616")]
 public class TwoChoiceNode : BaseNode
 {
-    [Input] public int entry;
+    [Input, SerializeField] public int entry;
     
     public string dialogue;
 
     public string passButtonString;
-    [Output] public int pass;
+    [Output, SerializeField] public int pass;
     public string failButtonString;
-	[Output] public int fail;
+	[Output, SerializeField] public int fail;
 
 	public override string GetString()
     {

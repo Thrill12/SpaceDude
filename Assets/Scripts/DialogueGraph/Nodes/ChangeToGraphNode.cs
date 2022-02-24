@@ -5,18 +5,13 @@ using XNode;
 
 public class ChangeToGraphNode : BaseNode {
 
-	[Input] public int entry;
-	public DialogueGraph graphToChangeTo;
+	[Input, SerializeField] public int entry;
+	public string graphToChangeTo;
 	public bool startImmediately = false;
-	[Output] public int exit;
+	[Output, SerializeField] public int exit;
 
 	public override string GetString()
     {
-		return "GraphChange/" + startImmediately.ToString();
-    }
-
-	public DialogueGraph GetGraph()
-    {
-		return graphToChangeTo;
+		return "GraphChange/" + startImmediately.ToString() + "/" + graphToChangeTo;
     }
 }

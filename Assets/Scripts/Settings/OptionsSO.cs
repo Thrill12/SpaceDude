@@ -10,8 +10,10 @@ public class OptionsSO
     public float masterLevel = 0.6f;
     public float musicLevel = 0.6f;
     public float sfxLevel = 0.6f;
+
     [Header("Keybinds")]
     public string keybindsJson;
+
     [Header("Options")]
     public int qualityTier = 3;
     public bool fpsCounter = false;

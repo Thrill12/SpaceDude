@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 
 [CreateAssetMenu(menuName = "Items/Weapons/Projectile Gun")]
 public class StraightShootingGun : BaseGun
-{
-    public GameObject projectile;
+{    
     public Stat projectileSpeed;
 
     //A normal shoot function for a straight shooting gun

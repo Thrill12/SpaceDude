@@ -1,3 +1,5 @@
+using FullSerializer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +18,7 @@ public class Modifier
     public Stat statAffecting;
     [HideInInspector]
     public int Order;
+    [fsIgnore, NonSerialized]
     public BaseItem Source; // Added this variable
 
     // "Main" constructor. Requires all variables.

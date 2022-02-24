@@ -7,14 +7,14 @@ using XNode;
 [NodeTint("#44bd32")]
 public class CheckQuestRequirementsNode : BaseNode
 {
-    [Input] public int entry;
+    [Input, SerializeField] public int entry;
     public Quest questToCheck;
-    [Output] public int pass;
-    [Output] public int fail;
+    [Output, SerializeField] public int pass;
+    [Output, SerializeField] public int fail;
     
     public override string GetString()
     {
-        return "QuestCheckRequirements/";
+        return "QuestCheckRequirements";
     }
 
     public Quest GetQuest()

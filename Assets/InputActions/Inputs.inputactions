@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Screenshot",
+                    "type": "Button",
+                    "id": "1b2c92da-f335-43cd-a0eb-5403900b000b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Turning",
                     "type": "Value",
                     "id": "fbcadf70-55cd-48f3-8037-8d3544dcc3e2",
@@ -311,6 +320,17 @@
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ca6a9bc-080a-434f-92ad-e1824dd7ba9b",
+                    "path": "<Keyboard>/f2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Screenshot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -403,6 +423,15 @@
                     "name": "ReloadWeapon",
                     "type": "Button",
                     "id": "b866270a-3a21-4f74-96f3-f05e261c1f9f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Screenshot",
+                    "type": "Button",
+                    "id": "7968b162-c3c2-4d9c-98c7-94fe189d4106",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -759,6 +788,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ReloadWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce350321-d3d6-48a8-906d-7a33e666434d",
+                    "path": "<Keyboard>/f2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoard",
+                    "action": "Screenshot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -6,8 +6,8 @@ using XNode;
 [NodeTint("#718093")]
 public class DialogueNode : BaseNode {
 
-	[Input] public int entry;
-	[Output] public int exit;
+	[Input, SerializeField] public int entry;
+	[Output, SerializeField] public int exit;
 
 	public string dialogueText;
 

@@ -5,10 +5,10 @@ using XNode;
 
 public class CheckQuestCompletionNode : BaseNode {
 
-	[Input] public int entry;
+	[Input, SerializeField] public int entry;
 	public Quest questToCheck;
-	[Output] public int completed;
-	[Output] public int notcompleted;
+	[Output, SerializeField] public int completed;
+	[Output, SerializeField] public int notcompleted;
 
 	public override string GetString()
     {

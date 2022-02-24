@@ -1,3 +1,4 @@
+using FullSerializer;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,6 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance;
-
     
     public BaseEntity player;
     
@@ -29,22 +29,116 @@ public class Inventory : MonoBehaviour
 
     [Space(10)]
 
-    public List<BaseItem> itemsEquipped = new List<BaseItem>();
+    public List<BaseEquippable> itemsEquipped = new List<BaseEquippable>();
 
-    [HideInInspector]
     public List<UIItemHolder> uiItemHolders = new List<UIItemHolder>();
 
-    [HideInInspector]
     public List<UIItemHolder> shipUiItemHolders = new List<UIItemHolder>();
 
     public int maxPlayerItemCount = 30;
     public int maxShipItemCount = 30;
 
+    [fsIgnore]
     public bool isInShipInventory;
 
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
+        try
+        {
+            LoadItemsFromSave();
+        }
+        catch
+        {
+            Debug.Log("No save");
+        }       
+    }
+
+    public void LoadItemsFromSave()
+    {
+        for (int i = 0; i < GameManager.instance.progressSave.inventorySave.shipInventoryItems.Count(); i++)
+        {
+            BaseItem item = GameManager.instance.progressSave.inventorySave.shipInventoryItems[i] as BaseItem;
+            LoadResourcesForItem(item);
+            SetItemModifierSources(item);
+
+            AddItemIgnoreLimits(item);
+
+            SwapInventoryOfItem(item);
+        }
+
+        for (int i = 0; i < GameManager.instance.progressSave.inventorySave.playerInventoryItems.Count(); i++)
+        {
+            BaseItem item = GameManager.instance.progressSave.inventorySave.playerInventoryItems[i] as BaseItem;
+            LoadResourcesForItem(item);
+            SetItemModifierSources(item);
+            AddItemIgnoreLimits(item);
+        }
+
+        for (int i = 0; i < GameManager.instance.progressSave.inventorySave.itemsEquipped.Count(); i++)
+        {
+            BaseEquippable equip = Instantiate(GameManager.instance.progressSave.inventorySave.itemsEquipped[i] as BaseEquippable);
+            LoadResourcesForItem(equip);
+            SetItemModifierSources(equip);
+            AddItemIgnoreLimits(equip);
+            EquipItem(equip);
+
+            if(equip as BaseWeapon)
+            {
+                weaponHolder.SwapWeapons();
+            }
+
+            equip.isEquipped = true;
+            equip.hostEntity = player;
+
+            //if(equip as BaseWeapon)
+            //{
+            //    weaponHolder.EquipWeapon(equip as BaseWeapon);
+            //}
+
+            //GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
+            //uiHolder.GetComponent<UIItemHolder>().itemHeld = equip;
+            //uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());            
+        }
+    }
+
+    //Function to get the files required for hte item to enable them to be saved
+    public void LoadResourcesForItem(BaseItem item)
+    {
+        item.itemIcon = Resources.Load<Sprite>(item.itemIconPath);
+
+        if(item as BaseEquippable)
+        {
+            if(item as BaseWeapon)
+            {
+                BaseWeapon weapon = item as BaseWeapon;
+                weapon.weaponObject = Resources.Load<GameObject>(weapon.weaponObjectPath);
+                weapon.attackSound = Resources.Load<AudioClip>(weapon.attackSoundPath);   
+
+                if(item as BaseGun)
+                {
+                    BaseGun gun = item as BaseGun;
+                    gun.projectile = Resources.Load<GameObject>(gun.projectilePath);
+                    gun.outOfAmmoSound = Resources.Load<AudioClip>(gun.outOfAmmoSoundFilePath);
+                }
+            }
+        }
+    }
+
+    private static void SetItemModifierSources(BaseItem item)
+    {
+        if (item as BaseEquippable)
+        {
+            BaseEquippable equip = item as BaseEquippable;
+            foreach (var mod in equip.itemMods)
+            {
+                mod.Source = equip;
+            }
+        }
     }
 
     private void Update()
@@ -56,6 +150,15 @@ public class Inventory : MonoBehaviour
         else
         {
             isInShipInventory = false;
+        }
+
+        for (int i = 0; i < uiItemHolders.Count; i++)
+        {
+            BaseItem item = uiItemHolders[i].itemHeld;
+            if (item.itemStack <= 0)
+            {
+                RemoveItemFromInventory(item);
+            }
         }
     }
 
@@ -72,22 +175,24 @@ public class Inventory : MonoBehaviour
     {
         if (playerInventoryItems.Count < maxPlayerItemCount && !playerInventoryItems.Contains(itemToAdd))
         {
-            if (!typeof(BaseEquippable).IsAssignableFrom(itemToAdd.GetType()))
-            {
-                if (playerInventoryItems.Where(x => x.itemName == itemToAdd.itemName).Count() > 0)
-                {
-                    GeneralItem item = (GeneralItem)playerInventoryItems.Where(x => x.itemName == itemToAdd.itemName).First();
-                    GeneralItem genItemToAdd = (GeneralItem)itemToAdd;
-                    item.itemStack += genItemToAdd.itemStack;
-                }
-                else
-                {
-                    playerInventoryItems.Add(itemToAdd);
+            return AddItemIgnoreLimits(itemToAdd);
+        }
+        else
+        {
+            Debug.Log("Inventory Full");
+            return false;
+        }       
+    }
 
-                    GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
-                    uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
-                    uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
-                }
+    private bool AddItemIgnoreLimits(BaseItem itemToAdd)
+    {
+        if (!typeof(BaseEquippable).IsAssignableFrom(itemToAdd.GetType()))
+        {
+            if (playerInventoryItems.Where(x => x.itemName == itemToAdd.itemName).Count() > 0)
+            {
+                GeneralItem item = (GeneralItem)playerInventoryItems.Where(x => x.itemName == itemToAdd.itemName).First();
+                GeneralItem genItemToAdd = (GeneralItem)itemToAdd;
+                item.itemStack += genItemToAdd.itemStack;
             }
             else
             {
@@ -97,14 +202,16 @@ public class Inventory : MonoBehaviour
                 uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
                 uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
             }
-
-            return true;
         }
         else
         {
-            Debug.Log("Inventory Full");
-            return false;
-        }      
+            playerInventoryItems.Add(itemToAdd);
+
+            GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
+            uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
+            uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
+        }
+        return true;
     }
 
     public void RemoveItemFromInventory(BaseItem itemToRemove)
@@ -121,7 +228,9 @@ public class Inventory : MonoBehaviour
         }
 
         playerInventoryItems.Remove(itemToRemove);
+        GameObject objToRemove = uiItemHolders.First(x => x.itemHeld == itemToRemove).gameObject;
         uiItemHolders.Remove(uiItemHolders.Where(x => x.itemHeld == itemToRemove).First());
+        Destroy(objToRemove);
     }
 
     public bool SwapInventoryOfItem(BaseItem itemToSwap)
@@ -129,8 +238,6 @@ public class Inventory : MonoBehaviour
         if (playerInventoryItems.Contains(itemToSwap))
         {
             //Run code to move from player to ship
-
-            Debug.Log("Swapping " + itemToSwap.itemName + " to ship");
 
             if (shipInventoryItems.Count >= maxShipItemCount) return false;
 
@@ -147,8 +254,6 @@ public class Inventory : MonoBehaviour
         {
             //Code to swap item from ship to player
 
-            Debug.Log("Swapping " + itemToSwap.itemName + " to player");
-
             if (playerInventoryItems.Count >= maxPlayerItemCount) return false;
 
             shipInventoryItems.Remove(itemToSwap);
@@ -164,8 +269,6 @@ public class Inventory : MonoBehaviour
     //These 2 functions handle equipping and unequipping items, excluding weapons which are handled below.
     public void EquipItem(BaseEquippable itemToEquip)
     {
-        Debug.Log("Equipping item " + itemToEquip.itemName);
-
         itemToEquip.OnEquip(player);
         itemsEquipped.Add(itemToEquip);
         playerInventoryItems.Remove(itemToEquip);
@@ -174,7 +277,6 @@ public class Inventory : MonoBehaviour
 
         if (slot.itemInSlot != null)
         {
-            Debug.Log("Item " + slot.itemInSlot.itemName + " is already in the " + slot.slotName + " slot");
             UnequipItem(slot.itemInSlot);
 
             //Checks if the item is a weapon
@@ -190,8 +292,6 @@ public class Inventory : MonoBehaviour
         }
 
         slot.itemInSlot = itemToEquip;
-
-        Debug.Log("Placed in slot " + slot.slotName);
 
         //Checks if the item is a weapon
         if (typeof(BaseWeapon).IsAssignableFrom(itemToEquip.GetType()))
@@ -212,8 +312,6 @@ public class Inventory : MonoBehaviour
         }
         itemToEquip.isEquipped = true;
         itemToEquip.hostEntity = player;
-
-        Debug.Log("Reached the end");
     }
 
     //Unequips item in the argument from the player

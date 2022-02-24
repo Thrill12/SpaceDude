@@ -27,11 +27,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private void Start()
     {
         inventory = Inventory.instance;
-        if (typeof(BaseEquippable).IsAssignableFrom(itemHeld.GetType()))
-        {
-            BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
-            eqItemHeld.isEquipped = false;
-        }
+        
         if (itemHeld.itemIcon != null)
         {
             img.sprite = itemHeld.itemIcon;
@@ -70,8 +66,6 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             CheckingBeingEquippedOrNot();
         }
 
-        Debug.Log(isHoveredOn);
-
         if (UIManager.instance.playerInput.currentControlScheme == "GamePad")
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
@@ -88,13 +82,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (isHoveredOn)
         {
             UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
-        }
-
-        if(itemHeld.itemStack <= 0)
-        {
-            inventory.RemoveItemFromInventory(itemHeld);
-            Destroy(gameObject);
-        }
+        }       
     }
 
     private void CheckingBeingEquippedOrNot()
@@ -106,16 +94,15 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
 
-            Debug.Log(eqItemHeld.itemSlot);
-            Debug.Log(inventory.slotsParent.transform.Find(eqItemHeld.itemSlot).gameObject.name);
-
             if (eqItemHeld.isEquipped)
             {
                 transform.SetParent(inventory.slotsParent.transform.Find(eqItemHeld.itemSlot).transform);
+                Debug.Log("Setting for equipped");
             }
             else
             {
                 transform.SetParent(inventory.itemInventoryDisplay.transform);
+                Debug.Log("Setting for not equipped");
             }
         }
     }
@@ -136,7 +123,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private void OnDisable()
     {
         isHoveredOn = false;
-        UIManager.instance.SelectUIObject(null);
+        UIManager.instance.SelectUIObject();
     }
 
     public void ToggleEquipUnequip()
@@ -153,7 +140,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 }
                 else
                 {
-                    Equip(eqItemHeld.itemSlot);
+                    Equip();
                 }
             }            
         }
@@ -165,18 +152,19 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     //We only use these functions when we are trying to equip an item, and we are already checking if item held is
     //equippable in update, no need to check here again.
-    public void Equip(string slot)
+    public void Equip()
     {
         BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
         eqItemHeld.isEquipped = true;
-        inventory.EquipItem(eqItemHeld);
+        Inventory.instance.EquipItem(eqItemHeld);
         UIManager.instance.SelectFirstItemHolder();
+        Debug.Log("Equipped item " + itemHeld.itemName);
     }
 
     public void Unequip()
     {
         BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
         eqItemHeld.isEquipped = false;
-        inventory.UnequipItem(eqItemHeld);
+        Inventory.instance.UnequipItem(eqItemHeld);
     }
 }

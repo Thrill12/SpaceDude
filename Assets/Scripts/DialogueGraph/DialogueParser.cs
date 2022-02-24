@@ -7,10 +7,10 @@ using XNode;
 
 public class DialogueParser : MonoBehaviour
 {
-    [HideInInspector]
+    
     public DialogueGraph graph;
     Coroutine _parser;
-    bool isPlaying = false;
+    public bool isPlaying = false;
 
     public void StartDialogueGraph()
     {
@@ -35,13 +35,23 @@ public class DialogueParser : MonoBehaviour
     IEnumerator ParseNode()
     {
         BaseNode b = graph.current;
-
+        
         string data = b.GetString();
 
-        string[] parts = data.Split("/");
+        string[] parts = {};
+        Debug.Log(data);
+        try
+        {
+            parts = data.Split("/");
+        }
+        catch
+        {
+            Debug.Log("Data couldnt be parsed - data here: " + data);
+        }
+        
 
         if (parts[0].Trim() == "Start")
-        {
+        {           
             NextNode("exit");
         }
         else if (parts[0].Trim() == "Dialogue")
@@ -71,9 +81,9 @@ public class DialogueParser : MonoBehaviour
 
             UIManager.instance.DisplayChoices(new List<string> { parts[2], parts[3] });
 
-            yield return new WaitUntil(() => UIManager.instance.hasChosen);
+            yield return new WaitUntil(() => UIManager.instance.hasChosenDialogueChoice);
 
-            if(UIManager.instance.chosenChoice == 0)
+            if(UIManager.instance.chosenDialogueChoice == 0)
             {
                 //Pass
                 NextNode("pass");
@@ -84,7 +94,7 @@ public class DialogueParser : MonoBehaviour
                 NextNode("fail");
             }
 
-            UIManager.instance.hasChosen = false;            
+            UIManager.instance.hasChosenDialogueChoice = false;            
         }
         else if(parts[0].Trim() == "QuestCheckRequirements")
         {
@@ -116,11 +126,9 @@ public class DialogueParser : MonoBehaviour
         else if(parts[0].Trim() == "GraphChange")
         {
             ChangeToGraphNode node = graph.current as ChangeToGraphNode;
-            DialogueGraph newGraph = node.GetGraph();
-            NPCManager.instance.SetNPCToGraph(GetComponent<NPC>().npcName, newGraph);
+            NPCManager.instance.SetNPCToGraph(GetComponent<NPC>().npcName, parts[2]);
 
             isPlaying = false;
-            GameManager.instance.progressSave.npcStates = NPCManager.instance.allNPCs;
             //If we start the new graph immediately
             if (parts[1].Trim() == "True")
             {
@@ -135,14 +143,13 @@ public class DialogueParser : MonoBehaviour
         else if (parts[0].Trim() == "SetNPCToGraph")
         {
             SetNPCToGraphNode node = graph.current as SetNPCToGraphNode;
-            NPCManager.instance.SetNPCToGraph(node.npcToChange, node.graphToChangeTo);
-            GameManager.instance.progressSave.npcStates = NPCManager.instance.allNPCs;
+            NPCManager.instance.SetNPCToGraph(node.npcToChange, parts[1]);            
             NextNode("exit");
         }
     }
 
     public void NextNode(string fieldName)
-    {
+    {      
         if (_parser != null)
         {
             StopCoroutine(_parser);

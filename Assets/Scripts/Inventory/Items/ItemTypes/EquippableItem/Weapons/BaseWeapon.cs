@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,18 @@ using UnityEngine.InputSystem;
 public abstract class BaseWeapon : BaseEquippable
 {
     public GameObject weaponObject;
+    [SerializeField, HideInInspector]
+    public string weaponObjectPath;
+
+    public AudioClip attackSound;
+    [SerializeField, HideInInspector]
+    public string attackSoundPath;
+
     public Stat damage;
     public Stat criticalChance;
     public Stat criticalDamage;
     public Stat attackCooldown;
     public bool large;
-    public AudioClip attackSound;
 
     public BaseWeapon()
     {

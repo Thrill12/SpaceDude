@@ -42,7 +42,7 @@ public class MainMenu : MonoBehaviour
         playerInput.SwitchCurrentActionMap("MainMenu");
         optionsMenu.SetActive(false);
 
-        GameManager.instance.LoadOptions();
+        GameManager.instance.HandleSaveInit();
         InitializeSettings();
     }
 
@@ -63,7 +63,7 @@ public class MainMenu : MonoBehaviour
             }
         }
 
-        GameManager.instance.fpsCounter.enabled = !GameManager.instance.options.fpsCounter;
+        GameManager.instance.fpsCounter.gameObject.SetActive(GameManager.instance.options.fpsCounter);
     }
 
     //Turns on options
@@ -123,6 +123,7 @@ public class MainMenu : MonoBehaviour
         options.musicLevel = musicVolumeBar.GetComponent<Image>().fillAmount;
         options.sfxLevel = sfxVolumeBar.GetComponent<Image>().fillAmount;
         options.keybindsJson = inputActionAsset.SaveBindingOverridesAsJson();
+        options.fpsCounter = fpsCounter.isOn;
 
         GameManager.instance.SaveOptions();
     }
@@ -150,6 +151,7 @@ public class MainMenu : MonoBehaviour
     public void ToggleFPSCounter()
     {
         GameManager.instance.options.fpsCounter = !GameManager.instance.options.fpsCounter;
+        SaveSettings();
     }
 
     //Saves settings on application quit in case people do ALT+F4

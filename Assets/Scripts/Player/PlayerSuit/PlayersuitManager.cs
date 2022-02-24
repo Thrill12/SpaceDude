@@ -55,6 +55,10 @@ public class PlayersuitManager : MonoBehaviour
         else
         {
             instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = orthoSizeNormal;
+            instantiatedPlayerSuitCam.GetComponent<CinemachineCameraOffset>().m_Offset = Vector2.Lerp(
+                instantiatedPlayerSuitCam.GetComponent<CinemachineCameraOffset>().m_Offset, 
+                ((instantiatedPlayerSuit.transform.position + instantiatedPlayerSuit.transform.up) - instantiatedPlayerSuit.transform.position).normalized,
+                0.1f);
         }
     }
 

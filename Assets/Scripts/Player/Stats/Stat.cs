@@ -1,3 +1,4 @@
+using FullSerializer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ public class Stat
     protected float lastBaseValue = float.MinValue;
 
     public List<Modifier> statModifiers;
-    public ReadOnlyCollection<Modifier> StatModifiers;
 
     //This will tell us if we need to clean up the modifiers, as some addition types need to be added first before others
     public bool isDirty = true;
@@ -26,7 +26,6 @@ public class Stat
     public Stat()
     {
         statModifiers = new List<Modifier>();
-        StatModifiers = statModifiers.AsReadOnly();
     }
 
     public Stat(float baseValue) : this()
@@ -104,7 +103,7 @@ public class Stat
             }
             else if (mod.Type == Modifier.StatModType.PercentMult) // Percent renamed to PercentMult
             {
-                finalValue *= mod.Value / 100;
+                finalValue *= 1 + mod.Value / 100;
             }
         }
 
