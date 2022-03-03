@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7865005192222642398, guid: dbe130fbf6119ea4ea58a50561a0a284, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7865005192222642398, guid: dbe130fbf6119ea4ea58a50561a0a284, type: 3}
       propertyPath: m_LocalPosition.x
@@ -274,7 +274,7 @@ RectTransform:
   m_Children:
   - {fileID: 1014594228}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -441,7 +441,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7418286396940731919, guid: 5136f7fa9f8d7b34b813d483ca0bcf51, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7418286396940731919, guid: 5136f7fa9f8d7b34b813d483ca0bcf51, type: 3}
       propertyPath: m_AnchorMax.x
@@ -597,7 +597,6 @@ MonoBehaviour:
   fpsCounter: {fileID: 1014594229}
   optionsFilePath: /SpaceDudeOptions.ini
   saveFilePath: /SpaceDudeSave.spsv
-  questsPath: Data/Quests
   inputActions: {fileID: -944628639613478452, guid: 12a5a8eb803b6bf4bbda249c308ca27e, type: 3}
   options:
     masterLevel: 0.6
@@ -630,7 +629,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1558032502
 MonoBehaviour:

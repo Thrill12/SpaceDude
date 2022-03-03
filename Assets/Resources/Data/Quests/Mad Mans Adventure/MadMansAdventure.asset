@@ -17,8 +17,10 @@ MonoBehaviour:
   QuestDescription: Mickey asked you to kill a few turrets. You should probably do
     that - he seems adamant you do.
   npcAssignedTo: 
-  questCompletedDialoguePath: Mad Mans Adventure/MadMansAdventuresCompletedGraph
-  questInProgressDialoguePath: Mad Mans Adventure/MadMansAdventuresInProgress
+  questCompletedGraph: {fileID: 11400000, guid: 780812ebad2b0a84699d34f4500db6a1, type: 2}
+  questCompletedGraphPath: Data/Quests/Mad Mans Adventure/MadMansAdventuresCompletedGraph
+  questInProgressGraph: {fileID: 11400000, guid: 90921e0d5787f874a9c1a1a35c8335cb, type: 2}
+  questInProgressGraphPath: Data/Quests/Mad Mans Adventure/MadMansAdventuresInProgress
   Goals:
   - {fileID: 11400000, guid: 5015798b9cd37a4418370da9168606ff, type: 2}
   - {fileID: 11400000, guid: 97eecbb836dcc174488334ee49bf8394, type: 2}

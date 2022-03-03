@@ -8,12 +8,15 @@ public class SetNPCToGraphNode : BaseNode {
 	[Input, SerializeField] public int entry;
 
 	public string npcToChange;
-	public string graphToChangeTo;
+
+    public DialogueGraph graphToChangeTo;
+    [SerializeField, HideInInspector]
+    public string graphToChangeToPath;
 
 	[Output, SerializeField] public int exit;
 
     public override string GetString()
     {
-        return "SetNPCToGraph/" + graphToChangeTo;
+        return "SetNPCToGraph/" + graphToChangeToPath;
     }
 }

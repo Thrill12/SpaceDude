@@ -33,7 +33,9 @@ public class MainMenu : MonoBehaviour
     public GameObject musicVolumeBar;
     public GameObject sfxVolumeBar;
     public TMP_Text graphicsTierText;
+    public TMP_Text maxFPSText;
     public Toggle fpsCounter;
+    public Toggle vsyncToggle;
 
     private void Start()
     {
@@ -107,8 +109,13 @@ public class MainMenu : MonoBehaviour
         sfxVolumeBar.GetComponent<Image>().fillAmount = options.sfxLevel;
 
         QualitySettings.SetQualityLevel(options.qualityTier);
+
         graphicsTierText.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+        maxFPSText.text = Application.targetFrameRate.ToString();
+
         fpsCounter.isOn = GameManager.instance.options.fpsCounter;
+        vsyncToggle.isOn = GameManager.instance.options.fpsCounter;
+
         mixer.SetFloat("Master", Mathf.Log10(masterVolumeBar.GetComponent<Image>().fillAmount) * 20);
         mixer.SetFloat("Music", Mathf.Log10(musicVolumeBar.GetComponent<Image>().fillAmount) * 20);
         mixer.SetFloat("SFX", Mathf.Log10(sfxVolumeBar.GetComponent<Image>().fillAmount) * 20);
@@ -148,9 +155,41 @@ public class MainMenu : MonoBehaviour
         SaveSettings();
     }
 
+    public void IncreaseMaxFPS()
+    {
+        Application.targetFrameRate += 10;
+        maxFPSText.text = Application.targetFrameRate.ToString();
+        GameManager.instance.options.maxFPS = Application.targetFrameRate;
+
+        SaveSettings();
+    }
+    
+    public void DecreaseMaxFPS()
+    {
+        Application.targetFrameRate -= 10;
+        maxFPSText.text = Application.targetFrameRate.ToString();
+        GameManager.instance.options.maxFPS = Application.targetFrameRate;
+
+        SaveSettings();
+    }
+
     public void ToggleFPSCounter()
     {
         GameManager.instance.options.fpsCounter = !GameManager.instance.options.fpsCounter;
+        SaveSettings();
+    }
+
+    public void ToggleVSync()
+    {
+        GameManager.instance.options.vsync = !GameManager.instance.options.vsync;
+        if (GameManager.instance.options.vsync)
+        {
+            QualitySettings.vSyncCount = 1;
+        }
+        else
+        {
+            QualitySettings.vSyncCount = 0;
+        }
         SaveSettings();
     }
 

@@ -13,9 +13,13 @@ public class Quest : ScriptableObject
     public string QuestDescription;
     public string npcAssignedTo;
 
-    public string questCompletedDialoguePath;
+    public DialogueGraph questCompletedGraph;
+    [SerializeField, HideInInspector]
+    public string questCompletedGraphPath;
 
-    public string questInProgressDialoguePath;
+    public DialogueGraph questInProgressGraph;
+    [SerializeField, HideInInspector]
+    public string questInProgressGraphPath;
 
     public List<Goal> Goals = new List<Goal>();
 
@@ -37,6 +41,8 @@ public class Quest : ScriptableObject
     //Spawns a clone of the goals, so that we don't modify the ones in the assets folder
     public void Init()
     {
+        GameManager.instance.LoadResourcesForQuest(this);
+
         for (int i = 0; i < Goals.Count; i++)
         {
             Goals[i] = Instantiate(Goals[i]);

@@ -40,19 +40,41 @@ public class TriangulationGraph
         public int weight;
     }
 
+    //Used in the minimum spanning tree. 
     struct Subset
     {
         public int parent;
         public int rank;
     }
 
+    //A struct which describes a shortest path route from the graph.
+    public struct GraphRoute
+    {
+        public List<int> roomIndexes;
+        public bool containsLockedRoomOnRoute;
+    }
+
     #endregion
 
     //The graphs which we want to create.
     public HashSet<Edge> graph = new HashSet<Edge>();
+    //The poisitons of the rooms.
     public List<Vector2Int> rooms;
+    //A list of edges which have two nodes rather than positions.
     List<NodeEdge> nodeGraph;
+    //Adjacency matrix for the graph.
     int[,] graphAdjacencyTable;
+
+    //Dijkstrra shortest path:
+    List<GraphRoute> routes;
+    int[] minDist;
+    bool[] nodeFixed;
+    int thisNode;
+    int thisMin;
+    GraphRoute thisRoute;
+    int distToThisNode;
+    int nodeCount;
+
 
     //Using the Bowyer-Watson algorithm to complete Delenauy trigulation of the points.
     public List<Edge> DelenauyTriangulation(List<Vector2Int> roomPositions, int gridSize)
@@ -116,6 +138,42 @@ public class TriangulationGraph
         mst.RemoveAt(mst.Count - 1);
 
         return mst;
+    }
+
+    public List<GraphRoute> Dijkstra(int[,] adjTable)
+    {
+        //Init new list of graph routes for the shortest path algorithm. 
+        //Each element will be the start node to x, where x is a different room of the station.
+        routes = new List<GraphRoute>();
+
+        //The node counts is the number of rooms that the station has. 
+        nodeCount = rooms.Count;
+
+        //Init the data we need.
+        for (int i = 0; i < nodeCount; i++)
+        {
+            //Init the graph routes.
+            GraphRoute route = new GraphRoute();
+            //Set all the first rooms of the room indexes to the entrance room, which is index 0.
+            route.roomIndexes = new List<int> { 0 };
+            //Add the route to the array of routes.
+            routes[i] = route;
+
+            //Init nodeFixed array all to false.
+            nodeFixed[i] = false;
+
+            //Set all the min distances to 999 - technically infinity but for all extents and purposes 999.
+            minDist[i] = 999;
+        }
+        
+        //Set the min dist of the 1st room to 0.
+        minDist[1] = 0;
+
+        //Start the recursion - Diskstra's algorithm.
+        CurrentNode(1);
+
+        //Return all of the discovered routes.
+        return routes;
     }
 
     #region Graph Functions
@@ -523,6 +581,16 @@ public class TriangulationGraph
         }
 
         return result.ToList();
+    }
+
+    #endregion
+
+    #region Dijkstra's Shortest Path Algorithm
+
+    void CurrentNode(int thisNode)
+    {
+        distToThisNode = minDist[thisNode];
+        nodeFixed[thisNode] = true;
     }
 
     #endregion

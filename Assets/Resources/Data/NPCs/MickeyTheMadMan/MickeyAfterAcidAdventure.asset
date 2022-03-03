@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Name: Dialogue
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2600, y: 248}
+  position: {x: 2648, y: 280}
   ports:
     keys:
     - entry
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: Change To Graph
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2971.3997, y: 318.89996}
+  position: {x: 2904, y: 344}
   ports:
     keys:
     - entry
@@ -152,7 +152,8 @@ MonoBehaviour:
       _typeConstraint: 0
       _dynamic: 0
   entry: 0
-  graphToChangeTo: Data/NPCs/MickeyTheMadMan/MickeyTheMadManGraph
+  graphToChangeTo: {fileID: 11400000, guid: d8e3d6458f035c14eb7ecad9a24ff0da, type: 2}
+  graphToChangeToPath: 
   startImmediately: 1
   exit: 0
 --- !u!114 &-3414343553927670301
@@ -615,7 +616,7 @@ MonoBehaviour:
   m_Name: Two Choice
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2254.3208, y: 233.49951}
+  position: {x: 2264, y: 296}
   ports:
     keys:
     - entry

@@ -16,5 +16,7 @@ public class OptionsSO
 
     [Header("Options")]
     public int qualityTier = 3;
+    public int maxFPS = 60;
     public bool fpsCounter = false;
+    public bool vsync = true;
 }

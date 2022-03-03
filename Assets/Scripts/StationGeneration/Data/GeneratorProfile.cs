@@ -21,11 +21,12 @@ public class GeneratorProfile : ScriptableObject
     [Tooltip("The maximum number of rooms that must could be generated.")]
     public int maxNumRooms;
     public int corridorWidth;
-    [Tooltip("The first item should be the default - any other items should thus be variations of the default.")]
+    [Tooltip("The first item should be the default - any other items should thus be variations of the default. Used when generating corridoors.")]
     public List<TileData> floorTile;
-    [Tooltip("The first item should be the default - any other items should thus be variations of the default.")]
+    [Tooltip("The first item should be the default - any other items should thus be variations of the default. Used when generating corridoors.")]
     public List<TileData> wallTiles;
-    
-    //Rooms this profile can use.
+    [Tooltip("The start room of the station; likely the player's entrance, if they don't improvise one of course. Used by generation to base locked doors and station progression.")]
+    public RoomData startRoom;
+    [Tooltip("The rooms - and their variations - which the generator will use to generate stations with.")]
     public List<RoomData> rooms = new List<RoomData>();
 }

@@ -17,8 +17,10 @@ MonoBehaviour:
   QuestDescription: Timmy asked me to check out if they're playing "The Blue Panther?"
     What even is that? And why does he care if a hospital plays it?
   npcAssignedTo: 
-  questCompletedDialoguePath: Timmys Acid Trip/TimmysAcidTripCompleted
-  questInProgressDialoguePath: Timmys Acid Trip/TimmysAcidTripInProgress
+  questCompletedGraph: {fileID: 11400000, guid: d24585a7d91397b4ebea85879fe3653e, type: 2}
+  questCompletedGraphPath: Data/Quests/Timmys Acid Trip/TimmysAcidTripCompleted
+  questInProgressGraph: {fileID: 11400000, guid: 6d0fa943ba1f5d946ba551d1df4c11a3, type: 2}
+  questInProgressGraphPath: Data/Quests/Timmys Acid Trip/TimmysAcidTripInProgress
   Goals:
   - {fileID: 11400000, guid: e7c3e6483fad4394ca8c1ff60f584773, type: 2}
   - {fileID: 11400000, guid: fe35c486c60eec849b7a1605d938737b, type: 2}

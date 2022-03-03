@@ -32,7 +32,7 @@ public class ExplosiveBarrel : BaseEnemy
 
             if (item.GetComponent<BaseEntity>())
             {
-                item.GetComponent<BaseEntity>().TakeDamage(explosionForce * 50);
+                item.GetComponent<BaseEntity>().TakeDamage(explosionForce * 50, (Vector2)item.transform.position + Random.insideUnitCircle, this);
             }
         }
 

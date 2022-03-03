@@ -151,21 +151,17 @@ public class ItemStatDisplayer : MonoBehaviour
 
     public void SetBorder(BaseItem item, Image itemBorder)
     {
-        if(item.itemRarity.name == "Common")
+        if(item.itemRarity.rarityName == "Common")
         {
             itemBorder.sprite = PrefabManager.instance.commonItemBorder;
         }
-        else if (item.itemRarity.name == "Rare")
+        else if (item.itemRarity.rarityName == "Rare")
         {
             itemBorder.sprite = PrefabManager.instance.rareItemBorder;
         }
-        else if(item.itemRarity.name == "Royal")
+        else if(item.itemRarity.rarityName == "Royal")
         {
             itemBorder.sprite = PrefabManager.instance.royalItemBorder;
-        }
-        else
-        {
-            itemBorder.sprite = PrefabManager.instance.ascendedItemBorder;
         }
     }
 

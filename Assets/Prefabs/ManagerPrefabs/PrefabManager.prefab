@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3251383165333252957
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3251383165333252959}
+  - component: {fileID: 3251383165333252958}
+  m_Layer: 0
+  m_Name: PrefabManager
+  m_TagString: PrefabManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3251383165333252959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3251383165333252957}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -52.12068, y: 54.825874, z: 510.42822}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3251383165333252958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3251383165333252957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d306e13481bed4badacef10144b56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetBorder: {fileID: 5545111576020806981, guid: 556021cca3aaab34680ad691d559a723, type: 3}
+  questAssignedSound: {fileID: 8300000, guid: 187d7f39006477843bd138e41e3922b6, type: 3}
+  questGoalCompletedSound: {fileID: 8300000, guid: fc0b71f5a9641ea4a8c25ad556d7566f, type: 3}
+  explosionSound: {fileID: 8300000, guid: d88d8d9b835feb1498b4b29db91598ff, type: 3}
+  white: {r: 0.9607843, g: 0.9647059, b: 0.98039216, a: 1}
+  orange: {r: 0.9098039, g: 0.25490198, b: 0.09411765, a: 1}
+  purple: {r: 0.54901963, g: 0.47843137, b: 0.9019608, a: 1}
+  planetHolderUI: {fileID: 5252627056984669613, guid: 3852c96af0a1800429d05b652870e7d6, type: 3}
+  commodityMarketDisplayObject: {fileID: 3556412963029960148, guid: 36c259964ba67704fac7302b470f204c, type: 3}
+  commodityInventoryDisplayObject: {fileID: 18655779013239337, guid: 55b4c0a91bcb0a94c9109c91c5e9750c, type: 3}
+  galacticEventPrefab: {fileID: 193805550001663530, guid: 9e27bd25ffb9dbf49ae632dc87095f07, type: 3}
+  commonItemBorder: {fileID: 21300000, guid: 4de59b5ba91bc0a48a39595ae8a7d010, type: 3}
+  rareItemBorder: {fileID: 21300000, guid: 73d2feb04f241274ca2d2def2ec17c05, type: 3}
+  royalItemBorder: {fileID: 21300000, guid: 917d9fd7b2c42fd4ca7034265bbcc627, type: 3}
+  ascendedItemBorder: {fileID: 21300000, guid: 90d854b2bfa83744d84b59a8abe1e60e, type: 3}
+  questDisplay: {fileID: 2108333165607062608, guid: c8465e8f8248e904c94847b82f62e6e2, type: 3}
+  questGoalDisplay: {fileID: 6956772050285699601, guid: 33edc83ab71a9ec47a9015a76313227c, type: 3}
+  healthBarObject: {fileID: 4981204578656640639, guid: 589bea23be47aba4ab80e7a1ea8f4292, type: 3}
+  numberPopup: {fileID: 1067734060492392457, guid: ace8bf7799f96814d87d40c0d13059fc, type: 3}
+  cargoShip: {fileID: 7723718285495040506, guid: e53bf774d1536cf4ba0e606a795dc66a, type: 3}
+  itemObject: {fileID: 9171643131429873287, guid: e3bcd9158eba0574db0fc58bf3ea3e56, type: 3}
+  rarityTable: {fileID: 11400000, guid: f44b765f569680244bd7a0b537c79a99, type: 2}
+  playerSuitBullet: {fileID: 1199885856826008898, guid: 80c79b24a9fa77b488dd9fe49f6b36fa, type: 3}
+  playerSuitYellowBulletImpactParticles: {fileID: 3842217551754517919, guid: 643475d64c4afa441acfed47013b1863, type: 3}

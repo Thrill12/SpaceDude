@@ -6,12 +6,17 @@ using XNode;
 public class ChangeToGraphNode : BaseNode {
 
 	[Input, SerializeField] public int entry;
-	public string graphToChangeTo;
-	public bool startImmediately = false;
+
+    public DialogueGraph graphToChangeTo;
+    [SerializeField, HideInInspector]
+    public string graphToChangeToPath;
+
+
+    public bool startImmediately = false;
 	[Output, SerializeField] public int exit;
 
 	public override string GetString()
     {
-		return "GraphChange/" + startImmediately.ToString() + "/" + graphToChangeTo;
+		return "GraphChange/" + startImmediately.ToString() + "/" + graphToChangeToPath;
     }
 }

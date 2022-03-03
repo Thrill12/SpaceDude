@@ -92,6 +92,8 @@ public class UIManager : MonoBehaviour
 
     [Space(15)]
 
+    public GameObject playerHitEffectHolder;
+
     [HideInInspector]
     public BaseItem commSelectedInMarketWindow;
     [HideInInspector]
@@ -137,6 +139,8 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(playerInput.currentActionMap.name);
+
         isInShipInventory = shipInventory.activeInHierarchy;
 
         //Displaying the currently hovered on item in the inventory
@@ -237,14 +241,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            if(UnityEngine.Random.Range(0, 2) == 0)
-            {
-                speedIndicator.text = int.Parse(UnityEngine.Random.Range(1000, 10000000).ToString("X"), System.Globalization.NumberStyles.HexNumber) + " m/s";
-            }
-            else
-            {
-                speedIndicator.text = UnityEngine.Random.Range(1000, 10000000)+ " m/s";
-            }           
+            speedIndicator.text = UnityEngine.Random.Range(1000, 10000000) + " m/s";       
         }       
 
         if (playerMovement.dampeners)
@@ -341,7 +338,7 @@ public class UIManager : MonoBehaviour
     public void PlanetDescription(InputAction.CallbackContext context)
     {
         if (context.phase != InputActionPhase.Started) return;
-        Debug.Log("Planet description");
+
         PlanetDescription();    
     }
 
@@ -399,6 +396,8 @@ public class UIManager : MonoBehaviour
 
         isInUI = false;
 
+        PauseOff();
+
         if (playerMovement.isPlayerPiloting)
         {
             playerInput.SwitchCurrentActionMap("PlayerShip");
@@ -406,7 +405,7 @@ public class UIManager : MonoBehaviour
         else
         {
             playerInput.SwitchCurrentActionMap("PlayerSuit");
-        }      
+        }
     }
 
     public void PlanetDescription()
@@ -617,49 +616,52 @@ public class UIManager : MonoBehaviour
 
     public void PauseMenu()
     {
-        if (pauseMenu.activeInHierarchy == false)
+        if (!pauseMenu.activeSelf)
         {
-            CloseAllUI();
-        }
-
-        if (playerInput.currentActionMap.name == "UI")
-        {
-            if (playerMovement.isPlayerPiloting)
-            {
-                playerInput.SwitchCurrentActionMap("PlayerShip");
-            }
-            else
-            {
-                playerInput.SwitchCurrentActionMap("PlayerSuit");
-            }
+            PauseOn();
         }
         else
         {
-            playerInput.SwitchCurrentActionMap("UI");
+            PauseOff();
         }
+    }
 
-        pauseMenu.SetActive(!pauseMenu.activeInHierarchy);
+    public void PauseOn()
+    {
+        Debug.Log("Pause on");
+
+        CloseAllUI();
+
+        playerInput.SwitchCurrentActionMap("UI");
+
+        pauseMenu.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(firstSelectedInPauseMenu);
 
-        if (Time.timeScale == 0)
+        Time.timeScale = 0;
+
+        isInUI = true;
+    }
+
+    public void PauseOff()
+    {
+        Debug.Log("Pause off");
+
+        if (playerMovement.isPlayerPiloting)
         {
-            Time.timeScale = 1;
+            playerInput.SwitchCurrentActionMap("PlayerShip");
         }
         else
         {
-            Time.timeScale = 0;
+            playerInput.SwitchCurrentActionMap("PlayerSuit");
         }
 
-        if (pauseMenu.activeInHierarchy)
-        {
-            isInUI = true;
-        }
-        else
-        {
-            isInUI = false;
-        }
+        pauseMenu.SetActive(false);
+
+        Time.timeScale = 1;
+
+        isInUI = false;
     }
 
     public void TriggerNextDialogue()

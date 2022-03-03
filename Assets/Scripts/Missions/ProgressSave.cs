@@ -8,6 +8,9 @@ public class ProgressSave
     public QuestsSavedSO questsSaved;
     public NPCStatesSave npcStates;
     public InventorySave inventorySave;
+
+    public Vector3 playerShipLocation = new Vector3();
+    public Vector3 playerShipRotation = new Vector3(0, 0, 270);
 }
 
 [System.Serializable]

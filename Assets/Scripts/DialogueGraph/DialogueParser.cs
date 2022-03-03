@@ -39,7 +39,7 @@ public class DialogueParser : MonoBehaviour
         string data = b.GetString();
 
         string[] parts = {};
-        Debug.Log(data);
+
         try
         {
             parts = data.Split("/");
@@ -126,7 +126,7 @@ public class DialogueParser : MonoBehaviour
         else if(parts[0].Trim() == "GraphChange")
         {
             ChangeToGraphNode node = graph.current as ChangeToGraphNode;
-            NPCManager.instance.SetNPCToGraph(GetComponent<NPC>().npcName, parts[2]);
+            NPCManager.instance.SetNPCToGraph(GetComponent<NPC>().npcName, node.graphToChangeTo);
 
             isPlaying = false;
             //If we start the new graph immediately
@@ -143,7 +143,7 @@ public class DialogueParser : MonoBehaviour
         else if (parts[0].Trim() == "SetNPCToGraph")
         {
             SetNPCToGraphNode node = graph.current as SetNPCToGraphNode;
-            NPCManager.instance.SetNPCToGraph(node.npcToChange, parts[1]);            
+            NPCManager.instance.SetNPCToGraph(node.npcToChange, node.graphToChangeTo);            
             NextNode("exit");
         }
     }

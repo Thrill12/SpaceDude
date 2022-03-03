@@ -57,16 +57,20 @@ public class NearbyIndicator : MonoBehaviour
 
     private void Update()
     {
-        try
+        if (PlayerShipMovement.instance != null && PlayerShipMovement.instance.isPlayerPiloting)
         {
-            playerObj = GameObject.FindGameObjectWithTag("PlayerSuit");
+            playerObj = PlayerShipMovement.instance.gameObject;
         }
-        catch
+        else if (Inventory.instance.player != null)
         {
-            Debug.Log("Player not found in nearby indicator");
+            playerObj = Inventory.instance.player.gameObject;
         }
 
-        if (playerObj == null) return;        
+        if (playerObj == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         child.SetActive(playerObj.activeSelf);
 

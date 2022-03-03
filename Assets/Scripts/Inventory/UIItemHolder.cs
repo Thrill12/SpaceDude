@@ -27,7 +27,7 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private void Start()
     {
         inventory = Inventory.instance;
-        
+
         if (itemHeld.itemIcon != null)
         {
             img.sprite = itemHeld.itemIcon;
@@ -37,21 +37,27 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             img.color = itemHeld.itemRarity.rarityColor;
         }
 
-        if(itemHeld.itemRarity.name == "Common")
+        SetBackground();
+    }
+
+    public void SetBackground()
+    {
+        Debug.Log("Beforehand is " + itemHeld.itemRarity.rarityName);
+
+        if (itemHeld.itemRarity.rarityName == "Common")
         {
             GetComponentInChildren<Image>().sprite = PrefabManager.instance.commonItemBorder;
+            Debug.Log("Common");
         }
-        else if(itemHeld.itemRarity.name == "Rare")
+        else if (itemHeld.itemRarity.rarityName == "Rare")
         {
             GetComponentInChildren<Image>().sprite = PrefabManager.instance.rareItemBorder;
+            Debug.Log("Rare");
         }
-        else if(itemHeld.itemRarity.name == "Royal")
+        else if (itemHeld.itemRarity.rarityName == "Royal")
         {
             GetComponentInChildren<Image>().sprite = PrefabManager.instance.royalItemBorder;
-        }
-        else
-        {
-            GetComponentInChildren<Image>().sprite = PrefabManager.instance.ascendedItemBorder;
+            Debug.Log("Royal");
         }
     }
 

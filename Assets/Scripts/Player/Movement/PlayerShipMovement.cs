@@ -14,6 +14,8 @@ using UnityEngine.VFX;
 
 public class PlayerShipMovement : MonoBehaviour
 {
+    public static PlayerShipMovement instance;
+
     public bool isPlayerPiloting = true;
 
     [Space(5)]
@@ -108,6 +110,12 @@ public class PlayerShipMovement : MonoBehaviour
     private bool isUISpeedNumberRandom = false;
     private int aspiteStack;
 
+    private void Awake()
+    {
+        instance = this;
+        GameManager.instance.LoadPlayerLocations();
+    }
+
     private void Start()
     {
         accelAcceleration = baseAcceleration;
@@ -120,6 +128,7 @@ public class PlayerShipMovement : MonoBehaviour
         playerSuit = GetComponent<PlayersuitManager>();
         postProcessingVolume = GameObject.FindGameObjectWithTag("Volume").GetComponent<Volume>();
         //Setting up input actions for the new input system
+        
     }
 
     private void Update()
@@ -184,7 +193,7 @@ public class PlayerShipMovement : MonoBehaviour
 
         if (!isPlayerPiloting) return;
 
-        //GetComponent<CinemachineImpulseSource>().GenerateImpulseWithForce(currentSpeed / (maxWarpSpeed * 100));              
+     
 
         //if (Input.GetMouseButton(0))
         //{
@@ -256,6 +265,11 @@ public class PlayerShipMovement : MonoBehaviour
         }
     }
     #endregion
+
+    public void LeaveCockpit()
+    {
+        playerSuit.PlayerLeaveCockpit();
+    }
 
     //Potential script to make ship face an objective if we add google maps drive by
     private void TurnToObjective(Vector3 positionToNavigateTo)

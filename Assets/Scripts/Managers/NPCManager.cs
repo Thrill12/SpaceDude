@@ -27,9 +27,10 @@ public class NPCManager : MonoBehaviour
         QuestManager.instance.InitializeQuests();
     }
 
-    public void SetNPCToGraph(string npcName, string graphPath)
+    public void SetNPCToGraph(string npcName, DialogueGraph graph)
     {
-        allNPCs.First(x => x.npcName == npcName).dialogueGraph = Resources.Load<DialogueGraph>(graphPath);
+        allNPCs.First(x => x.npcName == npcName).dialogueGraph = (graph);
+        allNPCs.First(x => x.npcName == npcName).GetComponent<DialogueParser>().graph = (graph);
 
         GameManager.instance.SaveNPCStates();
     }

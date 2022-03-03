@@ -11,10 +11,21 @@ public class NearbyIndicatorSpawner : MonoBehaviour
     private List<GameObject> nearbyObjects = new List<GameObject>();
     private List<GameObject> objsDone = new List<GameObject> ();
 
-    public GameObject playerObj;
+    private GameObject playerObj;
 
     private void Update()
     {
+        if (PlayerShipMovement.instance != null && PlayerShipMovement.instance.isPlayerPiloting)
+        {
+            playerObj = PlayerShipMovement.instance.gameObject;
+        }
+        else
+        {
+            playerObj = Inventory.instance.player.gameObject;
+        }
+
+        if (playerObj == null) return;
+
         if (playerObj.activeInHierarchy == false) return;
 
         //Gets a list of all nearby objects that have the tag below, closer than the max distance

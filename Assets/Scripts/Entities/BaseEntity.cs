@@ -75,15 +75,46 @@ public class BaseEntity : MonoBehaviour
         nextFireEnergyRegen = 1;
     }
 
-    public virtual void TakeDamage(float damageToTake)
+    public virtual void TakeDamage(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false)
     {
-        UIManager.instance.audioSource.PlayOneShot(hitSound);
+        GetComponent<AudioSource>().PlayOneShot(hitSound);
+        TakeDamageWithPopup(damageToTake, popupPosition, hitter, ignoreEffect);
+    }
+
+    private void TakeDamageWithPopup(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false)
+    {
         if (health > 0)
         {
-            health -= UnityEngine.Random.Range(damageToTake - 2, damageToTake + 2);
-            
-            PrefabManager.instance.SpawnNumberPopup(damageToTake, PrefabManager.instance.orange, (Vector2)transform.position + UnityEngine.Random.insideUnitCircle);
-        }        
+            TakeDamagePureNumbers(damageToTake, hitter, ignoreEffect);
+
+            PrefabManager.instance.SpawnNumberPopup(Mathf.RoundToInt(damageToTake), PrefabManager.instance.orange, popupPosition);
+        }
+
+        //(Vector2)transform.position + UnityEngine.Random.insideUnitCircle)
+    }
+
+    public virtual void TakeDamageNoSound(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false)
+    {
+        TakeDamageWithPopup(damageToTake, popupPosition, hitter, ignoreEffect);
+    }
+
+    private void TakeDamagePureNumbers(float damageToTake, BaseEntity hitter, bool ignoreEffect = false)
+    {
+        if (!ignoreEffect)
+        {
+            GameEvents.instance.OnEntityHit(this, hitter, damageToTake);
+        }      
+
+        float damageToGive = 0;
+        if (armour.Value >= 0)
+        {
+            damageToGive = (UnityEngine.Random.Range(damageToTake - 2, damageToTake + 2) * (100 / (100 + armour.Value)));
+        }
+        else
+        {
+            damageToGive = (UnityEngine.Random.Range(damageToTake - 2, damageToTake + 2) * (2 - 100 / (100 - armour.Value)));
+        }
+        health -= damageToGive;
     }
 
     public virtual void Die()

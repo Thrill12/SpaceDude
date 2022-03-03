@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     public string optionsFilePath = "/SpaceDudeOptions.ini";
     public string saveFilePath = "/SpaceDudeSave.spsv";
-    public string questsPath = "/Data/Quests";
 
     [Space(15)]
 
@@ -94,6 +93,39 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #region LoadingResources
+
+    //Function to get the files required for hte item to enable them to be saved
+    public void LoadResourcesForItem(BaseItem item)
+    {
+        item.itemIcon = Resources.Load<Sprite>(item.itemIconPath);
+
+        if (item as BaseEquippable)
+        {
+            if (item as BaseWeapon)
+            {
+                BaseWeapon weapon = item as BaseWeapon;
+                weapon.weaponObject = Resources.Load<GameObject>(weapon.weaponObjectPath);
+                weapon.attackSound = Resources.Load<AudioClip>(weapon.attackSoundPath);
+
+                if (item as BaseGun)
+                {
+                    BaseGun gun = item as BaseGun;
+                    gun.projectile = Resources.Load<GameObject>(gun.projectilePath);
+                    gun.outOfAmmoSound = Resources.Load<AudioClip>(gun.outOfAmmoSoundFilePath);
+                }
+            }
+        }
+    }
+
+    public void LoadResourcesForQuest(Quest quest)
+    {
+        quest.questCompletedGraph = Resources.Load<DialogueGraph>(quest.questCompletedGraphPath);
+        quest.questInProgressGraph = Resources.Load<DialogueGraph>(quest.questInProgressGraphPath);
+    }
+
+    #endregion
+
     #region Scenes
 
     //Loads the game scene from the main menu
@@ -157,8 +189,21 @@ public class GameManager : MonoBehaviour
     public void LoadOptions()
     {
         options = JsonUtility.FromJson<OptionsSO>(File.ReadAllText(optionsFilePath));
+
         fpsCounter.gameObject.SetActive(options.fpsCounter);
+
         inputActions.LoadBindingOverridesFromJson(options.keybindsJson);
+
+        Application.targetFrameRate = options.maxFPS;
+
+        if (options.vsync)
+        {
+            QualitySettings.vSyncCount = 1;
+        }
+        else
+        {
+            QualitySettings.vSyncCount = 0;
+        }
     }
 
     public void SaveNPCStates()
@@ -202,21 +247,18 @@ public class GameManager : MonoBehaviour
         {
             BaseItem item = Inventory.instance.itemsEquipped[i];
             itemsEquipped.Add(item);
-            Debug.Log("Saving " + item.itemName);
         }
 
         for (int i = 0; i < Inventory.instance.playerInventoryItems.Count; i++)
         {
             BaseItem item = Inventory.instance.playerInventoryItems[i];
             playerItems.Add(item);
-            Debug.Log("Saving " + item.itemName);
         }
 
         for (int i = 0; i < Inventory.instance.shipInventoryItems.Count; i++)
         {
             BaseItem item = Inventory.instance.shipInventoryItems[i];
             shipItems.Add(item);
-            Debug.Log("Saving " + item.itemName);
         }
 
         progressSave.inventorySave.itemsEquipped = itemsEquipped.ToArray();
@@ -224,10 +266,23 @@ public class GameManager : MonoBehaviour
         progressSave.inventorySave.shipInventoryItems = shipItems.ToArray();
     }
 
+    public void SavePlayerLocations()
+    {
+        progressSave.playerShipLocation = PlayerShipMovement.instance.gameObject.transform.position;
+        progressSave.playerShipRotation = PlayerShipMovement.instance.gameObject.transform.rotation.eulerAngles;
+    }
+
+    public void LoadPlayerLocations()
+    {
+        PlayerShipMovement.instance.gameObject.transform.position = progressSave.playerShipLocation;
+        PlayerShipMovement.instance.gameObject.transform.rotation = Quaternion.Euler(progressSave.playerShipRotation);
+    }
+
     public void SaveProgress()
     {
         SaveNPCStates();
         SaveInventory();
+        SavePlayerLocations();
 
         string json = Serialization.Serialize(progressSave.GetType(), progressSave);
         File.WriteAllText(saveFilePath, json);

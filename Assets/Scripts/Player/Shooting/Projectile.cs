@@ -18,13 +18,20 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, 3);
     }
 
+    private void Update()
+    {
+        Vector2 dir = transform.GetComponent<Rigidbody2D>().velocity;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle + 90, Vector3.forward);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.GetComponent<BaseEntity>() && collision.GetComponent<BaseEntity>() != entityShotFrom || ((layerMask.value & (1 << collision.gameObject.layer)) > 0))
         {
             if (collision.gameObject.GetComponent<BaseEntity>() && collision.gameObject != entityShotFrom.gameObject)
             {
-                collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage);
+                collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage, collision.ClosestPoint(gameObject.transform.position), entityShotFrom);
             }
 
             if (collision.gameObject.GetComponent<Rigidbody2D>())

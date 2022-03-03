@@ -109,24 +109,7 @@ public class Inventory : MonoBehaviour
     //Function to get the files required for hte item to enable them to be saved
     public void LoadResourcesForItem(BaseItem item)
     {
-        item.itemIcon = Resources.Load<Sprite>(item.itemIconPath);
-
-        if(item as BaseEquippable)
-        {
-            if(item as BaseWeapon)
-            {
-                BaseWeapon weapon = item as BaseWeapon;
-                weapon.weaponObject = Resources.Load<GameObject>(weapon.weaponObjectPath);
-                weapon.attackSound = Resources.Load<AudioClip>(weapon.attackSoundPath);   
-
-                if(item as BaseGun)
-                {
-                    BaseGun gun = item as BaseGun;
-                    gun.projectile = Resources.Load<GameObject>(gun.projectilePath);
-                    gun.outOfAmmoSound = Resources.Load<AudioClip>(gun.outOfAmmoSoundFilePath);
-                }
-            }
-        }
+        GameManager.instance.LoadResourcesForItem(item);
     }
 
     private static void SetItemModifierSources(BaseItem item)
@@ -200,6 +183,7 @@ public class Inventory : MonoBehaviour
 
                 GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
                 uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
+                uiHolder.GetComponent<UIItemHolder>().SetBackground();
                 uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
             }
         }
@@ -209,6 +193,7 @@ public class Inventory : MonoBehaviour
 
             GameObject uiHolder = Instantiate(uiItemHolder, itemInventoryDisplay.transform);
             uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToAdd;
+            uiHolder.GetComponent<UIItemHolder>().SetBackground();
             uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
         }
         return true;

@@ -58,11 +58,19 @@ public class WeaponsHolder : MonoBehaviour
                 weaponEquippedIcon.sprite = currentlyEquippedWeapon.itemIcon;
                 cooldownIndicator.fillAmount = nextFire / currentlyEquippedWeapon.attackCooldown.Value;
 
-                BaseGun gun = (BaseGun)currentlyEquippedWeapon;
-                totalMagazinesAvailable = inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Sum(x => x.itemStack);
+                if(currentlyEquippedWeapon as BaseGun)
+                {
+                    BaseGun gun = (BaseGun)currentlyEquippedWeapon;
+                    totalMagazinesAvailable = inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Sum(x => x.itemStack);
 
-                currentBullets.text = gun.currentBullets.ToString();
-                totalBulletsInInventory.text = (totalMagazinesAvailable * (int)gun.maxBulletsInClip.Value).ToString();              
+                    currentBullets.text = gun.currentBullets.ToString();
+                    totalBulletsInInventory.text = (totalMagazinesAvailable * (int)gun.maxBulletsInClip.Value).ToString();
+                }
+                else
+                {
+                    currentBullets.text = "";
+                    totalBulletsInInventory.text = "";
+                }
             }         
         }
         else
@@ -165,14 +173,21 @@ public class WeaponsHolder : MonoBehaviour
 
         if (currentlyEquippedWeapon == null) return;
 
-        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, Inventory.instance.player.transform.rotation);
+        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, Quaternion.identity);
+        currentlyEquippedWeapon.instantiatedWeapon = weaponObject;
+
+        if(!(currentlyEquippedWeapon as BaseMelee))
+        {
+            weaponObject.transform.SetPositionAndRotation(weaponObject.transform.position, Inventory.instance.player.transform.rotation);
+        }
+
         weaponObject.transform.parent = Inventory.instance.player.transform;
 
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
 
         if(ammoDisplay != null)
         {
-            if (currentlyEquippedWeapon as BaseGun)
+            if (currentlyEquippedWeapon as BaseWeapon)
             {
                 ammoDisplay.SetActive(true);
             }
@@ -188,6 +203,7 @@ public class WeaponsHolder : MonoBehaviour
     {
         if (weaponToStow == currentlyEquippedWeapon)
         {
+            currentlyEquippedWeapon.instantiatedWeapon = null;
             Destroy(weaponObject);
             currentlyEquippedWeapon = null;
         }

@@ -36,6 +36,7 @@ public class PlayersuitManager : MonoBehaviour
     {
         #region Make player character inactive.
         //Hide the player character, setting the character game object to inactive as default the player is in the ship at start of the scene.
+        instantiatedPlayerSuit = Inventory.instance.player.gameObject;
         instantiatedPlayerSuit.SetActive(false);
         instantiatedPlayerSuitCam = Instantiate(playerSuitCamPrefab, transform.position, Quaternion.identity);
         instantiatedPlayerSuitCam.SetActive(false);
@@ -51,6 +52,8 @@ public class PlayersuitManager : MonoBehaviour
         if (UIManager.instance.playerInput.currentActionMap.name == "Dialogue")
         {
             instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = orthoSizeDialogue;
+            instantiatedPlayerSuitCam.GetComponent<CinemachineCameraOffset>().m_Offset = Vector2.Lerp(instantiatedPlayerSuitCam.GetComponent<CinemachineCameraOffset>().m_Offset,
+                new Vector3(), 1f);
         }
         else
         {

@@ -1,14 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
- public struct PlacedRoom
+public struct PlacedRoom
 {
     public Vector2Int position;
     public int roomWidth;
     public int roomHeight;
     public List<Vector2Int> entrances;
+    public bool locked;
 
     public PlacedRoom(RoomData room, Vector2Int pos)
     {
@@ -16,6 +15,7 @@ using UnityEngine.Rendering;
         roomWidth = room.roomWidth;  
         roomHeight = room.roomHeight;    
         entrances = room.entrances;
+        locked = false;
     }
 }
 
@@ -68,20 +68,125 @@ public class Generator
         List<Vector2Int> rooms = new List<Vector2Int>();
         tGraph = new TriangulationGraph();
 
+        #region Place station entrance first in one of the outer edges of the grid.
+
+        int startRoomLocationChoice = Random.Range(1, 9);
+        Vector2Int startRoomPos = new Vector2Int();
+        Vector2Int startRoomOffset = new Vector2Int(profile.startRoom.roomWidth + 1, profile.startRoom.roomHeight + 1);
+
+        switch (startRoomLocationChoice)
+        {
+            case 1:
+                Debug.Log("Bottom Left");
+                startRoomPos = new Vector2Int(startRoomOffset.x, 1);
+                break;
+            case 2:
+                Debug.Log("Bottom Right");
+                startRoomPos = new Vector2Int(profile.gridSize - startRoomOffset.x, 1);
+                break;
+            case 3:
+                Debug.Log("Top Left");
+                startRoomPos = new Vector2Int(1, profile.gridSize - startRoomOffset.y);
+                break;
+            case 4:
+                Debug.Log("Top Right");
+                startRoomPos = new Vector2Int(profile.gridSize - startRoomOffset.x, profile.gridSize - startRoomOffset.y);
+                break;
+            case 5:
+                Debug.Log("Mid Left");
+                startRoomPos = new Vector2Int(1, (int)profile.gridSize / 2 - startRoomOffset.y);
+                break;
+            case 6:
+                Debug.Log("Mid Right");
+                startRoomPos = new Vector2Int(profile.gridSize - startRoomOffset.x, (int)profile.gridSize / 2 - startRoomOffset.y);
+                break;
+            case 7:
+                Debug.Log("Top Mid");
+                startRoomPos = new Vector2Int((int)profile.gridSize / 2 - startRoomOffset.x, profile.gridSize - startRoomOffset.y);
+                break;
+            case 8:
+                Debug.Log("Bottom Mid");
+                startRoomPos = new Vector2Int(profile.gridSize - (int)startRoomOffset.x / 2, 1);
+                break;
+            default:
+                break;
+        }
+
+        AddRoomToGrid(profile.startRoom, startRoomPos);
+
+        #endregion
+
+        //Generate the rest of the rooms for the station.
         GenerateRooms();
-
-        List<TriangulationGraph.Edge> graph = tGraph.DelenauyTriangulation(RoomPositions(), profile.gridSize);
-
+        //Create a triangulation of the rooms. 
+        List<TriangulationGraph.Edge> graph = tGraph.DelenauyTriangulation(GetRoomPositions(), profile.gridSize);
+        //Create the minimujm spanning tree from the triangulation graph.
         List<TriangulationGraph.Edge> mstGraph = tGraph.MinimumSpanningTree(graph);
 
-        //Add corridors.
+        //Get the adjacency table for the minimum spanning tree.
         int[,] mstTable = tGraph.GraphAdjacencyTable(mstGraph, tGraph.rooms, false);
+        //Generate corridors for the station (using the adjacency table).
         GenerateCorridors(mstTable);
 
-        Texture2D texture = DebugTexture();
+        //Lock rooms.
+        FindAndLockRooms(mstTable);
 
+
+        //Create the debug texture.
+        Texture2D texture = GetDebugTexture();
+
+        //Return the generated texture.
         return texture;
     }
+
+    #region Generator Outputs 
+
+    //Generates a debug texture from a generated grid.
+    public Texture2D GetDebugTexture()
+    {
+        Texture2D tex = new Texture2D(profile.gridSize, profile.gridSize, TextureFormat.ARGB32, false);
+
+        for (int x = 0; x < profile.gridSize; x++)
+        {
+            for (int y = 0; y < profile.gridSize; y++)
+            {
+                if (grid[x, y] != null)
+                {
+                    switch (grid[x, y].type)
+                    {
+                        case TileType.empty:
+                            tex.SetPixel(x, y, Color.black);
+                            break;
+                        case TileType.floor:
+                            tex.SetPixel(x, y, Color.white);
+                            break;
+                        case TileType.wall:
+                            tex.SetPixel(x, y, Color.blue);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        tex.Apply();
+        return tex;
+    }
+
+    //Returns a list of nodes (rooms).
+    public List<Vector2Int> GetRoomPositions()
+    {
+        List<Vector2Int> pos = new List<Vector2Int>();
+
+        foreach (PlacedRoom r in placedRooms)
+        {
+            pos.Add(r.position);
+        }
+
+        return pos;
+    }
+
+    #endregion
 
     public void GenerateStation()
     {
@@ -521,18 +626,20 @@ public class Generator
 
     #region Gameplay Mechanics
 
+    #region Room Locking
+
     //Will identify branches in the minimum spanning tree which can be locked.
-    void FindAndLockRooms()
+    void FindAndLockRooms(int[,] graphTable)
     {
-        //Start by finding which room is our start room, this will be a room which is most near the outer edges of the grid.
+        //Use Dijkstra's shortest path algorithm to find the shortest path from the entrance room to every other room.
+        List<TriangulationGraph.GraphRoute> routes = tGraph.Dijkstra(graphTable);
 
-        int startRoomIndex = FindStartRoom();
+        //Randomly lock rooms - with some rules including not locking rooms with 3 or more connections as these are branched.
 
-        //Any room can be lockable...
-        //but weighting should make branched rooms least likely to be locked as this quickly locks large portions of a stations and makes key placements less interesting and exploration more linear.
-        //Locked rooms effectively create subtrees which we can use to hide keys in.
+        //Now backtrack and find on the routes to them locked rooms if there is a branched room, follow a branch and hide key along there, otherwise just on route.
 
-        //Identify which rooms to lock then lock them.
+        //When placing keys, start with the shortest route first, increasing the distance of routes to the locked door each time;
+        //when we backtrack if we hit a locked door we need to stop and hide the key in that area forwards, no point getting key to dorr 4 before door 1.
     }
 
     //Will for a given room place a locked door, and find a suitable place to put a key earlier in the tree based on a given start room.
@@ -541,75 +648,7 @@ public class Generator
 
     }
 
-    //Picks a starting rooom which is furthest from the grid centre (so we know it is accessible with the ship).
-    int FindStartRoom()
-    {
-        int index = 0;
-        int highestDist = 0;
-
-        //Find room distance from the centre of the grid, we want the most outside.
-        foreach (PlacedRoom room in placedRooms)
-        {
-            int dist = (int)Vector2.Distance(room.position, new Vector2(profile.gridSize / 2, profile.gridSize / 2));
-
-            if (dist > highestDist) 
-            { 
-                highestDist = dist;
-                index = placedRooms.IndexOf(room);
-            } 
-        }
-
-        return index;
-    }
-
     #endregion
-
-    #region Outputs 
-
-    //Generates a debug texture from a generated grid.
-    Texture2D DebugTexture()
-    {
-        Texture2D tex = new Texture2D(profile.gridSize, profile.gridSize, TextureFormat.ARGB32, false);
-
-        for (int x = 0; x < profile.gridSize; x++)
-        {
-            for (int y = 0; y < profile.gridSize; y++)
-            {
-                if (grid[x,y] != null)
-                {
-                    switch (grid[x, y].type)
-                    {
-                        case TileType.empty:
-                            tex.SetPixel(x, y, Color.black);
-                            break;
-                        case TileType.floor:
-                            tex.SetPixel(x, y, Color.white);
-                            break;
-                        case TileType.wall:
-                            tex.SetPixel(x, y, Color.blue);
-                            break;
-                        default:
-                            break;
-                    }
-                }  
-            }
-        }
-        tex.Apply();
-        return tex;
-    }
-
-    //Returns a list of nodes (rooms).
-    public List<Vector2Int> RoomPositions()
-    {
-        List<Vector2Int> pos = new List<Vector2Int>();
-
-        foreach (PlacedRoom r in placedRooms)
-        {
-            pos.Add(r.position);
-        }
-
-        return pos;
-    }
 
     #endregion
 }

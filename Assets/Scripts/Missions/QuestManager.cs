@@ -137,8 +137,16 @@ public class QuestManager : MonoBehaviour
 
     public void LoadQuests()
     {
-        var save = GameManager.instance.progressSave as ProgressSave;
-
+        ProgressSave save = null;
+        try
+        {
+            save = GameManager.instance.progressSave as ProgressSave;
+        }
+        catch
+        {
+            Debug.Log("No Game manager");
+        }
+       
         if (save == null) return;
 
         if (save.questsSaved == null) return;

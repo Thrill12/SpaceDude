@@ -23,6 +23,16 @@ public class GameEvents : MonoBehaviour
             onEntityKilled(entity);           
         }
     }
+
+    public event Action<BaseEntity, BaseEntity, float> onEntityHit;
+
+    public void OnEntityHit(BaseEntity victim, BaseEntity hitter, float damage)
+    {
+        if(onEntityHit != null)
+        {
+            onEntityHit(victim, hitter, damage);
+        }
+    }
     #endregion
 
     #region LocationEvents

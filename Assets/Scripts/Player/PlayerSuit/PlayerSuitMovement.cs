@@ -188,33 +188,33 @@ public class PlayerSuitMovement : MonoBehaviour
 
     #region Dashing
 
-    public void Dash(InputAction.CallbackContext context)
-    {
-        if (context.phase == InputActionPhase.Started)
-        {
-            //Check for Dash input and that the player is not already dashing.
-            if (isDashing == null)
-            {
-                //Starts the dashing co-routine.
-                isDashing = StartCoroutine(DodgeCoroutine());
-            }
-        }        
-    }
+    //public void Dash(InputAction.CallbackContext context)
+    //{
+    //    if (context.phase == InputActionPhase.Started)
+    //    {
+    //        //Check for Dash input and that the player is not already dashing.
+    //        if (isDashing == null)
+    //        {
+    //            //Starts the dashing co-routine.
+    //            isDashing = StartCoroutine(DodgeCoroutine());
+    //        }
+    //    }        
+    //}
 
-    //Co-routine which executes the player dash.
-    private IEnumerator DodgeCoroutine()
-    {     
-        //For the duration of a dashTime will move the player forwards at the end of each frame at the higher dashSpeed.
-        for (float timer = 0; timer < dashTime; timer += Time.deltaTime)
-        {
-            var endOfFrame = new WaitForEndOfFrame();
-            rb.MovePosition(transform.position + (new Vector3(rb.velocity.normalized.x * dashSpeed * Time.deltaTime, rb.velocity.normalized.y * dashSpeed * Time.deltaTime, 0)));
-            yield return endOfFrame;
-        }
+    ////Co-routine which executes the player dash.
+    //private IEnumerator DodgeCoroutine()
+    //{     
+    //    //For the duration of a dashTime will move the player forwards at the end of each frame at the higher dashSpeed.
+    //    for (float timer = 0; timer < dashTime; timer += Time.deltaTime)
+    //    {
+    //        var endOfFrame = new WaitForEndOfFrame();
+    //        rb.MovePosition(transform.position + (new Vector3(rb.velocity.normalized.x * dashSpeed * Time.deltaTime, rb.velocity.normalized.y * dashSpeed * Time.deltaTime, 0)));
+    //        yield return endOfFrame;
+    //    }
 
-        //The dash is completed. Set to null as the player is no longer dashing and can dash again.
-        isDashing = null;
-    }
+    //    //The dash is completed. Set to null as the player is no longer dashing and can dash again.
+    //    isDashing = null;
+    //}
 
     #endregion
 

@@ -14,14 +14,14 @@ public class Stat
     //You want to access the value of the stat with .Value instead of _value, as that is a function
     //that returns the cleaned up version of the stat.
     //I exposed this to be easier to see in the inspector 
-    [SerializeField] public float _value;
+    [SerializeField, HideInInspector] public float _value;
 
     protected float lastBaseValue = float.MinValue;
 
     public List<Modifier> statModifiers;
 
     //This will tell us if we need to clean up the modifiers, as some addition types need to be added first before others
-    public bool isDirty = true;
+    [HideInInspector] public bool isDirty = true;
 
     public Stat()
     {

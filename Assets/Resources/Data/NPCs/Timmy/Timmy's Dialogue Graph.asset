@@ -120,7 +120,8 @@ MonoBehaviour:
       _dynamic: 0
   entry: 0
   npcToChange: Mickey the Mad Man
-  graphToChangeTo: Data/NPCs/MickeyTheMadMan/MickeyAfterAcidAdventure
+  graphToChangeTo: {fileID: 11400000, guid: 3f0f2598b9703684084ecbe65da23484, type: 2}
+  graphToChangeToPath: 
   exit: 0
 --- !u!114 &-3518339866125157864
 MonoBehaviour:

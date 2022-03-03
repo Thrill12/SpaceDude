@@ -10,6 +10,8 @@ public abstract class BaseWeapon : BaseEquippable
     [SerializeField, HideInInspector]
     public string weaponObjectPath;
 
+    public GameObject instantiatedWeapon;
+
     public AudioClip attackSound;
     [SerializeField, HideInInspector]
     public string attackSoundPath;
