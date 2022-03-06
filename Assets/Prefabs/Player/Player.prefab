@@ -297,7 +297,6 @@ GameObject:
   - component: {fileID: 48211329198415422}
   - component: {fileID: -7717495220036303782}
   - component: {fileID: 5898455060828305356}
-  - component: {fileID: 6104419335816767539}
   - component: {fileID: 1619563898779149639}
   - component: {fileID: 3851219736476597051}
   m_Layer: 0
@@ -397,6 +396,9 @@ MonoBehaviour:
   dashSpeed: 25
   dashTime: 0.1
   frontChecker: {fileID: 4047702826241862813}
+  virtualCamera: {fileID: 0}
+  orthoSizeNormal: 0
+  orthoSizeDialogue: 0
   playerInput: {fileID: 0}
 --- !u!50 &48211329198415411
 Rigidbody2D:
@@ -511,25 +513,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.34375
---- !u!114 &6104419335816767539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 48211329198415412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64ee7effbca3411489dd18c0f8ddd15a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainWeapon: {fileID: 0}
-  secondaryWeapon: {fileID: 0}
-  playerInput: {fileID: 0}
-  currentlyEquippedWeapon: {fileID: 0}
-  weaponObjectPosition: {fileID: 3060388201143529263}
-  weaponAttackSource: {fileID: 0}
-  weaponObject: {fileID: 0}
 --- !u!114 &1619563898779149639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,43 +525,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c075a12636834c34089a095711a0ee7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 0
+  ID: entity_player
   entityName: Player
   health: 0
   maxHealth:
-    BaseValue: 500
+    statName: Max Health
+    BaseValue: 50000
     _value: 0
     statModifiers: []
     isDirty: 1
   armour:
-    BaseValue: 0
+    statName: Armour
+    BaseValue: 500
     _value: 0
     statModifiers: []
     isDirty: 1
   damageMultiplier:
+    statName: Damage Multiplier
     BaseValue: 1
-    _value: 0
+    _value: 1
     statModifiers: []
     isDirty: 1
   healthRegeneration:
+    statName: Health Regen
     BaseValue: 0
     _value: 0
     statModifiers: []
     isDirty: 1
   energy: 0
   maxEnergy:
+    statName: Max Energy
     BaseValue: 0
     _value: 0
     statModifiers: []
     isDirty: 1
   energyRegeneration:
+    statName: Energy Regen
     BaseValue: 0
     _value: 0
     statModifiers: []
     isDirty: 1
+  hitSound: {fileID: 0}
   pfMan: {fileID: 0}
+  isDead: 0
   healthDisplay: {fileID: 0}
   energyDisplay: {fileID: 0}
+  oxygen: 0
+  maxOxygen:
+    statName: Maximum Oxygen
+    BaseValue: 50
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  oxygenDisplay: {fileID: 0}
+  useOxygen: 0
 --- !u!82 &3851219736476597051
 AudioSource:
   m_ObjectHideFlags: 0

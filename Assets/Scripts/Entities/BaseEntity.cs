@@ -117,6 +117,12 @@ public class BaseEntity : MonoBehaviour
         health -= damageToGive;
     }
 
+    public void TakeDamagePure(float damage)
+    {
+        health -= damage;
+        PrefabManager.instance.SpawnNumberPopup(Mathf.RoundToInt(damage), PrefabManager.instance.orange, transform.position + (Vector3)UnityEngine.Random.insideUnitCircle);
+    }
+
     public virtual void Die()
     {
         GameEvents.instance.OnEntityKilled(this);

@@ -98,6 +98,6 @@ public class PrefabManager : MonoBehaviour
         num.GetComponent<Canvas>().worldCamera = Camera.main;
         num.GetComponentInChildren<TMP_Text>().text = number.ToString();
         num.GetComponentInChildren<TMP_Text>().color = colorPopup;
-        Destroy(num, 5);
+        Destroy(num, 3);
     }
 }

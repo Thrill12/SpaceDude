@@ -26,6 +26,13 @@ public class UIManager : MonoBehaviour
 
     public Image dampenersImage;
 
+    [Space(5)]
+
+    public bool isWarning = false;
+    public GameObject warningObject;
+    public TMP_Text warningTextObject;
+    public AudioClip warningSound;
+
     [Header("Dialogue Stuff")]
 
     [HideInInspector]
@@ -919,6 +926,33 @@ public class UIManager : MonoBehaviour
     {
         LeanTween.scaleY(dialogueDisplay, 0.2f, 0.1f);
         LeanTween.scaleX(dialogueDisplay, 0.5f, 0.1f).setDelay(0.1f);
+    }
+
+    public void ShowWarning(string warningText)
+    {       
+        StartCoroutine(AnimateWarning(warningText));
+    }
+
+    public IEnumerator AnimateWarning(string text)
+    {
+        if (!isWarning)
+        {
+            isWarning = true;
+            warningObject.GetComponent<CanvasGroup>().alpha = 1;
+            warningTextObject.text = "Warning: " + text;
+            warningObject.transform.localScale = new Vector3(1, 1, 1);
+
+            audioSource.PlayOneShot(warningSound);
+
+            LeanTween.alphaCanvas(warningObject.GetComponent<CanvasGroup>(), 0, 3);            
+
+            yield return new WaitForSecondsRealtime(2.5f);
+
+            LeanTween.scaleY(warningObject, 0, 0.2f);
+
+            yield return new WaitForSecondsRealtime(0.5f);
+            isWarning = false;
+        }
     }
 
     #endregion

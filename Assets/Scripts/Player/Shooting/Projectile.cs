@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    public float timeOut = 3;
     public BaseEntity entityShotFrom;
     public BaseWeapon weaponShotFrom;
 
@@ -13,9 +14,9 @@ public class Projectile : MonoBehaviour
 
     public LayerMask layerMask;
 
-    private void Start()
+    public virtual void Start()
     {
-        Destroy(gameObject, 3);
+        Destroy(gameObject, timeOut);
     }
 
     private void Update()

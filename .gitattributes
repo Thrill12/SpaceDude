@@ -681,3 +681,14 @@
 /Assets/Resources/Sprites/Planets/Anims/VioletIslands/1575675603.png filter=lfs diff=lfs merge=lfs -text
 /Assets/Resources/Sprites/Planets/Anims/VioletIslands/1575675603.png.meta filter=lfs diff=lfs merge=lfs -text
 /Assets/Resources/Sprites/Planets/Anims/VioletIslands/VioletIslands.anim filter=lfs diff=lfs merge=lfs -text
+/Assets/Audio/WarningSound.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/LightningBolt/Editor/LightningBoltLogo.png filter=lfs diff=lfs merge=lfs -text
+/Assets/LightningBolt/Textures/LightningSpriteSheet1.png filter=lfs diff=lfs merge=lfs -text
+/Assets/LightningBolt/Textures/LightningSpriteSheet2.png filter=lfs diff=lfs merge=lfs -text
+/Assets/LightningBolt/Textures/LightningSpriteSheet3.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Data/Items/Weapons/Large/Magnum[[:space:]]Opus/MagnumOpusBallBuzzingSound.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Data/Items/Weapons/Large/Magnum[[:space:]]Opus/MagnumOpusLightningSphere.prefab filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Data/Items/Weapons/Large/Magnum[[:space:]]Opus/MagnumOpusOutOfAmmo.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Data/Items/Weapons/Large/Magnum[[:space:]]Opus/MagnumOpusShoot.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Data/Items/Weapons/Large/Orenmir/49695__ejfortin__energy-whip-2.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Data/Items/Weapons/Large/Viktor/EnergyShot.wav filter=lfs diff=lfs merge=lfs -text

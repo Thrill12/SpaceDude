@@ -23,6 +23,11 @@ public class PlayersuitManager : MonoBehaviour
     [Tooltip("The internal location of the player when they enter the airlock.")]
     public GameObject airLockInterior;
 
+    [Space(5)]
+
+    public GameObject playerSuitUI;
+    public GameObject shipUI;
+
     [HideInInspector]
     public GameObject instantiatedPlayerSuitCam;
     [HideInInspector]
@@ -63,6 +68,17 @@ public class PlayersuitManager : MonoBehaviour
                 ((instantiatedPlayerSuit.transform.position + instantiatedPlayerSuit.transform.up) - instantiatedPlayerSuit.transform.position).normalized,
                 0.1f);
         }
+
+        if (ship.isPlayerPiloting)
+        {
+            playerSuitUI.SetActive(false);
+            shipUI.SetActive(true);
+        }
+        else
+        {
+            playerSuitUI.SetActive(true);
+            shipUI.SetActive(false);
+        }
     }
 
     public void PlayerLeaveCockpit()
@@ -76,6 +92,7 @@ public class PlayersuitManager : MonoBehaviour
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_LookAt = ship.gameObject.transform;
 
         instantiatedPlayerSuit.transform.SetParent(shipInt.transform, false);
+        
         ship.newInput.SwitchCurrentActionMap("PlayerSuit");
 
         Invoke("LeaveCockpitTransition", .7f);
@@ -105,6 +122,7 @@ public class PlayersuitManager : MonoBehaviour
         fadeAnimation.SetTrigger("Fade");
 
         instantiatedPlayerSuit.transform.parent = null;
+        instantiatedPlayerSuit.GetComponent<PlayerEntity>().useOxygen = true;
 
         Invoke("ExitShipTransition", .7f);
     }
@@ -120,6 +138,8 @@ public class PlayersuitManager : MonoBehaviour
         //Set the vCam to follow the ship.
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Follow = shipInt.gameObject.transform;
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_LookAt = shipInt.gameObject.transform;
+
+        instantiatedPlayerSuit.GetComponent<PlayerEntity>().useOxygen = false;
 
         Invoke("EntertShipTransition", .7f);
     }

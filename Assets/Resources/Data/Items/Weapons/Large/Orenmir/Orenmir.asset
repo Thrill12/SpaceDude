@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5d92c00b36162f44a091740451ca131, type: 3}
+  m_Name: Orenmir
+  m_EditorClassIdentifier: 
+  GUID: 5bf96775-c947-452a-a4f6-8f528b7258da
+  itemName: Orenmir
+  itemDescription: Created in the ancient Wizard forges from the ages ago, it is
+    now in safe hands. Or is it?
+  itemIcon: {fileID: 21300000, guid: 06b4c16cde56a6d45b9c622429f6d9fe, type: 3}
+  itemIconPath: Data/Items/Weapons/Large/Orenmir/Orenmir
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemValue: 531
+  itemStack: 1
+  itemMaxStack: 1
+  itemType: 8
+  itemSlot: Primary Weapon
+  itemMods: []
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0
+  weaponObject: {fileID: 8300893100294450194, guid: c10a4f435e4e6ee4699de4f47b1a1e77, type: 3}
+  weaponObjectPath: Data/Items/Weapons/Large/Orenmir/OrenmirObject
+  instantiatedWeapon: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 2a6a161014126f846a4cf16521c77c2a, type: 3}
+  attackSoundPath: Data/Items/Weapons/Large/Orenmir/49695__ejfortin__energy-whip-2
+  damage:
+    statName: Damage
+    BaseValue: 75
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalChance:
+    statName: Critical Chance
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  criticalDamage:
+    statName: Critical Damage
+    BaseValue: 0
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  attackCooldown:
+    statName: Slice Cooldown
+    BaseValue: 0.2
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  large: 1
+  canReceiveInput: 1
+  receivedInput: 0
