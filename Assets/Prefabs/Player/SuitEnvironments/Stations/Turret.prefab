@@ -39,31 +39,31 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1772600871897164551}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_ComponentVersion: 1
   m_LightType: 3
-  m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.615
+  m_BlendStyleIndex: 1
+  m_FalloffIntensity: 0.78
   m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_Intensity: 4
-  m_LightVolumeIntensity: 1
+  m_Intensity: 1
+  m_LightVolumeIntensity: 0.01
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: a99992571beaae07110a6b09
+  m_ApplyToSortingLayers: a9999257110a6b09110a6b09110a6b09000000001beaae07
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
-  m_LightOrder: 0
+  m_LightOrder: 1
   m_OverlapOperation: 0
-  m_NormalMapDistance: 3
+  m_NormalMapDistance: 19.77
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
   m_ShadowIntensityEnabled: 1
-  m_ShadowIntensity: 0.775
-  m_ShadowVolumeIntensityEnabled: 0
-  m_ShadowVolumeIntensity: 0
+  m_ShadowIntensity: 0.5
+  m_ShadowVolumeIntensityEnabled: 1
+  m_ShadowVolumeIntensity: 1
   m_Vertices:
   - position: {x: 0.9985302, y: 0.9985302, z: 0}
     color: {r: 0.70710677, g: 0.70710677, b: 0, a: 0}
@@ -228,7 +228,7 @@ MonoBehaviour:
   - {x: -0.07486631, y: 0.09008035, z: 0}
   m_ShapePathHash: 849515421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 205030
+  m_InstanceId: 218826
 --- !u!61 &7283469730192501926
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -436,6 +436,8 @@ MonoBehaviour:
   dropChance: 30
   healthBarYOffset: 0.5
   detectionRange: 4
+  enemyTags:
+  - PlayerSuit
   nextFire: 0
   holder: {fileID: 3908656142975873585}
 --- !u!114 &3908656142975873585

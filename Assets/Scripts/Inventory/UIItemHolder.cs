@@ -8,33 +8,34 @@ using UnityEngine.UI;
 public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public BaseItem itemHeld;
-    private Inventory inventory;
+    private PlayerInventory inventory;
+    private UIManager uiManager;
 
     private GameObject canvasObject;
 
-    private Image img;
-    private TMP_Text itemNameText;
+    public Image itemIcon;
+    public TMP_Text itemStackText;
+    public Image itemRarityDisplay;
 
     private bool isHoveredOn;
 
     private void Awake()
     {
         canvasObject = GameObject.FindGameObjectWithTag("UICanvas");
-        
-        img = GetComponentsInChildren<Image>()[1];
     }
 
     private void Start()
     {
-        inventory = Inventory.instance;
+        inventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<PlayerInventory>();
+        uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
 
         if (itemHeld.itemIcon != null)
         {
-            img.sprite = itemHeld.itemIcon;
+            itemIcon.sprite = itemHeld.itemIcon;
         }
         else
         {
-            img.color = itemHeld.itemRarity.rarityColor;
+            itemIcon.color = itemHeld.itemRarity.rarityColor;
         }
 
         SetBackground();
@@ -42,27 +43,25 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void SetBackground()
     {
-        Debug.Log("Beforehand is " + itemHeld.itemRarity.rarityName);
-
-        if (itemHeld.itemRarity.rarityName == "Common")
-        {
-            GetComponentInChildren<Image>().sprite = PrefabManager.instance.commonItemBorder;
-            Debug.Log("Common");
-        }
-        else if (itemHeld.itemRarity.rarityName == "Rare")
-        {
-            GetComponentInChildren<Image>().sprite = PrefabManager.instance.rareItemBorder;
-            Debug.Log("Rare");
-        }
-        else if (itemHeld.itemRarity.rarityName == "Royal")
-        {
-            GetComponentInChildren<Image>().sprite = PrefabManager.instance.royalItemBorder;
-            Debug.Log("Royal");
-        }
+        itemRarityDisplay.color = itemHeld.itemRarity.rarityColor;
     }
 
     private void Update()
-    {      
+    {
+        if (itemHeld == null)
+        { 
+            if (inventory.uiItemHolders.Contains(this))
+            {
+                inventory.uiItemHolders.Remove(this);
+            }
+            else if (inventory.shipUiItemHolders.Contains(this))
+            {
+                inventory.shipUiItemHolders.Remove(this);
+            }
+
+            Destroy(gameObject);
+        }
+
         if (inventory.shipInventoryItems.Contains(itemHeld))
         {
             transform.SetParent(inventory.shipItemInventoryDisplay.transform);
@@ -72,12 +71,12 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             CheckingBeingEquippedOrNot();
         }
 
-        if (UIManager.instance.playerInput.currentControlScheme == "GamePad")
+        if (uiManager.playerInput.currentControlScheme == "GamePad")
         {
             if (EventSystem.current.currentSelectedGameObject == gameObject)
             {
                 isHoveredOn = true;
-                UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
+                uiManager.currentlySelectedItemToDisplay = itemHeld;
             }
             else
             {
@@ -85,10 +84,20 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
         }
 
-        if (isHoveredOn)
+        if (isHoveredOn && uiManager.currentlySelectedItemToDisplay != itemHeld)
         {
-            UIManager.instance.currentlySelectedItemToDisplay = itemHeld;
-        }       
+            uiManager.currentlySelectedItemToDisplay = itemHeld;
+            uiManager.SelectUIObject(gameObject);
+        }
+
+        if(itemHeld.itemStack == 1)
+        {
+            itemStackText.text = "";
+        }
+        else
+        {
+            itemStackText.text = itemHeld.itemStack.ToString();
+        }              
     }
 
     private void CheckingBeingEquippedOrNot()
@@ -103,38 +112,40 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             if (eqItemHeld.isEquipped)
             {
                 transform.SetParent(inventory.slotsParent.transform.Find(eqItemHeld.itemSlot).transform);
-                Debug.Log("Setting for equipped");
             }
             else
             {
                 transform.SetParent(inventory.itemInventoryDisplay.transform);
-                Debug.Log("Setting for not equipped");
             }
+        }
+        else
+        {
+            transform.SetParent(inventory.itemInventoryDisplay.transform);
         }
     }
 
     public void OnPointerEnter(PointerEventData data)
     {
         isHoveredOn = true;
-        UIManager.instance.SelectUIObject(gameObject);
+        uiManager.SelectUIObject(gameObject);
     }
 
     public void OnPointerExit(PointerEventData data)
     {
         isHoveredOn = false;
-        UIManager.instance.SelectUIObject(null);
-        UIManager.instance.currentlySelectedItemToDisplay = null;
+        uiManager.SelectUIObject(null);
+        uiManager.currentlySelectedItemToDisplay = null;
     }
 
     private void OnDisable()
     {
         isHoveredOn = false;
-        UIManager.instance.SelectUIObject();
+        uiManager.SelectUIObject();
     }
 
     public void ToggleEquipUnequip()
     {
-        if (!UIManager.instance.isInShipInventory)
+        if (!uiManager.isInShipInventory)
         {
             if(itemHeld as BaseEquippable)
             {
@@ -148,7 +159,13 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 {
                     Equip();
                 }
-            }            
+            }
+            else if(itemHeld as BaseConsumable)
+            {
+                BaseConsumable consumableItem = (BaseConsumable)itemHeld;
+
+                consumableItem.Use();
+            }
         }
         else
         {
@@ -161,16 +178,16 @@ public class UIItemHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void Equip()
     {
         BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
-        eqItemHeld.isEquipped = true;
-        Inventory.instance.EquipItem(eqItemHeld);
-        UIManager.instance.SelectFirstItemHolder();
+        inventory.EquipItem(eqItemHeld);
+        uiManager.SelectFirstItemHolder();
+        uiManager.audioSource.PlayOneShot(uiManager.itemEquipSound);
         Debug.Log("Equipped item " + itemHeld.itemName);
     }
 
     public void Unequip()
     {
         BaseEquippable eqItemHeld = (BaseEquippable)itemHeld;
-        eqItemHeld.isEquipped = false;
-        Inventory.instance.UnequipItem(eqItemHeld);
+        inventory.UnequipItem(eqItemHeld);
+        uiManager.audioSource.PlayOneShot(uiManager.itemUnequipSound);
     }
 }

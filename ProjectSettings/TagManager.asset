@@ -30,6 +30,9 @@ TagManager:
   - Ship Entrance
   - Inventory
   - Volume
+  - GameEvents
+  - QuestManager
+  - NPCManager
   layers:
   - Default
   - TransparentFX
@@ -79,14 +82,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Particles
-    uniqueID: 89850385
-    locked: 0
   - name: Ship Interior
     uniqueID: 3704131605
     locked: 0
   - name: Player
     uniqueID: 158009873
+    locked: 0
+  - name: Particles
+    uniqueID: 89850385
     locked: 0
   - name: WorldUI
     uniqueID: 3412181561

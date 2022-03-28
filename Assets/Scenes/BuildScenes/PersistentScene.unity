@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7865005192222642397, guid: dbe130fbf6119ea4ea58a50561a0a284, type: 3}
+      propertyPath: menuTheme
+      value: 
+      objectReference: {fileID: 8300000, guid: 3a1f925014a224c47a86b3afc370b352, type: 3}
     - target: {fileID: 7865005192222642398, guid: dbe130fbf6119ea4ea58a50561a0a284, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -178,7 +182,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: MusicManager
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 352563624666936451, guid: dbe130fbf6119ea4ea58a50561a0a284, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: dbe130fbf6119ea4ea58a50561a0a284, type: 3}
 --- !u!1 &518520563
 GameObject:
@@ -573,6 +578,7 @@ GameObject:
   - component: {fileID: 1558032500}
   - component: {fileID: 1558032503}
   - component: {fileID: 1558032502}
+  - component: {fileID: 1558032504}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -604,7 +610,9 @@ MonoBehaviour:
     sfxLevel: 0.6
     keybindsJson: 
     qualityTier: 3
+    maxFPS: 60
     fpsCounter: 0
+    vsync: 1
   progressSave:
     questsSaved:
       questsCompleted: []
@@ -615,7 +623,20 @@ MonoBehaviour:
       playerInventoryItems: []
       shipInventoryItems: []
       itemsEquipped: []
+      playerCredits: 0
+    discoveriesSave:
+      locationsDiscovered: []
+      npcsDiscovered: []
+      itemsDiscovered: []
+    playerShipLocation: {x: 0, y: 0, z: 0}
+    playerShipRotation: {x: 0, y: 0, z: 270}
   autosaveInterval: 300
+  uiManager: {fileID: 0}
+  questManager: {fileID: 0}
+  playerInventory: {fileID: 0}
+  npcManager: {fileID: 0}
+  progress: {fileID: 0}
+  gameEvents: {fileID: 0}
 --- !u!4 &1558032501
 Transform:
   m_ObjectHideFlags: 0
@@ -674,3 +695,11 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!81 &1558032504
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558032499}
+  m_Enabled: 1

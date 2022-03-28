@@ -9,6 +9,7 @@ public class BaseItem : ScriptableObject
 {
     public string GUID;
     public string itemName;
+    [TextArea(5,15)]
     public string itemDescription;
 
     public Sprite itemIcon;
@@ -44,6 +45,5 @@ public enum ItemType
     Shotgun_Shell,
     Kinetic_Belt,
     Spike_Ammo,
-    Union_Clip,
     Raw
 }

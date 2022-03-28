@@ -49,14 +49,14 @@ public class BaseEnemy : BaseEntity
         }
     }
 
-    public override void Die()
+    public override void Die(BaseEntity killer)
     {
         if(dropTable.Count > 0 && Random.Range(0, 101) < dropChance)
         {
             pfMan.SpawnItem(gameObject, GetRandomItem());
         }
         
-        base.Die();
+        base.Die(killer);
     } 
 
     //Counting total weight to figure out correct drop chances

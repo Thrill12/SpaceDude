@@ -21,7 +21,7 @@ public class NearbyIndicatorSpawner : MonoBehaviour
         }
         else
         {
-            playerObj = Inventory.instance.player.gameObject;
+            playerObj = GameManager.instance.playerInventory.player.gameObject;
         }
 
         if (playerObj == null) return;

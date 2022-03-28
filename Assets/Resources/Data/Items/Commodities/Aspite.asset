@@ -16,8 +16,8 @@ MonoBehaviour:
   itemName: Aspite
   itemDescription: Aspite, the fuel for the future, enabling limitless peaceful potential
     - or so they said.
-  itemIcon: {fileID: 21300000, guid: b5d5087e1a1f32642abfa8558b845db3, type: 3}
-  itemIconPath: Sprites/Items/Ores/Aspite
+  itemIcon: {fileID: 21300000, guid: d1eb24eba8bf7a34f95eab327c001e7b, type: 3}
+  itemIconPath: Sprites/Items/Void Strife Items/tile039
   itemRarity: {fileID: 11400000, guid: 88ceb3550f440f14cbaa6ccc05b95fa1, type: 2}
   itemValue: 175
   itemStack: 1

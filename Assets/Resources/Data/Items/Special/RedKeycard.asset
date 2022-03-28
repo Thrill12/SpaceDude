@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: RedKeycard
   m_EditorClassIdentifier: 
   GUID: 1c91a53a-04ec-401a-8b27-26f1050955bd
-  itemName: Red Keycard
+  itemName: Level 3 Keycard
   itemDescription: Standard Union keycard for secure access
-  itemIcon: {fileID: 21300000, guid: dbb040a569875bc49a00a3668248c3d4, type: 3}
-  itemIconPath: Sprites/Items/Collectibles/RedKeycard
-  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemIcon: {fileID: 21300000, guid: d05b8cfde9ed7a24da10b397645e3d98, type: 3}
+  itemIconPath: Sprites/Items/Void Strife Items/tile042
+  itemRarity: {fileID: 11400000, guid: 635ab1b99fa9814498f4746cda084f8d, type: 2}
   itemValue: 5
   itemStack: 1
   itemMaxStack: 1

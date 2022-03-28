@@ -15,7 +15,7 @@ public class NPCTalkGoal : Goal
     public override void Init(Quest quest)
     {
         base.Init(quest);
-        GameEvents.instance.onNPCCommunicate += OnTalkToNPC;
+        GameManager.instance.gameEvents.onNPCCommunicate += OnTalkToNPC;
     }
 
     public void OnTalkToNPC(NPC npc)

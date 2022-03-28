@@ -33,10 +33,10 @@ public class SpreadableShootingGun : StraightShootingGun
 
             pellet.GetComponent<Projectile>().entityShotFrom = hostEntity;
             pellet.GetComponent<Projectile>().weaponShotFrom = this;
+            pellet.GetComponent<Projectile>().hitEffects = hitEffects;
             currentBullets -= 1;
             holder.ShakeCamera();
             Destroy(pellet, 3);
-        }
-        
+        }       
     }
 }

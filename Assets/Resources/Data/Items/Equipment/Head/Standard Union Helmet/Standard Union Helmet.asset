@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ade5afaaf7565d42ad46a9d6fdb31c1, type: 3}
+  m_Name: Standard Union Helmet
+  m_EditorClassIdentifier: 
+  GUID: 44cafef2-f989-459f-a7b3-945d80df87d7
+  itemName: Union Standard Helmet
+  itemDescription: The bog standard level of head protection expected by mainly army,
+    as police tend to skimp.
+  itemIcon: {fileID: 21300000, guid: 640d7fde46f57164b9d472aced655411, type: 3}
+  itemIconPath: Sprites/Items/ScifiPack/tile003
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemValue: 63
+  itemStack: 1
+  itemMaxStack: 1
+  itemType: 2
+  itemSlot: Helmet
+  itemMods: []
+  xpMultiplier:
+    statName: XP Multiplier
+    BaseValue: 1.1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0
+  armour:
+    statName: Armour
+    BaseValue: 5
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  showableSprite: {fileID: 21300000, guid: a593e1802341a1c4797da6352dfd699a, type: 3}
+  showableSpritePath: Data/Items/Equipment/Head/Standard Union Helmet/StandardHelmet

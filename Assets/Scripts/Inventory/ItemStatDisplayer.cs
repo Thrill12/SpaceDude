@@ -10,10 +10,10 @@ using UnityEngine.UI;
 
 public class ItemStatDisplayer : MonoBehaviour
 {
-    public GameObject equippableStatsPage;
+    
+
     public Image itemIcon;
     public Image itemBorder;
-    public Image itemModifiersBar;
     public Image itemStatsBar;
     public Image itemDescriptionBorder;
     public TMP_Text itemName;
@@ -21,6 +21,13 @@ public class ItemStatDisplayer : MonoBehaviour
     public TMP_Text itemValue;
     public TMP_Text itemDescription;
     public TMP_Text itemSlotText;
+
+    [Header("Equippables")]
+
+    public GameObject equippableStatsPage;
+    public Image equippableXPBar;
+    public TMP_Text equippableXP;
+    public TMP_Text equippableLevel;
 
     [Header("Stats")]
     public GameObject itemStatModifierObject;
@@ -46,51 +53,14 @@ public class ItemStatDisplayer : MonoBehaviour
         {
             BaseEquippable equip = item as BaseEquippable;
             equippableStatsPage.SetActive(true);
-            SetBorder(equip, equippableStatsPage.GetComponent<Image>());
 
-            foreach (var mod in equip.itemMods)
-            {
-                GameObject statObj = Instantiate(itemStatModifierObject, itemModifiersHolder.transform);
-                TMP_Text statText = statObj.GetComponent<TMP_Text>();
-
-                TextInfo info = new CultureInfo("en-US", false).TextInfo;
-
-                if(mod.Value > 0)
-                {
-                    if (mod.Type == Modifier.StatModType.Flat)
-                    {
-                        statText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
-                    }
-                    else if (mod.Type == Modifier.StatModType.PercentAdd)
-                    {
-                        statText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
-                    }
-                    else if (mod.Type == Modifier.StatModType.PercentMult)
-                    {
-                        statText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% increased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
-                    }
-                }
-                else
-                {
-                    if (mod.Type == Modifier.StatModType.Flat)
-                    {
-                        statText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
-                    }
-                    else if (mod.Type == Modifier.StatModType.PercentAdd)
-                    {
-                        statText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
-                    }
-                    else if (mod.Type == Modifier.StatModType.PercentMult)
-                    {
-                        statText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% decreased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
-                    }
-                }                
-
-                activatedModifiers.Add(statObj);
-            }
+            equippableXPBar.fillAmount = equip.itemCurrentXP / equip.itemXPToNextLevel;
+            equippableXP.text = $"<color=#718093>{equip.itemCurrentXP}<color=white>/<color=#e84118>{equip.itemXPToNextLevel}";
+            equippableLevel.text = "Lv. " + equip.itemLevel;
 
             List<string> itemStatsStrings = equip.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(x => x.FieldType == typeof(Stat)).Select(x => x.Name).ToList();
+
 
             List<Stat> allItemStats = new List<Stat>();
 
@@ -101,67 +71,114 @@ public class ItemStatDisplayer : MonoBehaviour
 
             allItemStats.Reverse();
 
-            foreach (var stat in allItemStats)
+            if (allItemStats.Count > 0)
             {
-                GameObject displayer = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
-                TMP_Text statText = displayer.GetComponent<TMP_Text>();
+                foreach (var stat in allItemStats)
+                {
+                    GameObject displayer = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                    TMP_Text statText = displayer.GetComponent<TMP_Text>();
 
-                TextInfo info = new CultureInfo("en-US", false).TextInfo;
+                    TextInfo info = new CultureInfo("en-US", false).TextInfo;
 
-                statText.text = stat.Value + " " + stat.statName;
+                    statText.text = stat.Value + " " + stat.statName;
 
-                activatedStats.Add(displayer);
-            }
+                    activatedStats.Add(displayer);
+                }
 
-            if (equip.GetType().GetField("ammoType") != null)
-            {
-                GameObject displayer = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
-                
-                TMP_Text statText = displayer.GetComponent<TMP_Text>();
+                if (equip as BaseGun)
+                {
+                    BaseGun gun = equip as BaseGun;
 
-                TextInfo info = new CultureInfo("en-US", false).TextInfo;
+                    CheckForAndDisplayHitEffect(gun, EffectToCheck.bleed, "Bleeds", "#d63031");
+                    CheckForAndDisplayHitEffect(gun, EffectToCheck.poison, "Poisons", "#44bd32");
+                    CheckForAndDisplayHitEffect(gun, EffectToCheck.shock, "Shocks", "#0097e6");
 
-                statText.text = "\n(Uses " + equip.GetType().GetField("ammoType").GetValue(equip).ToString().Replace("_", " ") + "s for ammo)";
-                statText.fontSize -= 2;
-
-                activatedStats.Add(displayer);
+                    GameObject displayer = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                    TMP_Text statText = displayer.GetComponent<TMP_Text>();
+                    TextInfo info = new CultureInfo("en-US", false).TextInfo;
+                    statText.text = "\n(Uses " + gun.ammoType.ToString().Replace("_", " ") + " for ammo)";
+                    statText.fontSize -= 2;
+                    activatedStats.Add(displayer);
+                }
             }
 
             itemName.text = item.itemName;
-            itemModifiersBar.enabled = true;
+
+            if (equip.itemMods.Any())
+            {
+                itemModifiersHolder.SetActive(false);
+                foreach (var mod in equip.itemMods)
+                {
+                    GameObject modObj = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                    TMP_Text modText = modObj.GetComponent<TMP_Text>();
+
+                    TextInfo info = new CultureInfo("en-US", false).TextInfo;
+
+                    if (mod.Value > 0)
+                    {
+                        if (mod.Type == Modifier.StatModType.Flat)
+                        {
+                            modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                        }
+                        else if (mod.Type == Modifier.StatModType.PercentAdd)
+                        {
+                            modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                        }
+                        else if (mod.Type == Modifier.StatModType.PercentMult)
+                        {
+                            modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% increased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                        }
+                    }
+                    else
+                    {
+                        if (mod.Type == Modifier.StatModType.Flat)
+                        {
+                            modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                        }
+                        else if (mod.Type == Modifier.StatModType.PercentAdd)
+                        {
+                            modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                        }
+                        else if (mod.Type == Modifier.StatModType.PercentMult)
+                        {
+                            modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% decreased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                        }
+                    }
+
+                    activatedModifiers.Add(modObj);
+                }
+            }
+            else
+            {
+                itemModifiersHolder.SetActive(false);
+            }
+
+            
         }
         else
         {
             itemName.text = item.itemName + "(" + item.itemStack + ")";
-            itemModifiersBar.enabled = false;
             equippableStatsPage.SetActive(false);
         }
 
         itemSlotText.text = "[" +item.itemType.ToString().Replace("_", " ") + "]";
-
-        itemModifiersBar.color = item.itemRarity.rarityColor;
-        itemDescriptionBorder.color = item.itemRarity.rarityColor;
         itemIcon.sprite = item.itemIcon;
-        SetBorder(item, itemBorder);
-        itemRarity.text = item.itemRarity.name;
+        itemRarity.text = item.itemRarity.rarityName;
         itemRarity.color = item.itemRarity.rarityColor;
+        itemName.color = item.itemRarity.rarityColor;
         itemValue.text = "C:" + item.itemValue;
         itemDescription.text = item.itemDescription;
     }
 
-    public void SetBorder(BaseItem item, Image itemBorder)
+    private void CheckForAndDisplayHitEffect(BaseGun gun, EffectToCheck effectToCheckFor, string text, string hexColor)
     {
-        if(item.itemRarity.rarityName == "Common")
+        if ((gun.hitEffects & effectToCheckFor) != 0)
         {
-            itemBorder.sprite = PrefabManager.instance.commonItemBorder;
-        }
-        else if (item.itemRarity.rarityName == "Rare")
-        {
-            itemBorder.sprite = PrefabManager.instance.rareItemBorder;
-        }
-        else if(item.itemRarity.rarityName == "Royal")
-        {
-            itemBorder.sprite = PrefabManager.instance.royalItemBorder;
+            GameObject effectDisplayer = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+            TMP_Text effectText = effectDisplayer.GetComponent<TMP_Text>();
+            effectText.text = $"<color={hexColor}>{text}";
+            effectText.fontSize -= 2;
+            activatedStats.Add(effectDisplayer);
         }
     }
 

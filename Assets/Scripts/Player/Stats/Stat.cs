@@ -10,7 +10,7 @@ public class Stat
 {
     [SerializeField]
     public string statName;
-    public float BaseValue;
+    public float BaseValue = 1;
     //You want to access the value of the stat with .Value instead of _value, as that is a function
     //that returns the cleaned up version of the stat.
     //I exposed this to be easier to see in the inspector 
@@ -107,7 +107,7 @@ public class Stat
             }
         }
 
-        return (float)Math.Round(finalValue, 4);
+        return MathF.Round(finalValue, 1);
     }
 
     public virtual bool RemoveAllModifiersFromSource(object source)

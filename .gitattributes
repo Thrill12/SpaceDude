@@ -692,3 +692,16 @@
 /Assets/Resources/Data/Items/Weapons/Large/Magnum[[:space:]]Opus/MagnumOpusShoot.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Resources/Data/Items/Weapons/Large/Orenmir/49695__ejfortin__energy-whip-2.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Resources/Data/Items/Weapons/Large/Viktor/EnergyShot.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/LushkinR/Documentation/ReadMe.pdf filter=lfs diff=lfs merge=lfs -text
+/Assets/LushkinR/Shaders/FogShader.shadergraph filter=lfs diff=lfs merge=lfs -text
+/Assets/Rendering/Shaders/NewNoiseTexture.png filter=lfs diff=lfs merge=lfs -text
+/Assets/Rendering/Shaders/noisetexture[[:space:]](1).png filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Data/Items/Consumables/Healing[[:space:]]Vial/HealVialUse.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sounds/Music/EuropaIce[[:space:]]Extended.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sounds/UI/Click.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sounds/UI/EnterMenu.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sounds/UI/Equip.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sounds/UI/UI[[:space:]]Soundscape.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sounds/UI/Unequip.wav filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sprites/SuitEnvironments/Premade/tileset.png.meta filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sprites/UI/СommonElement/Background.jpg filter=lfs diff=lfs merge=lfs -text

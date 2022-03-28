@@ -16,6 +16,9 @@ public abstract class BaseWeapon : BaseEquippable
     [SerializeField, HideInInspector]
     public string attackSoundPath;
 
+    [EnumMask]
+    public EffectToCheck hitEffects;
+
     public Stat damage;
     public Stat criticalChance;
     public Stat criticalDamage;
@@ -29,10 +32,14 @@ public abstract class BaseWeapon : BaseEquippable
 
     public override void OnEquip(BaseEntity entity)
     {
-        hostEntity = entity;
-        if (!isEquipped)
+        base.OnEquip(entity);
+
+        if (itemMods.Count == 0) return;
+
+        foreach (var item in itemMods)
         {
-            isEquipped = true;         
+            item.statAffecting = (Stat)typeof(BaseWeapon).GetField(item.statStringName).GetValue(this);
+            item.statAffecting.AddModifier(item);
         }
     }    
 
@@ -42,10 +49,18 @@ public abstract class BaseWeapon : BaseEquippable
         hostEntity = null;
     }
 
-    public override void AddMod(Modifier mod)
-    {       
-        itemMods.Add(mod);
+    public override void OnLevelUp()
+    {
+        base.OnLevelUp();
+
+        damage.RemoveAllModifiersFromSource(this);
+        damage.AddModifier(new Modifier("DamageLevel", damage, damage.Value * Mathf.Pow(1.05f, itemLevel - 1) - damage.Value, Modifier.StatModType.Flat));
     }
+
+    //public override void AddMod(Modifier mod)
+    //{       
+    //    itemMods.Add(mod);
+    //}
 
     //Abstract function that other weapons derived from here will need to use to attack
     public abstract void Attack(GameObject weaponObject, AudioSource audioSource, WeaponsHolder holder, PlayerInput playerInput = null);

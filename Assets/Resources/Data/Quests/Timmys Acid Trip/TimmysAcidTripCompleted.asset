@@ -230,7 +230,8 @@ MonoBehaviour:
       _typeConstraint: 0
       _dynamic: 0
   entry: 0
-  graphToChangeTo: Data/NPCs/Timmy/Timmys Dialogue Graph
+  graphToChangeTo: {fileID: 11400000, guid: 6bed6439fe085144da566b1495763f05, type: 2}
+  graphToChangeToPath: 
   startImmediately: 0
   exit: 0
 --- !u!114 &11400000
@@ -252,7 +253,7 @@ MonoBehaviour:
   - {fileID: -4602165403337884498}
   - {fileID: 2594659193246672977}
   - {fileID: -1158815686169968424}
-  current: {fileID: 0}
+  current: {fileID: -1158815686169968424}
 --- !u!114 &2594659193246672977
 MonoBehaviour:
   m_ObjectHideFlags: 0

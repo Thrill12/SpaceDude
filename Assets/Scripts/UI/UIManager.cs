@@ -13,7 +13,15 @@ using System.Globalization;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager instance;
+    [Header("Sounds")]
+
+    public AudioClip normalClickSound;
+    public AudioClip itemEquipSound;
+    public AudioClip itemUnequipSound;
+    public AudioClip enterMenuSound;
+
+    [Space(5)]
+
     public PlayerEntity playerEntity;
 
     public GameObject firstSelectedInPauseMenu;
@@ -23,8 +31,16 @@ public class UIManager : MonoBehaviour
     [Header("In-Game UI")]
 
     public TMP_Text speedIndicator;
+    public TMP_Text deathScreenMiniText;
+    public List<string> deathScreenMiniTextList;
+    public GameObject respawnButton;
 
     public Image dampenersImage;
+
+    public GameObject deathScreen;
+
+    public GameObject playerSuitUI;
+    public GameObject shipUI;
 
     [Space(5)]
 
@@ -97,6 +113,16 @@ public class UIManager : MonoBehaviour
     public GameObject invisSelectButton;
     public BaseItem currentlySelectedItemToDisplay;
 
+    [Space(5)]
+
+    [Header("Discoveries")]
+
+    public GameObject discoveryRightSide;
+    public GameObject discoveryHexHolder;
+    public TMP_Text discoveryName;
+    public TMP_Text discoveryDescription;
+    public TMP_Text discoveryType;
+
     [Space(15)]
 
     public GameObject playerHitEffectHolder;
@@ -112,7 +138,7 @@ public class UIManager : MonoBehaviour
     private PlanetCheckerRaycast planetCheck;
     [HideInInspector]
     public List<Planet> allPlanets = new List<Planet>();
-    public Inventory inv;
+    public PlayerInventory inv;
 
     public bool isInUI;
 
@@ -123,13 +149,17 @@ public class UIManager : MonoBehaviour
     public float letterTypingPause;
 
     private List<GameObject> drawnCharacterStats = new List<GameObject>();
+
     private void Awake()
     {
-        instance = this;
+        GameManager.instance.LoadEssentials();
     }
 
     private void Start()
     {
+        Time.timeScale = 1;
+        GameManager.instance.masterMixer.SetFloat("EQMaster", 1);
+
         pfManager = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
         planetCheck = player.GetComponent<PlanetCheckerRaycast>();
 
@@ -142,11 +172,35 @@ public class UIManager : MonoBehaviour
         originalDialogueDisplayPosition = dialogueDisplay.transform.position;
 
         playerInput.SwitchCurrentActionMap("PlayerShip");
+
+        audioSource.ignoreListenerPause = true;
+
+        MusicManager.instance.shouldLoop = false;
     }
 
     private void Update()
     {
-        Debug.Log(playerInput.currentActionMap.name);
+        if (isInUI)
+        {
+            MusicManager.instance.musicSource.Pause();
+            MusicManager.instance.overrideSound = true;
+
+            playerSuitUI.SetActive(false);
+            shipUI.SetActive(false);
+            stationNameDisplay.gameObject.SetActive(false);
+            GameManager.instance.fpsCounter.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (!MusicManager.instance.musicSource.isPlaying)
+            {
+                MusicManager.instance.musicSource.Play();
+                MusicManager.instance.overrideSound = false;
+            }          
+
+            GameManager.instance.fpsCounter.gameObject.SetActive(true);
+            stationNameDisplay.gameObject.SetActive(true);
+        }
 
         isInShipInventory = shipInventory.activeInHierarchy;
 
@@ -160,7 +214,7 @@ public class UIManager : MonoBehaviour
                 {
                     BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
 
-                    if (equip.isEquipped)
+                    if (equip.isEquipped || inv.shipInventoryItems.Contains(equip))
                     {
                         leftItemStatDisplay.gameObject.SetActive(true);
                         rightItemStatDisplay.gameObject.SetActive(false);
@@ -175,9 +229,18 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    leftItemStatDisplay.gameObject.SetActive(false);
-                    rightItemStatDisplay.gameObject.SetActive(true);
-                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    if (inv.shipInventoryItems.Contains(currentlySelectedItemToDisplay))
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
                 }
             }
             else
@@ -196,7 +259,7 @@ public class UIManager : MonoBehaviour
                 {
                     BaseEquippable equip = (BaseEquippable)currentlySelectedItemToDisplay;
 
-                    if (equip.isEquipped)
+                    if (equip.isEquipped || inv.shipInventoryItems.Contains(equip))
                     {
                         leftItemStatDisplay.gameObject.SetActive(true);
                         rightItemStatDisplay.gameObject.SetActive(false);
@@ -211,9 +274,18 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    leftItemStatDisplay.gameObject.SetActive(false);
-                    rightItemStatDisplay.gameObject.SetActive(true);
-                    rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    if(inv.shipInventoryItems.Contains(currentlySelectedItemToDisplay))
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.gameObject.SetActive(false);
+                        leftItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }
+                    else
+                    {
+                        leftItemStatDisplay.gameObject.SetActive(false);
+                        rightItemStatDisplay.gameObject.SetActive(true);
+                        rightItemStatDisplay.GetComponent<ItemStatDisplayer>().ShowItem(currentlySelectedItemToDisplay);
+                    }                   
                 }
             }
             else
@@ -276,6 +348,15 @@ public class UIManager : MonoBehaviour
         #endregion
     }   
 
+    public void DisplayDeathScreen()
+    {
+        deathScreen.SetActive(true);
+        deathScreenMiniText.text = deathScreenMiniTextList[UnityEngine.Random.Range(0, deathScreenMiniTextList.Count)];
+        LeanTween.alphaCanvas(deathScreen.GetComponent<CanvasGroup>(), 1, 2).setIgnoreTimeScale(true);
+        playerInput.SwitchCurrentActionMap("UI");
+        SelectUIObject(respawnButton);
+    }
+
     private void DisplayItemStatsInItemStatDisplayer()
     {
         if (shipInventory.activeInHierarchy)
@@ -327,6 +408,11 @@ public class UIManager : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(objToSelect);
+
+        if(objToSelect != null)
+        {
+            audioSource.PlayOneShot(normalClickSound);
+        }       
     }
 
     //This selects the first item in the inventory when the player switches to a gamepad midgame
@@ -413,6 +499,8 @@ public class UIManager : MonoBehaviour
         {
             playerInput.SwitchCurrentActionMap("PlayerSuit");
         }
+
+        audioSource.PlayOneShot(enterMenuSound);
     }
 
     public void PlanetDescription()
@@ -450,10 +538,12 @@ public class UIManager : MonoBehaviour
             if (planetUI.activeInHierarchy)
             {
                 isInUI = true;
+                LeanTween.scale(planetUI, new Vector3(1, 1, 1), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
             }
             else
             {
                 isInUI = false;
+                LeanTween.scale(planetUI, new Vector3(0, 0, 0), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
             }
 
             if (Time.timeScale == 0)
@@ -513,11 +603,33 @@ public class UIManager : MonoBehaviour
         if (journalObject.activeInHierarchy)
         {
             isInUI = true;
+            SelectUIObject(discoveryHexHolder.transform.GetChild(0).gameObject);
+            journalObject.transform.localScale = new Vector3(0, 0, 0);
+            LeanTween.scale(journalObject, new Vector3(1,1,1), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
         }
         else
         {
             isInUI = false;
+            LeanTween.scale(journalObject, new Vector3(0, 0, 0), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
         }
+    }
+
+    public void DisplayDiscoverySelected(ProgressHex hex)
+    {
+        discoveryRightSide.SetActive(true);
+
+        if (hex.isDiscovered)
+        {
+            discoveryDescription.text = hex.hexDescription;
+            discoveryName.text = hex.hexName;
+            discoveryType.text = hex.hexType.ToString();
+        }
+        else
+        {
+            discoveryDescription.text = "???";
+            discoveryName.text = "???";
+            discoveryType.text = "???";
+        }        
     }
 
     public void Inventory()
@@ -563,11 +675,13 @@ public class UIManager : MonoBehaviour
             isInUI = true;
             commSelectedInMarketWindow = null;
             commSelectedInMarketWindowUnits = 0;
+            inventory.transform.localScale = new Vector3(0, 0, 0);
+            LeanTween.scale(inventory, new Vector3(1, 1, 1), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
         }
         else
         {
             isInUI = false;
-            
+            LeanTween.scale(inventory, new Vector3(0, 0, 0), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
         }
 
         leftItemStatDisplay.gameObject.SetActive(false);
@@ -612,12 +726,15 @@ public class UIManager : MonoBehaviour
             isInUI = true;
             commSelectedInMarketWindow = null;
             commSelectedInMarketWindowUnits = 0;
+            inventory.transform.localScale = new Vector3(0, 0, 0);
+            LeanTween.scale(inventory, new Vector3(1, 1, 1), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
         }
         else
         {
             isInUI = false;
             leftItemStatDisplay.gameObject.SetActive(false);
             rightItemStatDisplay.gameObject.SetActive(false);
+            LeanTween.scale(inventory, new Vector3(0, 0, 0), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
         }
     }
 
@@ -635,13 +752,13 @@ public class UIManager : MonoBehaviour
 
     public void PauseOn()
     {
-        Debug.Log("Pause on");
-
         CloseAllUI();
 
         playerInput.SwitchCurrentActionMap("UI");
 
         pauseMenu.SetActive(true);
+        pauseMenu.transform.localScale = new Vector3(0, 0, 0);
+        LeanTween.scale(pauseMenu, new Vector3(1, 1, 1), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(firstSelectedInPauseMenu);
@@ -653,8 +770,6 @@ public class UIManager : MonoBehaviour
 
     public void PauseOff()
     {
-        Debug.Log("Pause off");
-
         if (playerMovement.isPlayerPiloting)
         {
             playerInput.SwitchCurrentActionMap("PlayerShip");
@@ -663,6 +778,8 @@ public class UIManager : MonoBehaviour
         {
             playerInput.SwitchCurrentActionMap("PlayerSuit");
         }
+
+        LeanTween.scale(pauseMenu, new Vector3(0, 0, 0), 0.1f).setIgnoreTimeScale(true).setEaseOutCubic();
 
         pauseMenu.SetActive(false);
 
@@ -682,6 +799,12 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1;
         playerInput.SwitchCurrentActionMap("MainMenu");
         GameManager.instance.LoadMainMenu();
+    }
+
+    public void LoadLatestSave()
+    {
+        playerInput.SwitchCurrentActionMap("MainMenu");
+        GameManager.instance.LoadLatestSave();
     }
 
     //Selects the first item in the inventory for gamepad use
@@ -712,6 +835,9 @@ public class UIManager : MonoBehaviour
         {
             Destroy(item);
         }
+
+        GameManager.instance.playerInventory.playerCreditsText.text = GameManager.instance.playerInventory.playerCredits.ToString();
+        GameManager.instance.playerInventory.playerPowerText.text = GameManager.instance.playerInventory.playerPower.ToString();
 
         List<string> itemStatsStrings = playerEntity.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(x => x.FieldType == typeof(Stat)).Select(x => x.Name).ToList();
@@ -893,11 +1019,12 @@ public class UIManager : MonoBehaviour
     #endregion
 
     //Dialogue pages is the string you want it to display in the dialogue box, dialogue source is the place from where the dialogue came from
-    public void DisplayDialogue(string dialoguePages, string dialogueSource)
+    public void DisplayDialogue(string dialoguePages, NPC dialogueSource)
     {
         StopAllCoroutines();
         dialogueDisplay.SetActive(true);
-        dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource;
+        dialogueDisplay.GetComponentsInChildren<TMP_Text>()[1].text = dialogueSource.npcName;
+        dialogueDisplay.transform.Find("SpeakerImageBorder").transform.Find("SpeakerImageMask").transform.Find("SpeakerImage").GetComponent<Image>().sprite = dialogueSource.npcPortrait;
         //LeanTween.moveLocalY(dialogueDisplay, -400, 0.4f).setEaseInQuad();
         
         StartCoroutine(WriteDialogue(dialoguePages));        
@@ -1026,7 +1153,7 @@ public class UIManager : MonoBehaviour
                 newCommToAdd.itemStack = commSelectedInMarketWindowUnits;
 
                 planetCheck.planetHoveredP.ReceiveCommodity(newCommToAdd);
-                player.GetComponent<Inventory>().playerInventoryItems.Remove(player.GetComponent<Inventory>().playerInventoryItems.Where(x => x == commSelectedInMarketWindow).First());
+                player.GetComponent<PlayerInventory>().playerInventoryItems.Remove(player.GetComponent<PlayerInventory>().playerInventoryItems.Where(x => x == commSelectedInMarketWindow).First());
             }
             else
             {
@@ -1126,7 +1253,7 @@ public class UIManager : MonoBehaviour
             Debug.Log("No children to remove");
         }
 
-        foreach (BaseItem item in player.GetComponent<Inventory>().playerInventoryItems)
+        foreach (BaseItem item in player.GetComponent<PlayerInventory>().playerInventoryItems)
         {
             GameObject obj = Instantiate(pfManager.commodityMarketDisplayObject, planetMarketLayout.transform);
             obj.GetComponent<CommodityInvHolder>().commodityHeld = item;

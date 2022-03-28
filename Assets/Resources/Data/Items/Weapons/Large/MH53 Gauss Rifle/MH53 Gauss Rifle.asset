@@ -16,8 +16,8 @@ MonoBehaviour:
   itemName: MH53 Gauss Rifle
   itemDescription: The first prescription rifle that was used for more than 200 years
     in the Union's Special Ops gear
-  itemIcon: {fileID: 21300000, guid: 1022cb390e725fc4db8b3b621d1ca50a, type: 3}
-  itemIconPath: Data/Items/Weapons/Large/MH53 Gauss Rifle/MH53 Gauss Rifle
+  itemIcon: {fileID: 21300000, guid: 1893d9ac63483b7449321986468984c0, type: 3}
+  itemIconPath: Data/Items/Weapons/Large/MH53 Gauss Rifle/MH 53 Gauss Rifle
   itemRarity: {fileID: 11400000, guid: 635ab1b99fa9814498f4746cda084f8d, type: 2}
   itemValue: 414
   itemStack: 1
@@ -25,6 +25,12 @@ MonoBehaviour:
   itemType: 8
   itemSlot: Primary Weapon
   itemMods: []
+  xpMultiplier:
+    statName: XP Multiplier
+    BaseValue: 1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
@@ -71,7 +77,7 @@ MonoBehaviour:
   outOfAmmoSoundFilePath: Sounds/Files/OutOfAmmoSound
   projectile: {fileID: 4258480797235374359, guid: 9a67240cf5f35484ea951767c1745f91, type: 3}
   projectilePath: Data/Projectiles/SmallBullet
-  ammoType: 13
+  ammoType: 9
   ignoreAmmo: 0
   projectileSpeed:
     statName: Projectile Speed

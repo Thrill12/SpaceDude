@@ -9,6 +9,7 @@ using UnityEngine;
 public class NPC : Interactable
 {
     public string npcName;
+    public Sprite npcPortrait;
     public bool AssignedQuest = false;
 
     [Tooltip("Graph used for interactions with the NPC. Place any quests you want to give out in the graph itself.")]
@@ -16,12 +17,24 @@ public class NPC : Interactable
     [fsIgnore]
     private DialogueGraph defaultDialogueGraph;
     public Quest activeQuest;
-
+    [HideInInspector]
     public string dialogueGraphPath;
+
+    private NPCManager npcManager;
+    private GameEvents gameEvents;
 
     private void Start()
     {
+        npcManager = GameObject.FindGameObjectWithTag("NPCManager").GetComponent<NPCManager>();
+        gameEvents = GameObject.FindGameObjectWithTag("GameEvents").GetComponent<GameEvents>();
+
+        dialogueGraph = Resources.Load<DialogueGraph>(dialogueGraphPath);
         GetComponent<DialogueParser>().graph = dialogueGraph;
+
+        if(npcPortrait == null)
+        {
+            npcPortrait = PrefabManager.instance.unknownPersonPortrait;
+        }
 
         try
         {
@@ -33,16 +46,18 @@ public class NPC : Interactable
                 {
                     NPC thisNPCSave = progressSave.npcStates.npcList.First(x => x.npcName == npcName);
                     AssignedQuest = thisNPCSave.AssignedQuest;
-                    dialogueGraph = thisNPCSave.dialogueGraph;
                     activeQuest = thisNPCSave.activeQuest;
+                    dialogueGraphPath = thisNPCSave.dialogueGraphPath;
                 }
+
+                dialogueGraph = Resources.Load<DialogueGraph>(dialogueGraphPath);
 
                 GetComponent<DialogueParser>().graph = dialogueGraph;
                 GetComponent<DialogueParser>().isPlaying = false;
             }
             else
             {
-                NPCManager.instance.allNPCs.Add(this);
+                npcManager.allNPCs.Add(this);
             }
         }
         catch
@@ -65,7 +80,7 @@ public class NPC : Interactable
         if(dialogueGraph != null)
         {
             base.Interact();
-            GameEvents.instance.OnNPCCommunicate(this);
+            gameEvents.OnNPCCommunicate(this);
             if (!AssignedQuest)
             {
                 Debug.Log("Starting default graph");

@@ -14,7 +14,7 @@ public class KeybindShower : MonoBehaviour
 
     private void Start()
     {
-        playerInput = UIManager.instance.playerInput;
+        playerInput = GameManager.instance.uiManager.playerInput;
     }
 
     private void Update()

@@ -35,14 +35,14 @@ public class SlideyDoor : MonoBehaviour
     public void OpenDoor()
     {
         if (isOpen) return;
-        LeanTween.move(doorObject.gameObject, startPosition + moveVector, 1);
+        LeanTween.move(doorObject.gameObject, startPosition + moveVector, 1).setEaseOutCubic();
         isOpen = true;
     }
 
     public void CloseDoor()
     {
         if (!isOpen) return;
-        LeanTween.move(doorObject.gameObject, startPosition, 1);
+        LeanTween.move(doorObject.gameObject, startPosition, 1).setEaseOutCubic();
         isOpen = false;
     }
 }

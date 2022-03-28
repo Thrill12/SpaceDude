@@ -15,8 +15,6 @@ public class Follow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = toFollow.position;
-        transform.rotation = Quaternion.Euler(toFollow.transform.rotation.eulerAngles);
-        
+        transform.position = toFollow.position;       
     }
 }

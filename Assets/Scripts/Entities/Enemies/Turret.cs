@@ -6,13 +6,17 @@ using UnityEngine.Rendering.Universal;
 
 public class Turret : BaseEnemy
 {
-    private bool isPlayerInRange = false;
+    private bool isEnemyInRange = false;
     public float detectionRange;
+
+    public List<string> enemyTags = new List<string>();
 
     private Light2D lighttt;
 
     public float nextFire = 0;
     public EnemyWeaponsHolder holder;
+
+    private GameObject target;
 
     public override void Start()
     {
@@ -29,28 +33,43 @@ public class Turret : BaseEnemy
 
     public override void Update()
     {
-        base.Update();                
+        base.Update();
 
-        if (isPlayerInRange)
+        RaycastHit2D hit;       
+
+        if (target != null && isEnemyInRange)
         {
-            holder.RotateWeaponObject();
-            if(nextFire <= 0)
+            hit = Physics2D.Raycast(transform.position, target.transform.position - transform.position);
+
+            Debug.Log(hit.transform.tag);
+
+            if (enemyTags.Contains(hit.transform.tag))
             {
-                holder.AttackVoid();
-                Debug.Log("Turret has " + holder.currentlyEquippedWeapon.itemName + " equipped");
-                nextFire = holder.currentlyEquippedWeapon.attackCooldown.Value;
-            }
-            nextFire -= Time.deltaTime;
+                holder.RotateWeaponObject();
+                if (nextFire <= 0)
+                {
+                    holder.AttackVoid();
+                    Debug.Log("Turret has " + holder.currentlyEquippedWeapon.itemName + " equipped");
+                    nextFire = holder.currentlyEquippedWeapon.attackCooldown.Value;
+                }
+                nextFire -= Time.deltaTime;
+            }            
         }
 
-        if (Physics2D.OverlapCircleAll(transform.position, detectionRange).ToList().Any(x => x.gameObject.CompareTag("PlayerSuit")))
+        List<GameObject> nearbyEnemies = Physics2D.OverlapCircleAll(transform.position, detectionRange).ToList()
+            .Where(x => enemyTags.Contains(x.transform.tag)).Select(x => x.gameObject).ToList(); 
+
+        if (nearbyEnemies.Count > 0)
         {
-            isPlayerInRange = true;
+            target = nearbyEnemies[Random.Range(0, nearbyEnemies.Count)];
+            Debug.Log("Target found: " + target.gameObject.name);
+            isEnemyInRange = true;
             lighttt.enabled = true;
         }
         else
         {
-            isPlayerInRange = false;
+            target = null;
+            isEnemyInRange = false;
             lighttt.enabled = false;
         }
     }

@@ -23,7 +23,7 @@ public class Goal : ScriptableObject
 
     public void Evaluate()
     {
-        QuestManager.instance.SaveQuests();
+        GameManager.instance.questManager.SaveQuests();
         if(GoalCurrentAmount >= GoalRequiredAmount)
         {
             Complete();
@@ -34,10 +34,10 @@ public class Goal : ScriptableObject
     {
         if (!GoalCompleted)
         {
-            UIManager.instance.audioSource.PlayOneShot(PrefabManager.instance.questGoalCompletedSound);
+            GameManager.instance.uiManager.audioSource.PlayOneShot(PrefabManager.instance.questGoalCompletedSound);
             GoalCompleted = true;
             goalQuest.CheckGoals();
-            QuestManager.instance.SaveQuests();
+            GameManager.instance.questManager.SaveQuests();
         }       
     }
 }

@@ -21,6 +21,7 @@ public class MainMenu : MonoBehaviour
 
     [Header("Menus")]
 
+    public GameObject menuCamera;
     public GameObject optionsMenu;
     public GameObject mainMenu;
     public GameObject rebindingKeysKeyboard;
@@ -37,6 +38,8 @@ public class MainMenu : MonoBehaviour
     public Toggle fpsCounter;
     public Toggle vsyncToggle;
 
+    private bool isAnimating = false;
+
     private void Start()
     {
         SetSelectedObject(firstObjSelectedFromGameStart);    
@@ -46,6 +49,10 @@ public class MainMenu : MonoBehaviour
 
         GameManager.instance.HandleSaveInit();
         InitializeSettings();
+
+        GameManager.instance.masterMixer = mixer;
+
+        Time.timeScale = 1;
     }
 
     private void Update()
@@ -71,18 +78,43 @@ public class MainMenu : MonoBehaviour
     //Turns on options
     public void Options()
     {
-        mainMenu.SetActive(false);
+        if (isAnimating) return;
+        StartCoroutine(OptionsCor());
+    }
+
+    private IEnumerator OptionsCor()
+    {
+        isAnimating = true;
         SetSelectedObject(firstObjSelectedInOptions);
         optionsMenu.SetActive(true);
+        LeanTween.rotate(menuCamera, new Vector3(0, -100, 0), 2).setEaseOutCubic();
+
+        yield return new WaitForSeconds(2);
+
+        mainMenu.SetActive(false);
+
+        isAnimating = false;
     }
 
     //Comes back from options
     public void BackFromOptions()
     {
+        if (isAnimating) return;
+        StartCoroutine(BackFromOptionsCor());        
+    }
+
+    private IEnumerator BackFromOptionsCor()
+    {
+        isAnimating = true;
         mainMenu.SetActive(true);
         SetSelectedObject(firstObjSelectedFromOptions);
         SaveSettings();
+        LeanTween.rotate(menuCamera, new Vector3(0, -10, 0), 2).setEaseOutCubic();
+
+        yield return new WaitForSeconds(2);
+
         optionsMenu.SetActive(false);
+        isAnimating = false;
     }
 
     //Selects the object to be selected for gamepad use
@@ -95,8 +127,21 @@ public class MainMenu : MonoBehaviour
     //Switches to game scene
     public void GoToGame()
     {
+        if (isAnimating) return;
+        StartCoroutine(GoGameCor());
+    }
+
+    private IEnumerator GoGameCor()
+    {
+        isAnimating = true;
         SaveSettings();
-        GameManager.instance.LoadGame();
+
+        LeanTween.rotate(menuCamera, new Vector3(10, 0, 0), 5);
+
+        yield return new WaitForSeconds(2.5f);
+
+        
+        GameManager.instance.LoadGameFromMainMenu();
     }
 
     //Loads settings from save file

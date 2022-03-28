@@ -14,16 +14,35 @@ public class ItemHolder : MonoBehaviour
     public int stack = 1;
     private SpriteRenderer spriteRenderer;
     private PrefabManager prefabManager;
-    private Inventory playerInventory;
+    private PlayerInventory playerInventory;
+    private UIManager uiManager;
 
     private void Start()
     {
-        Inventory.instance.LoadResourcesForItem(itemHeld);
+        playerInventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<PlayerInventory>();
+        uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
+
+        playerInventory.LoadResourcesForItem(itemHeld);
 
         prefabManager = PrefabManager.instance;
-        itemHeld = ScriptableObject.Instantiate(itemHeld);
-        playerInventory = Inventory.instance;
-        itemHeld.itemStack = stack;
+        if(itemHeld != null)
+        {
+            itemHeld = ScriptableObject.Instantiate(itemHeld);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        if (stack <= itemHeld.itemMaxStack)
+        {
+            itemHeld.itemStack = stack;
+        }
+        else
+        {
+            itemHeld.itemStack = itemHeld.itemMaxStack;
+        }
+        
         //Setting up the item holder on the floor, its light/color etc.
         GetComponentInChildren<Light2D>().color = itemHeld.itemRarity.rarityColor;
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -40,10 +59,10 @@ public class ItemHolder : MonoBehaviour
         {
             BaseEquippable equippable = (BaseEquippable)itemHeld;
             equippable.isEquipped = false;
-            equippable.hostEntity = UIManager.instance.playerEntity;
+            equippable.hostEntity = uiManager.playerEntity;
 
             //Only generate random mods if the item is flagged for it
-            if (generateStats)
+            if (generateStats && !(equippable as BaseWeapon))
             {
                 equippable.GenerateMods();
             }
@@ -59,7 +78,7 @@ public class ItemHolder : MonoBehaviour
     {
         if (collision.transform.CompareTag("PlayerSuit"))
         {
-            if (Inventory.instance.AddItem(itemHeld))
+            if (playerInventory.AddItem(itemHeld))
             {
                 ClickedOn();
             }

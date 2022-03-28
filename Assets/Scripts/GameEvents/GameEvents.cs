@@ -5,32 +5,35 @@ using UnityEngine;
 
 public class GameEvents : MonoBehaviour
 {
-    public static GameEvents instance;
-
-    private void Awake()
-    {
-        instance = this;
-    }
-
     //These events should be called whenever an action happens in the game world, could be used eg. for tracking progress in quests.
 
     #region EntityEvents
-    public event Action<BaseEntity> onEntityKilled;
-    public void OnEntityKilled(BaseEntity entity)
+    public event Action<BaseEntity, BaseEntity> onEntityKilled;
+    public void OnEntityKilled(BaseEntity victim, BaseEntity killer)
     {
         if(onEntityKilled != null)
         {
-            onEntityKilled(entity);           
+            onEntityKilled(victim, killer);           
         }
     }
 
-    public event Action<BaseEntity, BaseEntity, float> onEntityHit;
+    public event Action<BaseEntity, BaseEntity, float, EffectToCheck> onEntityHit;
 
-    public void OnEntityHit(BaseEntity victim, BaseEntity hitter, float damage)
+    public void OnEntityHit(BaseEntity victim, BaseEntity hitter, float damage, EffectToCheck effectFlags)
     {
         if(onEntityHit != null)
         {
-            onEntityHit(victim, hitter, damage);
+            onEntityHit(victim, hitter, damage, effectFlags);
+        }
+    }
+
+    public event Action<NPC> onNPCCommunicate;
+
+    public void OnNPCCommunicate(NPC npc)
+    {
+        if (onNPCCommunicate != null)
+        {
+            onNPCCommunicate(npc);
         }
     }
     #endregion
@@ -48,14 +51,15 @@ public class GameEvents : MonoBehaviour
 
     #region Miscellaneous Events
 
-    public event Action<NPC> onNPCCommunicate;
+    public event Action<BaseItem> onItemPickedUp;
 
-    public void OnNPCCommunicate(NPC npc)
+    public void OnItemPickedUp(BaseItem item)
     {
-        if(onNPCCommunicate != null)
+        if(item != null)
         {
-            onNPCCommunicate(npc);
+            onItemPickedUp(item);
         }
     }
+
     #endregion
 }

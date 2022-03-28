@@ -20,16 +20,15 @@ public class KillGoal : Goal
     public override void Init(Quest quest)
     {
         base.Init(quest);
-        GameEvents.instance.onEntityKilled += EnemyDied;
+        GameManager.instance.gameEvents.onEntityKilled += EnemyDied;
     }
 
-    void EnemyDied(BaseEntity enemy)
+    void EnemyDied(BaseEntity enemy, BaseEntity killer)
     {
-        if(enemy.ID == EnemyId)
+        if(enemy.ID == EnemyId && killer.entityName == "Player")
         {
             GoalCurrentAmount++;
             Evaluate();
-            Debug.Log("Progress made hehe");
         }
     }
 }

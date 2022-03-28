@@ -5,9 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(BaseEnemy))]
 public class EnemyWeaponsHolder : WeaponsHolder
 {
+    private Transform playerPosition;
+
     public override void Start()
     {
-        inventory = Inventory.instance;
+        playerPosition = GameObject.FindGameObjectWithTag("PlayerSuit").transform;
         audioSource = GetComponent<AudioSource>();
         currentlyEquippedWeapon = ScriptableObject.Instantiate(mainWeapon);
         SwapWeapons();
@@ -30,7 +32,7 @@ public class EnemyWeaponsHolder : WeaponsHolder
     public void RotateWeaponObject()
     {
         Vector3 objectPos = transform.position;
-        Vector3 targetPos = UIManager.instance.playerEntity.gameObject.transform.position;
+        Vector3 targetPos = playerPosition.position;
 
         Vector3 direction = new Vector3();
 

@@ -10,7 +10,6 @@ public class PlayerSuitMovement : MonoBehaviour
 {
 
     [Header("Movement Settings")]
-    public float moveSpeed = 5;
     public float dashSpeed = 5;
     public float dashTime = 1;
 
@@ -26,6 +25,8 @@ public class PlayerSuitMovement : MonoBehaviour
     //Get the overarching player object.
     private GameObject playerObj;
     public PlayerInput playerInput;
+
+    public GameObject feetObject;
 
     //Input variables
     private float inputX;
@@ -178,11 +179,15 @@ public class PlayerSuitMovement : MonoBehaviour
             //Separates value given by the input in x and y components
             inputX = context.ReadValue<Vector2>().x;
             inputY = context.ReadValue<Vector2>().y;
+            //GetComponent<Animator>().SetBool("Walking", true);
+            feetObject.GetComponent<Animator>().SetBool("Walking", true);
         }
         else
         {
             inputX = 0;
             inputY = 0;
+            feetObject.GetComponent<Animator>().SetBool("Walking", false);
+            //GetComponent<Animator>().SetBool("Walking", false);
         }
     }
 
@@ -222,7 +227,7 @@ public class PlayerSuitMovement : MonoBehaviour
     private void MovePlayer()
     {
         //Set the velocity of the rigid body.
-        rb.velocity = new Vector2(inputX * moveSpeed, inputY * moveSpeed);
+        rb.velocity = new Vector2(inputX * GetComponent<BaseEntity>().moveSpeed.Value, inputY * GetComponent<BaseEntity>().moveSpeed.Value);
     }
 
     #endregion

@@ -5,17 +5,10 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
-    public static QuestManager instance;
-
     public List<Quest> allQuests = new List<Quest>();
 
     public List<Quest> activeQuests = new List<Quest>();
     public List<Quest> completedQuests = new List<Quest>();
-
-    private void Awake()
-    {
-        instance = this;
-    }
 
     private void Start()
     {
@@ -157,7 +150,7 @@ public class QuestManager : MonoBehaviour
         foreach (var item in savee.questsActive)
         {
             Quest questToAdd = (Quest)item;
-            NPC questGiver = NPCManager.instance.allNPCs.First(x => x.npcName == questToAdd.npcAssignedTo);
+            NPC questGiver = GameManager.instance.npcManager.allNPCs.First(x => x.npcName == questToAdd.npcAssignedTo);
 
             Quest newQuest = Instantiate(questToAdd);
             newQuest.npcAssignedTo = questGiver.npcName;

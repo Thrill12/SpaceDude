@@ -23,10 +23,7 @@ public class PlayersuitManager : MonoBehaviour
     [Tooltip("The internal location of the player when they enter the airlock.")]
     public GameObject airLockInterior;
 
-    [Space(5)]
-
-    public GameObject playerSuitUI;
-    public GameObject shipUI;
+    [Space(5)]    
 
     [HideInInspector]
     public GameObject instantiatedPlayerSuitCam;
@@ -41,7 +38,7 @@ public class PlayersuitManager : MonoBehaviour
     {
         #region Make player character inactive.
         //Hide the player character, setting the character game object to inactive as default the player is in the ship at start of the scene.
-        instantiatedPlayerSuit = Inventory.instance.player.gameObject;
+        instantiatedPlayerSuit = GameManager.instance.playerInventory.player.gameObject;
         instantiatedPlayerSuit.SetActive(false);
         instantiatedPlayerSuitCam = Instantiate(playerSuitCamPrefab, transform.position, Quaternion.identity);
         instantiatedPlayerSuitCam.SetActive(false);
@@ -54,7 +51,9 @@ public class PlayersuitManager : MonoBehaviour
 
     private void Update()
     {
-        if (UIManager.instance.playerInput.currentActionMap.name == "Dialogue")
+        if (GameManager.instance.uiManager == null) return;
+
+        if (GameManager.instance.uiManager.playerInput.currentActionMap.name == "Dialogue")
         {
             instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = orthoSizeDialogue;
             instantiatedPlayerSuitCam.GetComponent<CinemachineCameraOffset>().m_Offset = Vector2.Lerp(instantiatedPlayerSuitCam.GetComponent<CinemachineCameraOffset>().m_Offset,
@@ -69,16 +68,19 @@ public class PlayersuitManager : MonoBehaviour
                 0.1f);
         }
 
-        if (ship.isPlayerPiloting)
+        if (!GameManager.instance.uiManager.isInUI)
         {
-            playerSuitUI.SetActive(false);
-            shipUI.SetActive(true);
-        }
-        else
-        {
-            playerSuitUI.SetActive(true);
-            shipUI.SetActive(false);
-        }
+            if (ship.isPlayerPiloting)
+            {
+                GameManager.instance.uiManager.playerSuitUI.SetActive(false);
+                GameManager.instance.uiManager.shipUI.SetActive(true);
+            }
+            else
+            {
+                GameManager.instance.uiManager.playerSuitUI.SetActive(true);
+                GameManager.instance.uiManager.shipUI.SetActive(false);
+            }
+        }       
     }
 
     public void PlayerLeaveCockpit()
@@ -200,8 +202,8 @@ public class PlayersuitManager : MonoBehaviour
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_XDamping = 1;
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 1;
 
-        //Fold out the player ship's wings as the player is now piloting.
         ship.FoldInWings();
+        GameManager.instance.SaveProgress();
     }
 
     public void EntertShipTransition()

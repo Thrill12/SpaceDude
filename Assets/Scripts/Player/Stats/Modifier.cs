@@ -19,7 +19,7 @@ public class Modifier
     [HideInInspector]
     public int Order;
     [fsIgnore, NonSerialized]
-    public BaseItem Source; // Added this variable
+    public object Source; // Added this variable
 
     // "Main" constructor. Requires all variables.
     public Modifier(string statDisplayStringName, Stat statToAffect, float value, StatModType type, int order, BaseItem source) // Added "source" input parameter

@@ -17,6 +17,7 @@ public class BaseEntity : MonoBehaviour
     public float energy;
     public Stat maxEnergy;
     public Stat energyRegeneration;
+    public Stat moveSpeed;
 
     [Space(5)]
 
@@ -31,6 +32,8 @@ public class BaseEntity : MonoBehaviour
     [HideInInspector]
     public bool isDead;
 
+    private GameEvents gameEvents;
+
     private void Awake()
     {
         health = maxHealth.Value;
@@ -38,17 +41,13 @@ public class BaseEntity : MonoBehaviour
 
     public virtual void Start()
     {
+        gameEvents = GameObject.FindGameObjectWithTag("GameEvents").GetComponent<GameEvents>();
         pfMan = GameObject.FindGameObjectWithTag("PrefabManager").GetComponent<PrefabManager>();
+        gameEvents.onEntityKilled += OnKill;
     }
 
     public virtual void Update()
-    {
-        if (health <= 0 && !isDead)
-        {
-            Die();
-            isDead = true;
-        }
-
+    {     
         if (nextFireHealthRegen <= 0)
         {
             RegenHealth(healthRegeneration.Value);
@@ -75,34 +74,34 @@ public class BaseEntity : MonoBehaviour
         nextFireEnergyRegen = 1;
     }
 
-    public virtual void TakeDamage(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false)
+    public virtual void TakeDamage(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false, EffectToCheck effectFlags = 0)
     {
         GetComponent<AudioSource>().PlayOneShot(hitSound);
-        TakeDamageWithPopup(damageToTake, popupPosition, hitter, ignoreEffect);
+        TakeDamageWithPopup(damageToTake, popupPosition, hitter, ignoreEffect, effectFlags);
     }
 
-    private void TakeDamageWithPopup(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false)
+    private void TakeDamageWithPopup(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false, EffectToCheck effectFlags = 0)
     {
         if (health > 0)
         {
-            TakeDamagePureNumbers(damageToTake, hitter, ignoreEffect);
+            TakeDamagePureNumbers(damageToTake, hitter, ignoreEffect, effectFlags);
 
-            PrefabManager.instance.SpawnNumberPopup(Mathf.RoundToInt(damageToTake), PrefabManager.instance.orange, popupPosition);
+            PrefabManager.instance.SpawnNumberPopup(Mathf.RoundToInt(damageToTake), PrefabManager.instance.ascendedColour, popupPosition);
         }
 
         //(Vector2)transform.position + UnityEngine.Random.insideUnitCircle)
     }
 
-    public virtual void TakeDamageNoSound(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false)
+    public virtual void TakeDamageNoSound(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false, EffectToCheck effectFlags = 0)
     {
-        TakeDamageWithPopup(damageToTake, popupPosition, hitter, ignoreEffect);
+        TakeDamageWithPopup(damageToTake, popupPosition, hitter, ignoreEffect, effectFlags);
     }
 
-    private void TakeDamagePureNumbers(float damageToTake, BaseEntity hitter, bool ignoreEffect = false)
+    private void TakeDamagePureNumbers(float damageToTake, BaseEntity hitter, bool ignoreEffect = false, EffectToCheck effectFlags = 0)
     {
         if (!ignoreEffect)
         {
-            GameEvents.instance.OnEntityHit(this, hitter, damageToTake);
+            gameEvents.OnEntityHit(this, hitter, damageToTake, effectFlags);
         }      
 
         float damageToGive = 0;
@@ -115,17 +114,31 @@ public class BaseEntity : MonoBehaviour
             damageToGive = (UnityEngine.Random.Range(damageToTake - 2, damageToTake + 2) * (2 - 100 / (100 - armour.Value)));
         }
         health -= damageToGive;
+
+        if (health <= 0 && !isDead)
+        {
+            Die(hitter);
+            isDead = true;
+        }
     }
 
     public void TakeDamagePure(float damage)
     {
         health -= damage;
-        PrefabManager.instance.SpawnNumberPopup(Mathf.RoundToInt(damage), PrefabManager.instance.orange, transform.position + (Vector3)UnityEngine.Random.insideUnitCircle);
+        PrefabManager.instance.SpawnNumberPopup(Mathf.RoundToInt(damage), PrefabManager.instance.ascendedColour, transform.position + (Vector3)UnityEngine.Random.insideUnitCircle);
     }
 
-    public virtual void Die()
+    public virtual void Die(BaseEntity killer)
     {
-        GameEvents.instance.OnEntityKilled(this);
+        gameEvents.OnEntityKilled(this, killer);
         Destroy(gameObject);
+    }
+
+    public virtual void OnKill(BaseEntity victim, BaseEntity killer)
+    {
+        if(killer == this)
+        {
+            Debug.Log(entityName + " killed " + victim.entityName);
+        }       
     }
 }

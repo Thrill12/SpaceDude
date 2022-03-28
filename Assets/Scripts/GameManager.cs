@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -29,6 +30,15 @@ public class GameManager : MonoBehaviour
 
     public float autosaveInterval = 300;
     private float autosavingTimer = 0;
+
+    public UIManager uiManager;
+    public QuestManager questManager;
+    public PlayerInventory playerInventory;
+    public NPCManager npcManager;
+    public ProgressHolder progress;
+    public GameEvents gameEvents;
+
+    public AudioMixer masterMixer;
 
     private void Awake()
     {
@@ -115,6 +125,26 @@ public class GameManager : MonoBehaviour
                     gun.outOfAmmoSound = Resources.Load<AudioClip>(gun.outOfAmmoSoundFilePath);
                 }
             }
+
+            if(item as BaseChestArmour)
+            {
+                BaseChestArmour chest = item as BaseChestArmour;
+                chest.spriteLargeWeaponEquipped = Resources.Load<Sprite>(chest.spriteLargeWeaponEquippedPath);
+                chest.spriteSmallWeaponEquipped = Resources.Load<Sprite>(chest.spriteSmallWeaponEquippedPath);
+                chest.spriteNoWeaponsEquipped = Resources.Load<Sprite>(chest.spriteNoWeaponsEquippedPath);
+            }
+
+            if (item as BaseHelmet)
+            {
+                BaseHelmet helmet = item as BaseHelmet;
+                helmet.showableSprite = Resources.Load<Sprite>(helmet.showableSpritePath);
+            }
+        }
+
+        if(item as BaseConsumable)
+        {
+            BaseConsumable consumable = item as BaseConsumable;
+            consumable.useSound = Resources.Load<AudioClip>(consumable.useSoundPath);
         }
     }
 
@@ -131,12 +161,24 @@ public class GameManager : MonoBehaviour
     //Loads the game scene from the main menu
     float timer, displayLoadingBarLoadingValue;
     List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
-    public void LoadGame()
-    {      
-        loadingScreen.SetActive(true);
-        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.TITLE_SCREEN));
-        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.MAIN_GAME, LoadSceneMode.Additive));
 
+    public void LoadLatestSave()
+    {
+        loadingScreen.SetActive(true);
+        scenesLoading.Clear();
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.MAIN_GAME));
+        AsyncOperation loadingGame = SceneManager.LoadSceneAsync((int)SceneIndexes.MAIN_GAME, LoadSceneMode.Additive);
+        scenesLoading.Add(loadingGame);
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
+    public void LoadGameFromMainMenu()
+    {
+        loadingScreen.SetActive(true);
+        scenesLoading.Clear();
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.TITLE_SCREEN));
+        AsyncOperation loadingGame = SceneManager.LoadSceneAsync((int)SceneIndexes.MAIN_GAME, LoadSceneMode.Additive);
+        scenesLoading.Add(loadingGame);
         StartCoroutine(GetSceneLoadProgress());
     }
 
@@ -178,6 +220,16 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    public void LoadEssentials()
+    {
+        uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
+        questManager = GameObject.FindGameObjectWithTag("QuestManager").GetComponent<QuestManager>();
+        playerInventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<PlayerInventory>();
+        npcManager = GameObject.FindGameObjectWithTag("NPCManager").GetComponent<NPCManager>();
+        progress = GameObject.FindGameObjectWithTag("Progress").GetComponent<ProgressHolder>();
+        gameEvents = GameObject.FindGameObjectWithTag("GameEvents").GetComponent<GameEvents>();
+    }
+
     #region Saving
     public void SaveOptions()
     {
@@ -208,11 +260,11 @@ public class GameManager : MonoBehaviour
 
     public void SaveNPCStates()
     {
-        if (NPCManager.instance == null) return;
+        if (npcManager == null) return;
 
         NPCStatesSave save = new NPCStatesSave();
 
-        foreach (var item in NPCManager.instance.allNPCs)
+        foreach (var item in npcManager.allNPCs)
         {
             save.npcList.Add(item);
         }
@@ -222,43 +274,42 @@ public class GameManager : MonoBehaviour
 
     public void LoadNPCStates()
     {
-        if (NPCManager.instance == null) return;
+        if (npcManager == null) return;
 
         ProgressSave progressSavee = progressSave as ProgressSave;
         NPCStatesSave save = progressSavee.npcStates as NPCStatesSave;
 
         foreach (var item in save.npcList)
         {
-            NPCManager.instance.allNPCs.Add(item);
+            npcManager.allNPCs.Add(item);
         }
     }
 
     public void SaveInventory()
     {
-        if (Inventory.instance == null) return;
+        if (playerInventory == null) return;
 
         progressSave.inventorySave = new InventorySave();
+
+        progressSave.inventorySave.playerCredits = playerInventory.playerCredits;
 
         List<BaseItem> itemsEquipped = new List<BaseItem>();
         List<BaseItem> playerItems = new List<BaseItem>();
         List<BaseItem> shipItems = new List<BaseItem>();
 
-        for (int i = 0; i < Inventory.instance.itemsEquipped.Count; i++)
+        for (int i = 0; i < playerInventory.itemsEquipped.Count; i++)
         {
-            BaseItem item = Inventory.instance.itemsEquipped[i];
-            itemsEquipped.Add(item);
+            itemsEquipped.Add(playerInventory.itemsEquipped[i]);
         }
 
-        for (int i = 0; i < Inventory.instance.playerInventoryItems.Count; i++)
+        for (int i = 0; i < playerInventory.playerInventoryItems.Count; i++)
         {
-            BaseItem item = Inventory.instance.playerInventoryItems[i];
-            playerItems.Add(item);
+            playerItems.Add(playerInventory.playerInventoryItems[i]);
         }
 
-        for (int i = 0; i < Inventory.instance.shipInventoryItems.Count; i++)
+        for (int i = 0; i < playerInventory.shipInventoryItems.Count; i++)
         {
-            BaseItem item = Inventory.instance.shipInventoryItems[i];
-            shipItems.Add(item);
+            shipItems.Add(playerInventory.shipInventoryItems[i]);
         }
 
         progressSave.inventorySave.itemsEquipped = itemsEquipped.ToArray();
@@ -278,11 +329,52 @@ public class GameManager : MonoBehaviour
         PlayerShipMovement.instance.gameObject.transform.rotation = Quaternion.Euler(progressSave.playerShipRotation);
     }
 
+    public void SaveDiscoveries()
+    {
+        progressSave.discoveriesSave = new DiscoveriesSave();
+
+        foreach (var item in progress.locationsDiscovered)
+        {
+            progressSave.discoveriesSave.locationsDiscovered.Add(item);
+        }
+
+        foreach (var item in progress.npcsDiscovered)
+        {
+            progressSave.discoveriesSave.npcsDiscovered.Add(item);
+        }
+
+        foreach (var item in progress.itemsDiscovered)
+        {
+            progressSave.discoveriesSave.itemsDiscovered.Add(item);
+        }
+    }
+
+    public void LoadDiscoveries()
+    {
+        if (progressSave.discoveriesSave == null) return;
+
+        foreach (var item in progressSave.discoveriesSave.locationsDiscovered)
+        {
+            progress.locationsDiscovered.Add(item);
+        }
+
+        foreach (var item in progressSave.discoveriesSave.npcsDiscovered)
+        {
+            progress.npcsDiscovered.Add(item);
+        }
+
+        foreach (var item in progressSave.discoveriesSave.itemsDiscovered)
+        {
+            progress.itemsDiscovered.Add(item);
+        }
+    }
+
     public void SaveProgress()
     {
         SaveNPCStates();
         SaveInventory();
         SavePlayerLocations();
+        SaveDiscoveries();
 
         string json = Serialization.Serialize(progressSave.GetType(), progressSave);
         File.WriteAllText(saveFilePath, json);
@@ -292,9 +384,12 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Loading progress Data");
 
-        progressSave = Serialization.Deserialize(progressSave.GetType(), File.ReadAllText(saveFilePath)) as ProgressSave;
+        if (File.Exists(saveFilePath))
+        {
+            progressSave = Serialization.Deserialize(progressSave.GetType(), File.ReadAllText(saveFilePath)) as ProgressSave;
 
-        LoadNPCStates();
+            LoadNPCStates();
+        }
     }
 
     //public void SaveProgress()

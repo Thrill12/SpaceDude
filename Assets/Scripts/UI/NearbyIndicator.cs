@@ -61,9 +61,9 @@ public class NearbyIndicator : MonoBehaviour
         {
             playerObj = PlayerShipMovement.instance.gameObject;
         }
-        else if (Inventory.instance.player != null)
+        else if (GameManager.instance.playerInventory.player != null)
         {
-            playerObj = Inventory.instance.player.gameObject;
+            playerObj = GameManager.instance.playerInventory.player.gameObject;
         }
 
         if (playerObj == null)

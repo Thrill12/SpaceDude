@@ -19,7 +19,7 @@ public class ExplosiveBarrel : BaseEnemy
         base.Update();
     }
 
-    public override void Die()
+    public override void Die(BaseEntity killer)
     {
         List<GameObject> nearby = Physics2D.OverlapCircleAll(transform.position, explosionRadius).Select(x => x.gameObject).ToList();
 
@@ -39,6 +39,6 @@ public class ExplosiveBarrel : BaseEnemy
         GameObject explosion = Instantiate(explosionEffect, transform.position, Quaternion.identity);
         explosion.GetComponent<AudioSource>().PlayOneShot(PrefabManager.instance.explosionSound);
 
-        base.Die();
+        base.Die(killer);
     }
 }

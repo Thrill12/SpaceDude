@@ -49,7 +49,7 @@ public class Location : MonoBehaviour
 
     private void Start()
     {
-        ui = UIManager.instance;
+        ui = GameManager.instance.uiManager;
         if (shouldGeneateRandomly)
         {
             if(locType == LocationType.Station)
@@ -67,8 +67,8 @@ public class Location : MonoBehaviour
     {
         if(collision.CompareTag("Player") || collision.CompareTag("PlayerSuit"))
         {
-            UIManager.instance.ToggleLocationNameDisplay(true, locationName);
-            GameEvents.instance.OnLocationEntered(this);
+            ui.ToggleLocationNameDisplay(true, locationName);
+            GameManager.instance.gameEvents.OnLocationEntered(this);
         }
         
     }
@@ -77,7 +77,7 @@ public class Location : MonoBehaviour
     {
         if(collision.CompareTag("Player") || collision.CompareTag("PlayerSuit"))
         {
-            UIManager.instance.ToggleLocationNameDisplay(false, locationName);
+            GameManager.instance.uiManager.ToggleLocationNameDisplay(false, locationName);
         }       
     }
 }

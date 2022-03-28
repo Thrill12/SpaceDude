@@ -15,7 +15,7 @@ public class WeaponsHolder : MonoBehaviour
 
     public PlayerInput playerInput;
 
-    public Inventory inventory;
+    public PlayerInventory inventory;
 
     public BaseWeapon currentlyEquippedWeapon;
     public Transform weaponObjectPosition;
@@ -27,16 +27,19 @@ public class WeaponsHolder : MonoBehaviour
     public TMP_Text currentBullets;
     public TMP_Text totalBulletsInInventory;
     public Image weaponEquippedIcon;
-    public Image cooldownIndicator;
+    public Image cooldownIndicator;   
 
     private float nextFire;
     public AudioSource audioSource;
     private bool firing = false;
     private int totalMagazinesAvailable;
 
+    private UIManager uiManager;
+
     public virtual void Start()
     {
-        inventory = Inventory.instance;
+        inventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<PlayerInventory>();
+        uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
 
         SwapWeapons();
         audioSource = GetComponent<AudioSource>();
@@ -51,8 +54,9 @@ public class WeaponsHolder : MonoBehaviour
             AttackVoid();
         }
 
-        if(currentlyEquippedWeapon != null)
-        {        
+        if(currentlyEquippedWeapon != null && !uiManager.isInUI)
+        {
+            ammoDisplay.SetActive(true);
             if (ammoDisplay.activeInHierarchy)
             {
                 weaponEquippedIcon.sprite = currentlyEquippedWeapon.itemIcon;
@@ -63,8 +67,10 @@ public class WeaponsHolder : MonoBehaviour
                     BaseGun gun = (BaseGun)currentlyEquippedWeapon;
                     totalMagazinesAvailable = inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Sum(x => x.itemStack);
 
+                    
                     currentBullets.text = gun.currentBullets.ToString();
                     totalBulletsInInventory.text = (totalMagazinesAvailable * (int)gun.maxBulletsInClip.Value).ToString();
+                    
                 }
                 else
                 {
@@ -109,7 +115,7 @@ public class WeaponsHolder : MonoBehaviour
             {
                 if(inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Count() >= 1)
                 {
-                    inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).First().itemStack -= 1;
+                    inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Last().itemStack -= 1;
                     gun.currentBullets = (int)gun.maxBulletsInClip.Value;
                 }               
             }
@@ -130,17 +136,19 @@ public class WeaponsHolder : MonoBehaviour
                 {
                     if(inventory.playerInventoryItems.Where(x => x.itemType == gun.ammoType).Sum(x => x.itemStack) != 0)
                     {
-                        ReloadVoid();
+                        ReloadVoid();                       
                     }
                     else
                     {
                         audioSource.PlayOneShot(gun.outOfAmmoSound);
                     }
                 }
-            }
-            
-            currentlyEquippedWeapon.Attack(weaponObject, audioSource, this, playerInput);
-            nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+                else
+                {
+                    currentlyEquippedWeapon.Attack(weaponObject, audioSource, this, playerInput);
+                    nextFire = currentlyEquippedWeapon.attackCooldown.Value;
+                }
+            }                   
         }       
     }
 
@@ -150,6 +158,7 @@ public class WeaponsHolder : MonoBehaviour
         if (context.phase == InputActionPhase.Started)
         {
             SwapWeapons();
+            inventory.player.CheckItemsEquippedSprites();
         }      
     }
 
@@ -174,14 +183,10 @@ public class WeaponsHolder : MonoBehaviour
         if (currentlyEquippedWeapon == null) return;
 
         weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, Quaternion.identity);
+        weaponObject.transform.rotation = inventory.player.transform.rotation;
         currentlyEquippedWeapon.instantiatedWeapon = weaponObject;
 
-        if(!(currentlyEquippedWeapon as BaseMelee))
-        {
-            weaponObject.transform.SetPositionAndRotation(weaponObject.transform.position, Inventory.instance.player.transform.rotation);
-        }
-
-        weaponObject.transform.parent = Inventory.instance.player.transform;
+        weaponObject.transform.parent = inventory.player.transform;
 
         nextFire = currentlyEquippedWeapon.attackCooldown.Value;
 
@@ -206,6 +211,7 @@ public class WeaponsHolder : MonoBehaviour
             currentlyEquippedWeapon.instantiatedWeapon = null;
             Destroy(weaponObject);
             currentlyEquippedWeapon = null;
+            inventory.player.CheckItemsEquippedSprites();
         }
     }
 
@@ -254,7 +260,7 @@ public class WeaponsHolder : MonoBehaviour
 
     public void ShakeCamera()
     {
-        CinemachineImpulseSource impSource = Inventory.instance.player.gameObject.GetComponent<CinemachineImpulseSource>();
+        CinemachineImpulseSource impSource = GameObject.FindGameObjectWithTag("PlayerSuit").GetComponent<CinemachineImpulseSource>();
 
         impSource.GenerateImpulse();
     }

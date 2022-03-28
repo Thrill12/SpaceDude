@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7865005192222642397}
   - component: {fileID: 7865005192222642396}
   - component: {fileID: 7865005192222642403}
+  - component: {fileID: 352563624666936451}
   m_Layer: 0
   m_Name: MusicManager
   m_TagString: Untagged
@@ -46,9 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ded4ff9188d3dff4eb4be40f512be2a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuTheme: {fileID: 0}
   songs:
   - {fileID: 8300000, guid: 442275eb41a04f340a0f447a70670a61, type: 3}
+  shouldLoop: 0
   musicSource: {fileID: 7865005192222642403}
+  overrideSound: 1
 --- !u!114 &7865005192222642396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,3 +161,11 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!81 &352563624666936451
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865005192222642402}
+  m_Enabled: 1

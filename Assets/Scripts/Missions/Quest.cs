@@ -47,8 +47,8 @@ public class Quest : ScriptableObject
         {
             Goals[i] = Instantiate(Goals[i]);
         }
-        UIManager.instance.DrawQuest(this);
-        UIManager.instance.audioSource.PlayOneShot(PrefabManager.instance.questAssignedSound);
+        GameManager.instance.uiManager.DrawQuest(this);
+        GameManager.instance.uiManager.audioSource.PlayOneShot(PrefabManager.instance.questAssignedSound);
     }
 
     public bool CheckGoals()
@@ -67,8 +67,8 @@ public class Quest : ScriptableObject
     //Gives rewards for the quest
     public void GiveReward(GameObject position)
     {
-        QuestManager.instance.RemoveQuest(this);
-        UIManager.instance.RemoveQuest(this);
+        GameManager.instance.questManager.RemoveQuest(this);
+        GameManager.instance.uiManager.RemoveQuest(this);
 
         if(ItemReward != null)
         {
@@ -90,9 +90,9 @@ public class Quest : ScriptableObject
             //returns true only if all reqs are completed and their own reqs are completed and pass reqs
             foreach (var item in questRequirements)
             {
-                if(QuestManager.instance.completedQuests.Count > 0)
+                if(GameManager.instance.questManager.completedQuests.Count > 0)
                 {
-                    if (QuestManager.instance.completedQuests.First(x => x.id == item.id && x.Completed && x.CheckRequirements() && x.HandedIn))
+                    if (GameManager.instance.questManager.completedQuests.First(x => x.id == item.id && x.Completed && x.CheckRequirements() && x.HandedIn))
                     {
                         return true;
                     }

@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8409841cc90e4f46a86001d704f6d8a, type: 3}
+  m_Name: Standard Union Jacket
+  m_EditorClassIdentifier: 
+  GUID: a8fd7cb5-0dfe-47ca-916e-8f412dc328c3
+  itemName: Union Standard Jacket
+  itemDescription: The standard jacket worn by Union soldiers and police. Not very
+    well armored.
+  itemIcon: {fileID: 21300000, guid: 7f35542a7a5e209438bf5e85cc2988d8, type: 3}
+  itemIconPath: Sprites/Items/ScifiPack/tile008
+  itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
+  itemValue: 51
+  itemStack: 1
+  itemMaxStack: 1
+  itemType: 2
+  itemSlot: Chest
+  itemMods: []
+  xpMultiplier:
+    statName: XP Multiplier
+    BaseValue: 0.9
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  itemLevel: 1
+  itemCurrentXP: 0
+  itemXPToNextLevel: 1000
+  hostEntity: {fileID: 0}
+  isEquipped: 0
+  armour:
+    statName: Armour
+    BaseValue: 15
+    _value: 0
+    statModifiers: []
+    isDirty: 1
+  spriteNoWeaponsEquipped: {fileID: 21300000, guid: 8416cd67ae4356647835471e310cefa9, type: 3}
+  spriteNoWeaponsEquippedPath: Data/Items/Equipment/Chest/StandardJacket/StandardJacketNormal
+  spriteSmallWeaponEquipped: {fileID: 21300000, guid: bbc7ae264448ccd438a6085169a31a80, type: 3}
+  spriteSmallWeaponEquippedPath: Data/Items/Equipment/Chest/StandardJacket/StandardJacketSmallWeapon
+  spriteLargeWeaponEquipped: {fileID: 21300000, guid: 801a1bc62ea027f479207d8b5ed8a490, type: 3}
+  spriteLargeWeaponEquippedPath: Data/Items/Equipment/Chest/StandardJacket/StandardJacketLargeWeapon

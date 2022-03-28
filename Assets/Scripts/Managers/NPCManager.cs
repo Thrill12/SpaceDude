@@ -5,13 +5,12 @@ using UnityEngine;
 
 public class NPCManager : MonoBehaviour
 {
-    public static NPCManager instance;
-
     public List<NPC> allNPCs = new List<NPC>();
+
+    private QuestManager questManager;
 
     private void Awake()
     {
-        instance = this;
         try
         {
             GameManager.instance.LoadNPCStates();
@@ -23,8 +22,10 @@ public class NPCManager : MonoBehaviour
     }
 
     private void Start()
-    {      
-        QuestManager.instance.InitializeQuests();
+    {
+        questManager = GameObject.FindGameObjectWithTag("QuestManager").GetComponent<QuestManager>();
+
+        questManager.InitializeQuests();
     }
 
     public void SetNPCToGraph(string npcName, DialogueGraph graph)

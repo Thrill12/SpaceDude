@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Spike
   m_EditorClassIdentifier: 
   GUID: 3dd64e15-d2b9-4498-945b-98b91f326561
-  itemName: Spike
+  itemName: 50. Cal
   itemDescription: Special ammo used by snipers to be able to penetrate the hardest
     of materials
-  itemIcon: {fileID: 21300000, guid: 2b7b41eed3126f54a98378c8510f5ee5, type: 3}
-  itemIconPath: Sprites/Items/Ammo/Spike
+  itemIcon: {fileID: 21300000, guid: 1e65e4853bf670d489aae23734678d5a, type: 3}
+  itemIconPath: Sprites/Items/Void Strife Items/tile009
   itemRarity: {fileID: 11400000, guid: 635ab1b99fa9814498f4746cda084f8d, type: 2}
   itemValue: 0
   itemStack: 1

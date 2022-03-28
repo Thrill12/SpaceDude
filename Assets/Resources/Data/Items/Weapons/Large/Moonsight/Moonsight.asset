@@ -15,8 +15,8 @@ MonoBehaviour:
   GUID: 7ae2760f-b677-4337-9666-3c13c43c3a47
   itemName: Moonsight
   itemDescription: Loud. Deadly. What else would you want from a weapon you plonker.
-  itemIcon: {fileID: 21300000, guid: ac47cbb80b9701843b858b7f9296cca9, type: 3}
-  itemIconPath: Data/Items/Weapons/Large/Moonsight/Moonsight
+  itemIcon: {fileID: 21300000, guid: 1c96f66d9e51fae4f92bad3b1341b6eb, type: 3}
+  itemIconPath: Data/Items/Weapons/Large/Moonsight/Sniper
   itemRarity: {fileID: 11400000, guid: 88ceb3550f440f14cbaa6ccc05b95fa1, type: 2}
   itemValue: 531
   itemStack: 1
@@ -24,6 +24,12 @@ MonoBehaviour:
   itemType: 8
   itemSlot: Primary Weapon
   itemMods: []
+  xpMultiplier:
+    statName: XP Multiplier
+    BaseValue: 1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000

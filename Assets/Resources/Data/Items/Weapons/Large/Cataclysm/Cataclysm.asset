@@ -25,6 +25,12 @@ MonoBehaviour:
   itemType: 8
   itemSlot: Primary Weapon
   itemMods: []
+  xpMultiplier:
+    statName: XP Multiplier
+    BaseValue: 1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
@@ -35,6 +41,7 @@ MonoBehaviour:
   instantiatedWeapon: {fileID: 0}
   attackSound: {fileID: 8300000, guid: d88d8d9b835feb1498b4b29db91598ff, type: 3}
   attackSoundPath: Sounds/Files/ExplosionSound
+  hitEffects: 2
   damage:
     statName: Damage
     BaseValue: 35

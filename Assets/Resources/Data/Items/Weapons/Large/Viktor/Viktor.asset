@@ -16,8 +16,8 @@ MonoBehaviour:
   itemName: Viktor
   itemDescription: The favourite gun of hte frost tips, this ravage weapon can blast
     through most things imaginable.
-  itemIcon: {fileID: 21300000, guid: 80d15f5f822725444b3234cad3a034af, type: 3}
-  itemIconPath: Data/Items/Weapons/Large/Viktor/Viktor
+  itemIcon: {fileID: 21300000, guid: cfc47c36ffbe4054a97491268f3107d3, type: 3}
+  itemIconPath: Data/Items/Weapons/Large/Viktor/Minigun
   itemRarity: {fileID: 11400000, guid: 832344019b921514faeab9a22f4c5cfb, type: 2}
   itemValue: 521
   itemStack: 1
@@ -25,6 +25,12 @@ MonoBehaviour:
   itemType: 8
   itemSlot: Primary Weapon
   itemMods: []
+  xpMultiplier:
+    statName: XP Multiplier
+    BaseValue: 1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
@@ -35,6 +41,7 @@ MonoBehaviour:
   instantiatedWeapon: {fileID: 0}
   attackSound: {fileID: 8300000, guid: 49327b1c50a15f04eb0ce7d2d2bc4dfa, type: 3}
   attackSoundPath: Data/Items/Weapons/Large/Viktor/EnergyShot
+  hitEffects: 8
   damage:
     statName: Damage
     BaseValue: 50

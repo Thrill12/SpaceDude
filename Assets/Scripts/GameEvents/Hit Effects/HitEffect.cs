@@ -10,6 +10,8 @@ public abstract class HitEffect : MonoBehaviour
 
     public GameObject effectVisualization;
 
+    private GameObject instantiatedVisualiation;
+
     public BaseEntity source;
 
     private float nextDamage = 0;
@@ -17,21 +19,23 @@ public abstract class HitEffect : MonoBehaviour
     public float timer = 2;
     private float nextFire = 0;
 
+    private UIManager uiManager;
+
     private void Start()
     {
         nextFire = timer;
 
+        uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
+
         if(GetComponent<BaseEntity>() as PlayerEntity)
         {
             PlayerEntity player = GetComponent<BaseEntity>() as PlayerEntity;
-            GameObject effect = Instantiate(effectVisualization, UIManager.instance.playerHitEffectHolder.transform);
-            effectVisualization = effect;
+            instantiatedVisualiation = Instantiate(effectVisualization, uiManager.playerHitEffectHolder.transform);
         }
         else
         {
             BaseEnemy enemy = GetComponent<BaseEntity>() as BaseEnemy;
-            GameObject effect = Instantiate(effectVisualization, enemy.healthBar.gameObject.transform.parent.transform.Find("EffectHolder").transform);
-            effectVisualization = effect;
+            instantiatedVisualiation = Instantiate(effectVisualization, enemy.healthBar.gameObject.transform.parent.transform.Find("EffectHolder").transform);
         }
     }
 
@@ -45,8 +49,7 @@ public abstract class HitEffect : MonoBehaviour
 
         if(nextFire <= 0)
         {
-            Destroy(effectVisualization);
-            Destroy(this);
+            OnDestroy();
         }
     }
 
@@ -67,4 +70,10 @@ public abstract class HitEffect : MonoBehaviour
     }
 
     public abstract void OnEffect();
+
+    public virtual void OnDestroy()
+    {
+        Destroy(instantiatedVisualiation);
+        Destroy(this);
+    }
 }

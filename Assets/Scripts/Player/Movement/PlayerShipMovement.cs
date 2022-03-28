@@ -141,9 +141,11 @@ public class PlayerShipMovement : MonoBehaviour
 
         thrusterParticleSpawnRate = (int)Mathf.Floor(currentSpeed * 250);
 
-        if(Inventory.instance.shipInventoryItems.Any(x => x.itemType == ItemType.Aspite))
+        if (GameManager.instance.playerInventory == null) return;
+
+        if(GameManager.instance.playerInventory.shipInventoryItems.Any(x => x.itemType == ItemType.Aspite))
         {
-            aspiteStack = Inventory.instance.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).Sum(x => x.itemStack);
+            aspiteStack = GameManager.instance.playerInventory.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).Sum(x => x.itemStack);
         }     
 
         if (currentSpeed > minSpeedForWarp && aspiteStack > aspiteRequiredForJump)
@@ -285,7 +287,7 @@ public class PlayerShipMovement : MonoBehaviour
         rb.freezeRotation = true;
         shipWarpEffectParticles.SetInt(Shader.PropertyToID("Spawn Rate"), maxWarpEffectRate / 2);
         isChargingWarp = true;
-        Inventory.instance.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).First().itemStack -= aspiteRequiredForJump;
+        GameManager.instance.playerInventory.shipInventoryItems.Where(x => x.itemType == ItemType.Aspite).First().itemStack -= aspiteRequiredForJump;
         warpSource.PlayOneShot(warpInSound);
         GetComponent<CinemachineImpulseSource>().GenerateImpulse();
         Invoke("DropInWarp", 1.6f);

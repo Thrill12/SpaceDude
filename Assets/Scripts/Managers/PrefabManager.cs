@@ -18,9 +18,10 @@ public class PrefabManager : MonoBehaviour
 
     [Header("UI")]
 
-    public Color white;
-    public Color orange;
-    public Color purple;
+    public Color commonColour;
+    public Color ascendedColour;
+    public Color royalColour;
+    public Color rareColour;
 
     [Space(5)]
 
@@ -35,6 +36,7 @@ public class PrefabManager : MonoBehaviour
     public Sprite rareItemBorder;
     public Sprite royalItemBorder;
     public Sprite ascendedItemBorder;
+    public Sprite unknownPersonPortrait;
 
     [Space(5)]
 

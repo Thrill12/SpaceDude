@@ -45,7 +45,7 @@ public class LightningBoltSpawner : Projectile
             bolt.GetComponent<LightningBoltScript>().StartObject = gameObject;
 
             bolt.GetComponent<LightningBoltScript>().EndObject = item;
-            item.GetComponent<BaseEntity>().TakeDamage(damage, item.transform.position + (Vector3)Random.insideUnitCircle, entityShotFrom);
+            item.GetComponent<BaseEntity>().TakeDamage(damage, item.transform.position + (Vector3)Random.insideUnitCircle, entityShotFrom, false, hitEffects);
             Debug.Log("Timeout is " + lightningBoltDestroyTimer);
             gameObject.LeanScale(Vector3.zero, timeOut);
 

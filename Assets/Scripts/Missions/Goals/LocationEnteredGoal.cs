@@ -18,7 +18,7 @@ public class LocationEnteredGoal : Goal
     public override void Init(Quest quest)
     {
         base.Init(quest);
-        GameEvents.instance.onLocationEntered += EnteredLocation;
+        GameManager.instance.gameEvents.onLocationEntered += EnteredLocation;
     }
 
     public void EnteredLocation(Location location)

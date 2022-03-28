@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ecf52a29391a5a46858170f39368dd1, type: 3}
   m_Name: GeneralsNote1
   m_EditorClassIdentifier: 
+  GUID: caa00613-133a-4769-bb5c-6db571c639d7
   itemName: General's Note
   itemDescription: 
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: 5f196abad7cb5544f900974cac805b1f, type: 3}
+  itemIconPath: Sprites/Items/Void Strife Items/tile049
   itemRarity: {fileID: 0}
   itemValue: 0
   itemStack: 1

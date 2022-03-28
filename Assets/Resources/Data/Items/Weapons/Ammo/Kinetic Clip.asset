@@ -15,8 +15,8 @@ MonoBehaviour:
   GUID: b16140d7-5971-45db-990a-3d8f4856a89e
   itemName: Kinetic Clip
   itemDescription: Clip containing kinetic-based projectiles.
-  itemIcon: {fileID: 21300000, guid: f857f423632280f4dba52da86f6daee1, type: 3}
-  itemIconPath: Sprites/Items/Ammo/KineticClip
+  itemIcon: {fileID: 21300000, guid: fcacbfd838d464443866c865e551cd94, type: 3}
+  itemIconPath: Sprites/Items/Void Strife Items/tile011
   itemRarity: {fileID: 11400000, guid: cd01f86cc15225b42a34bf82b2d930fe, type: 2}
   itemValue: 6
   itemStack: 5

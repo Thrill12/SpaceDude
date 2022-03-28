@@ -15,6 +15,8 @@ public class BaseEquippable : BaseItem
     [SerializeField, Tooltip("Current mods for this specific item")]
     public List<Modifier> itemMods;
 
+    public Stat xpMultiplier;
+
     public int itemLevel = 1;
     public float itemCurrentXP = 0;
     public float itemXPToNextLevel = 1000;
@@ -26,7 +28,11 @@ public class BaseEquippable : BaseItem
 
     public virtual void OnEquip(BaseEntity hostEntity)
     {
-
+        this.hostEntity = hostEntity;
+        if (!isEquipped)
+        {
+            isEquipped = true;
+        }        
     }
 
     public virtual void OnUnequip()
@@ -36,7 +42,7 @@ public class BaseEquippable : BaseItem
 
     public virtual void AddMod(Modifier mod)
     {
-        //Simply called when adding a mod, might come in useful for requirements or something
+        itemMods.Add(mod);
     }
 
     public void RemoveMod(Modifier mod)
@@ -51,12 +57,14 @@ public class BaseEquippable : BaseItem
 
     public void AddXP(float xp)
     {
+        Debug.Log("Adding " + xp);
+
         //Backlog of xp in case we receive more xp than required for next item level
-        xpBacklog += xp;
+        xpBacklog += xp * xpMultiplier.Value;
 
         //Manages situation when we get more than enough xp to level up at least once, will keep leveling up.
         //using the XP it received.
-        while (itemCurrentXP + xpBacklog > itemXPToNextLevel)
+        while (itemCurrentXP + xpBacklog >= itemXPToNextLevel)
         {
             float differenceToNextLevel = itemXPToNextLevel - itemCurrentXP;
             xpBacklog -= differenceToNextLevel;
@@ -74,6 +82,13 @@ public class BaseEquippable : BaseItem
     public void LevelUp()
     {
         itemLevel++;
-        itemXPToNextLevel = Mathf.Floor(1000 * Mathf.Pow(1.1352225792f, itemLevel - 1));
+        itemXPToNextLevel = Mathf.Floor(1000 * Mathf.Pow(1.69897001f, itemLevel - 1));
+
+        OnLevelUp();
+    }
+
+    public virtual void OnLevelUp()
+    {
+        itemValue *= itemLevel;
     }
 }

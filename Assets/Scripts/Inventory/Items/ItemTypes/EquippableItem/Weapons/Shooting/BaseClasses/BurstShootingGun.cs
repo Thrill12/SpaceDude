@@ -11,7 +11,7 @@ public class BurstShootingGun : StraightShootingGun
 
     public override void Attack(GameObject weaponObject,  AudioSource audioSource, WeaponsHolder holder, PlayerInput playerInput = null)
     {
-        UIManager.instance.StartCoroutine(AttackCoroutine(weaponObject, playerInput, audioSource, holder));
+        hostEntity.StartCoroutine(AttackCoroutine(weaponObject, playerInput, audioSource, holder));
     }
 
     IEnumerator AttackCoroutine(GameObject weaponObject, PlayerInput playerInput, AudioSource audioSource, WeaponsHolder holder)

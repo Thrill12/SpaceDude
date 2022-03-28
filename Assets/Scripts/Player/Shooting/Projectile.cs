@@ -14,6 +14,9 @@ public class Projectile : MonoBehaviour
 
     public LayerMask layerMask;
 
+    [HideInInspector]
+    public EffectToCheck hitEffects;
+
     public virtual void Start()
     {
         Destroy(gameObject, timeOut);
@@ -32,7 +35,7 @@ public class Projectile : MonoBehaviour
         {
             if (collision.gameObject.GetComponent<BaseEntity>() && collision.gameObject != entityShotFrom.gameObject)
             {
-                collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage, collision.ClosestPoint(gameObject.transform.position), entityShotFrom);
+                collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage, collision.ClosestPoint(gameObject.transform.position), entityShotFrom, false, hitEffects);
             }
 
             if (collision.gameObject.GetComponent<Rigidbody2D>())
