@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    public static MainMenu instance;
     public PlayerInput playerInput;
     public InputActionAsset inputActionAsset;
 
@@ -16,6 +17,8 @@ public class MainMenu : MonoBehaviour
     public GameObject firstObjSelectedFromGameStart;
     public GameObject firstObjSelectedFromOptions;
     public GameObject firstObjSelectedInOptions;
+    public GameObject firstObjSelectedFromLoadGameMenu;
+    public GameObject firstObjSelectedInLoadGameMenu;
 
     [Space(10)]
 
@@ -26,6 +29,16 @@ public class MainMenu : MonoBehaviour
     public GameObject mainMenu;
     public GameObject rebindingKeysKeyboard;
     public GameObject rebindingKeysGamePad;
+
+    [Space(10)]
+
+    [Header("Save Games")]
+
+    public GameObject loadGameMenu;
+    public GameObject saveGameDisplayerPrefab;
+    public GameObject saveGameDisplayer;
+
+    [Space(10)]
 
     [Header("Settings")]
 
@@ -40,6 +53,11 @@ public class MainMenu : MonoBehaviour
 
     private bool isAnimating = false;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         SetSelectedObject(firstObjSelectedFromGameStart);    
@@ -47,7 +65,6 @@ public class MainMenu : MonoBehaviour
         playerInput.SwitchCurrentActionMap("MainMenu");
         optionsMenu.SetActive(false);
 
-        GameManager.instance.HandleSaveInit();
         InitializeSettings();
 
         GameManager.instance.masterMixer = mixer;
@@ -75,6 +92,22 @@ public class MainMenu : MonoBehaviour
         GameManager.instance.fpsCounter.gameObject.SetActive(GameManager.instance.options.fpsCounter);
     }
 
+    public void DisplaySaveGames()
+    {
+        List<string> saves = GameManager.instance.GetAllSaveFiles();
+
+        foreach (string save in saves)
+        {
+            GameObject display = Instantiate(saveGameDisplayerPrefab, saveGameDisplayer.transform);
+            var splitString = save.Split(@"\");
+            string strToDisplay = splitString[splitString.Length - 1];
+            splitString = strToDisplay.Split(".");
+            strToDisplay = splitString[0];
+            display.GetComponentInChildren<TMP_Text>().text = strToDisplay.Replace("-", " ");
+            display.GetComponentInChildren<LoadGameButton>().saveGamePath = save;
+        }
+    }
+
     //Turns on options
     public void Options()
     {
@@ -82,14 +115,41 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(OptionsCor());
     }
 
+    public void LoadGameMenu()
+    {
+        if (isAnimating) return;
+        StartCoroutine(LoadGameMenuCor());
+    }
+
+    private IEnumerator LoadGameMenuCor()
+    {
+        isAnimating = true;
+        SetSelectedObject(firstObjSelectedInLoadGameMenu);
+        loadGameMenu.SetActive(true);
+
+        foreach (var item in saveGameDisplayer.GetComponentsInChildren<LoadGameButton>())
+        {
+            Destroy(item.gameObject);
+        }
+
+        LeanTween.rotate(menuCamera, new Vector3(0, 90, 0), 0.2f).setEaseOutCubic();
+
+        yield return new WaitForSeconds(0.3f);
+
+        mainMenu.SetActive(false);
+
+        isAnimating = false;
+        DisplaySaveGames();
+    }
+
     private IEnumerator OptionsCor()
     {
         isAnimating = true;
         SetSelectedObject(firstObjSelectedInOptions);
         optionsMenu.SetActive(true);
-        LeanTween.rotate(menuCamera, new Vector3(0, -100, 0), 2).setEaseOutCubic();
+        LeanTween.rotate(menuCamera, new Vector3(0, -90, 0), 0.2f).setEaseOutCubic();
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(0.3f);
 
         mainMenu.SetActive(false);
 
@@ -103,17 +163,37 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(BackFromOptionsCor());        
     }
 
+    public void BackFromLoadingGameMenu()
+    {
+        if(isAnimating) return;
+        StartCoroutine(BackFromLoadingGameMenuCor());
+    }
+
     private IEnumerator BackFromOptionsCor()
     {
         isAnimating = true;
         mainMenu.SetActive(true);
         SetSelectedObject(firstObjSelectedFromOptions);
         SaveSettings();
-        LeanTween.rotate(menuCamera, new Vector3(0, -10, 0), 2).setEaseOutCubic();
+        LeanTween.rotate(menuCamera, new Vector3(0, 0, 0), 0.2f).setEaseOutCubic();
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(0.3f);
 
         optionsMenu.SetActive(false);
+        isAnimating = false;
+    }
+
+    private IEnumerator BackFromLoadingGameMenuCor()
+    {
+        isAnimating = true;
+        mainMenu.SetActive(true);
+        SetSelectedObject(firstObjSelectedFromLoadGameMenu);
+        
+        LeanTween.rotate(menuCamera, new Vector3(0, 0, 0), 0.2f).setEaseOutCubic();
+
+        yield return new WaitForSeconds(0.3f);
+
+        loadGameMenu.SetActive(false);
         isAnimating = false;
     }
 
@@ -125,9 +205,16 @@ public class MainMenu : MonoBehaviour
     }
 
     //Switches to game scene
-    public void GoToGame()
+    public void GoToFreshGame()
     {
         if (isAnimating) return;
+        GameManager.instance.StartNewSave();
+        StartCoroutine(GoGameCor());
+    }
+
+    public void GoToSavedGame()
+    {
+        if(isAnimating) return;
         StartCoroutine(GoGameCor());
     }
 
@@ -136,11 +223,10 @@ public class MainMenu : MonoBehaviour
         isAnimating = true;
         SaveSettings();
 
-        LeanTween.rotate(menuCamera, new Vector3(10, 0, 0), 5);
+        LeanTween.rotate(menuCamera, new Vector3(10, 0, 0), 1);
 
         yield return new WaitForSeconds(2.5f);
-
-        
+      
         GameManager.instance.LoadGameFromMainMenu();
     }
 

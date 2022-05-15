@@ -34,6 +34,9 @@ public class BaseEntity : MonoBehaviour
 
     private GameEvents gameEvents;
 
+    [HideInInspector]
+    public List<Modifier> itemSetModifiers;
+
     private void Awake()
     {
         health = maxHealth.Value;
@@ -55,7 +58,7 @@ public class BaseEntity : MonoBehaviour
 
         if (nextFireEnergyRegen <= 0)
         {
-            RegenHealth(energyRegeneration.Value);
+            RegenEnergy(energyRegeneration.Value);
         }
 
         nextFireHealthRegen -= Time.deltaTime;
@@ -70,7 +73,7 @@ public class BaseEntity : MonoBehaviour
 
     public virtual void RegenEnergy(float energyToRegen)
     {
-        maxEnergy._value += energyToRegen;
+        energy += energyToRegen;
         nextFireEnergyRegen = 1;
     }
 

@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class BaseEnemy : BaseEntity
 {
     public Image healthBar;
-    public BaseWeapon weaponUsed;
+
+    public List<string> enemyTags = new List<string>();
+
     public List<ItemDrop> dropTable;
     public float dropChance = 30;
 
@@ -38,7 +40,8 @@ public class BaseEnemy : BaseEntity
 
         if (healthBarObject == null) return;
         healthBar.fillAmount = health / maxHealth.Value;
-
+        healthBarObject.transform.rotation = Quaternion.identity;
+        
         if(health < maxHealth.Value)
         {
             healthBarObject.SetActive(true);
@@ -57,7 +60,12 @@ public class BaseEnemy : BaseEntity
         }
         
         base.Die(killer);
-    } 
+    }
+
+    public override void RegenHealth(float healthToRegen)
+    {
+        base.RegenHealth(healthToRegen);
+    }
 
     //Counting total weight to figure out correct drop chances
     public void InitializeItems()

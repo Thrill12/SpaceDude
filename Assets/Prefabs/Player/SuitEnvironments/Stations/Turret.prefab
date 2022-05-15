@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3315610593024403667}
   - component: {fileID: 3326020329182630223}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: TurretLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 3192206770917268793}
   - component: {fileID: 3908656142975873585}
   - component: {fileID: 24476375699964608}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: Turret
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -424,11 +424,21 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
+  moveSpeed:
+    statName: 
+    BaseValue: 1
+    _value: 0
+    statModifiers: []
+    isDirty: 1
   hitSound: {fileID: 8300000, guid: 65ff4c0466173e842a81e058c4a58fd4, type: 3}
   pfMan: {fileID: 0}
   isDead: 0
+  itemSetModifiers: []
   healthBar: {fileID: 0}
   weaponUsed: {fileID: 0}
+  visionAngle: 0
+  enemyTags:
+  - PlayerSuit
   dropTable:
   - item: {fileID: 11400000, guid: f5fa09290a5cf9c448a793adbeedcc75, type: 2}
     amountMinMax: {x: 5, y: 15}
@@ -436,8 +446,6 @@ MonoBehaviour:
   dropChance: 30
   healthBarYOffset: 0.5
   detectionRange: 4
-  enemyTags:
-  - PlayerSuit
   nextFire: 0
   holder: {fileID: 3908656142975873585}
 --- !u!114 &3908656142975873585

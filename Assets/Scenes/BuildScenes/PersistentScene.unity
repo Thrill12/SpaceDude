@@ -578,7 +578,6 @@ GameObject:
   - component: {fileID: 1558032500}
   - component: {fileID: 1558032503}
   - component: {fileID: 1558032502}
-  - component: {fileID: 1558032504}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -637,6 +636,7 @@ MonoBehaviour:
   npcManager: {fileID: 0}
   progress: {fileID: 0}
   gameEvents: {fileID: 0}
+  masterMixer: {fileID: 0}
 --- !u!4 &1558032501
 Transform:
   m_ObjectHideFlags: 0
@@ -695,11 +695,3 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!81 &1558032504
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1558032499}
-  m_Enabled: 1

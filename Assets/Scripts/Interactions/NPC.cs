@@ -23,9 +23,15 @@ public class NPC : Interactable
     private NPCManager npcManager;
     private GameEvents gameEvents;
 
-    private void Start()
+    private void Awake()
     {
         npcManager = GameObject.FindGameObjectWithTag("NPCManager").GetComponent<NPCManager>();
+        npcManager.allNPCs.Add(this);
+    }
+
+    private void Start()
+    {
+        
         gameEvents = GameObject.FindGameObjectWithTag("GameEvents").GetComponent<GameEvents>();
 
         dialogueGraph = Resources.Load<DialogueGraph>(dialogueGraphPath);
@@ -39,6 +45,8 @@ public class NPC : Interactable
         try
         {
             ProgressSave progressSave = GameManager.instance.progressSave;
+
+            
 
             if (progressSave.npcStates.npcList.Any(x => x.npcName == npcName))
             {
@@ -55,25 +63,12 @@ public class NPC : Interactable
                 GetComponent<DialogueParser>().graph = dialogueGraph;
                 GetComponent<DialogueParser>().isPlaying = false;
             }
-            else
-            {
-                npcManager.allNPCs.Add(this);
-            }
         }
         catch
         {
             Debug.Log("No Game manager");
         }
     }    
-
-    //private void Update()
-    //{
-    //    if(activeQuest == null && GetComponent<DialogueParser>().isPlaying == false)
-    //    {
-    //        dialogueGraph = defaultDialogueGraph;
-    //        GetComponent<DialogueParser>().graph = dialogueGraph;
-    //    }
-    //}
 
     public override void Interact()
     {
@@ -90,7 +85,6 @@ public class NPC : Interactable
             {
                 Debug.Log("Starting quest graph");
                 CheckQuestCompletion(activeQuest);
-
             }
         }
     }

@@ -38,7 +38,7 @@ public class PlayerEntity : BaseEntity
     private ItemSlot chestSlot;
     private ItemSlot backSlot;
 
-    private WeaponsHolder weaponsHolder;
+    private WeaponsHolder weaponsHolder;   
 
     public override void Start()
     {

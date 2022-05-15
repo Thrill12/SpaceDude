@@ -31,6 +31,7 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
+  itemSet: {fileID: 0}
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
@@ -82,7 +83,7 @@ MonoBehaviour:
   ignoreAmmo: 0
   projectileSpeed:
     statName: Lightning Ball Speed
-    BaseValue: 30000
+    BaseValue: 30
     _value: 0
     statModifiers: []
     isDirty: 1

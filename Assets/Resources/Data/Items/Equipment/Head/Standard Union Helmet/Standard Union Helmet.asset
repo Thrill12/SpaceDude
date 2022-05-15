@@ -31,6 +31,8 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
+  itemSet: {fileID: 11400000, guid: 15fd81233abdeec42bafe05c196920ac, type: 2}
+  itemSetModifiers: []
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000

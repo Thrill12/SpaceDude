@@ -37,7 +37,15 @@ public class PlayerShipGPS : MonoBehaviour
 
         positionText.text = outputtedPosition;
 
-        bearingHolder.transform.localEulerAngles = new Vector3(0, 0, playerShip.transform.localEulerAngles.z );
-        bearingText.text = Mathf.RoundToInt(playerShip.transform.localEulerAngles.z).ToString();
+        bearingHolder.transform.localEulerAngles = new Vector3(0, 0, playerShip.transform.localEulerAngles.z);
+
+        if (playerShip.transform.localEulerAngles.z > 180 && playerShip.transform.localEulerAngles.z < 360)
+        {
+            bearingText.text = Mathf.RoundToInt(Mathf.Abs(Vector2.Angle(playerShip.transform.up, Vector2.up) + 180)).ToString();
+        }
+        else
+        {
+            bearingText.text = Mathf.RoundToInt(Mathf.Abs(playerShip.transform.localEulerAngles.z - 180)).ToString();
+        }
     }
 }

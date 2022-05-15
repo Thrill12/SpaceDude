@@ -231,7 +231,7 @@ MonoBehaviour:
       _dynamic: 0
   entry: 0
   graphToChangeTo: {fileID: 11400000, guid: 6bed6439fe085144da566b1495763f05, type: 2}
-  graphToChangeToPath: 
+  graphToChangeToPath: Data/NPCs/Timmy/Timmy's Dialogue Graph
   startImmediately: 0
   exit: 0
 --- !u!114 &11400000

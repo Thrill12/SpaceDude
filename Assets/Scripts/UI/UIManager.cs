@@ -101,6 +101,8 @@ public class UIManager : MonoBehaviour
     public GameObject characterSlotsDisplay;
     public GameObject shipInventory;
     public GameObject pauseMenu;
+    public GameObject pauseMenuCustomSave;
+    public TMP_InputField pauseMenuCustomSaveInputField;
 
     public bool isInShipInventory;
 
@@ -791,6 +793,22 @@ public class UIManager : MonoBehaviour
     public void TriggerNextDialogue()
     {
         triggeredNextStep = true;
+    }
+
+    public void SaveCustomGame()
+    {
+        var saveName = pauseMenuCustomSaveInputField.text;
+        GameManager.instance.CustomSave(saveName);
+    }
+
+    public void EnableCustomSaveMenu()
+    {
+        pauseMenuCustomSave.SetActive(true);
+    }
+
+    public void BackFromSavingCustomGame()
+    {
+        pauseMenuCustomSave.SetActive(false);
     }
 
     //Function to return back to main menu

@@ -361,6 +361,7 @@ public class PlayerInventory : MonoBehaviour
 
         itemToEquip.isEquipped = true;
         itemToEquip.hostEntity = player;
+        itemsEquipped.Add(itemToEquip);
         playerInventoryItems.Remove(itemToEquip);
         itemToEquip.OnEquip(player);
 
@@ -370,9 +371,7 @@ public class PlayerInventory : MonoBehaviour
             uiHolder.GetComponent<UIItemHolder>().itemHeld = itemToEquip;
             uiHolder.GetComponent<UIItemHolder>().SetBackground();
             uiItemHolders.Add(uiHolder.GetComponent<UIItemHolder>());
-        }
-
-        itemsEquipped.Add(itemToEquip);
+        }       
 
         if (playerInventoryItems.Contains(itemToEquip))
         {
@@ -413,8 +412,9 @@ public class PlayerInventory : MonoBehaviour
             weaponHolder.StowWeaponWhenUnequipping((BaseWeapon)itemToUnequip);
         }
 
-        itemToUnequip.OnUnequip();
         itemToUnequip.isEquipped = false;
+        itemToUnequip.OnUnequip();
+        
 
         player.CheckItemsEquippedSprites();
         CalculatePlayerPower();

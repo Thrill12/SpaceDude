@@ -33,6 +33,7 @@ TagManager:
   - GameEvents
   - QuestManager
   - NPCManager
+  - FactionManager
   layers:
   - Default
   - TransparentFX
@@ -49,8 +50,8 @@ TagManager:
   - ExtremeUI
   - Ship
   - Ship Interior
-  - 
-  - 
+  - Item
+  - Entities
   - 
   - 
   - 

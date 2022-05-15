@@ -53,6 +53,7 @@ public class Stat
         isDirty = true;
         statModifiers.Add(mod);
         statModifiers.Sort(CompareModifierOrder);
+        mod.statAffecting = this;
         CalculateFinalValue();
     }
 

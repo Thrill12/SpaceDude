@@ -30,6 +30,7 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
+  itemSet: {fileID: 0}
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
@@ -40,6 +41,7 @@ MonoBehaviour:
   instantiatedWeapon: {fileID: 0}
   attackSound: {fileID: 8300000, guid: 4ba745fdabcbb3e4494d34e8b563eeba, type: 3}
   attackSoundPath: Data/Items/Weapons/Large/Moonsight/PowerfulPhysicalAmmoShot
+  hitEffects: 0
   damage:
     statName: Damage
     BaseValue: 100
@@ -80,7 +82,7 @@ MonoBehaviour:
   ignoreAmmo: 0
   projectileSpeed:
     statName: Projectile Speed
-    BaseValue: 100000
+    BaseValue: 100
     _value: 0
     statModifiers: []
     isDirty: 1

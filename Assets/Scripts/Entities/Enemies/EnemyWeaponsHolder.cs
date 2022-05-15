@@ -9,16 +9,43 @@ public class EnemyWeaponsHolder : WeaponsHolder
 
     public override void Start()
     {
-        playerPosition = GameObject.FindGameObjectWithTag("PlayerSuit").transform;
+        try
+        {
+            playerPosition = GameObject.FindGameObjectWithTag("PlayerSuit").transform;
+        }
+        catch
+        {
+            Debug.Log("Couldnt find player transform");
+        }
+        
         audioSource = GetComponent<AudioSource>();
-        currentlyEquippedWeapon = ScriptableObject.Instantiate(mainWeapon);
+        try
+        {
+            GameManager.instance.LoadResourcesForItem(mainWeapon);
+        }
+        catch
+        {
+            Debug.Log("Game manager not in scene");
+        }
+        currentlyEquippedWeapon = Instantiate(mainWeapon);
         SwapWeapons();
-        SwapWeapons();
+        Debug.Log("TURRET SHOULD NOW HAVE EQUIPPED " + mainWeapon.name);
+        Debug.Log("TURRET NOW HAS EQUIPPED " + currentlyEquippedWeapon.name);
     }
 
     public override void Update()
     {
-        
+        if(playerPosition == null && GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>().playerMovement.isPlayerPiloting == false)
+        {
+            try
+            {
+                playerPosition = GameObject.FindGameObjectWithTag("PlayerSuit").transform;
+            }
+            catch
+            {
+
+            }          
+        }
     }
 
     public override void AttackVoid()
@@ -55,6 +82,7 @@ public class EnemyWeaponsHolder : WeaponsHolder
 
         currentlyEquippedWeapon = Instantiate(mainWeapon);
         currentlyEquippedWeapon.hostEntity = gameObject.GetComponent<BaseEntity>();
+
         if(currentlyEquippedWeapon as BaseGun)
         {
             BaseGun gun = currentlyEquippedWeapon as BaseGun;

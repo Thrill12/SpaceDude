@@ -1,22 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FactionManager : MonoBehaviour
 {
-    public static FactionManager instance;
+    public List<Faction> factions = new List<Faction>();
 
-    private void Awake()
+    public void AddReputation(string factionName, int reputation)
     {
-        instance = this;
+        Faction factionToChange = factions.First(x => x.factionName == factionName);
+
+        factionToChange.AddXP(reputation);
     }
 
-    public List<Faction> factions = new List<Faction>();
-}
+    public bool CheckReputation(string factionName, int level)
+    {
+        Faction factionToCheck = factions.First(x => x.factionName == factionName);
 
-public class Faction : ScriptableObject
-{
-    public string factionName;
-    public Sprite factionIcon;
-    public int factionReputation;
+        if(factionToCheck.factionLevel >= level)
+        {
+            Debug.Log("Have enough for check");
+            return true;
+        }
+        else
+        {
+            Debug.Log("Not enough for check");
+            return false;
+        }
+    }
 }

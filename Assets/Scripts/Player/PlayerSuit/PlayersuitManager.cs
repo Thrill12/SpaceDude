@@ -203,7 +203,6 @@ public class PlayersuitManager : MonoBehaviour
         instantiatedPlayerSuitCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_YDamping = 1;
 
         ship.FoldInWings();
-        GameManager.instance.SaveProgress();
     }
 
     public void EntertShipTransition()

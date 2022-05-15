@@ -14,12 +14,14 @@ public class DialogueParser : MonoBehaviour
     private UIManager uiManager;
     private QuestManager questManager;
     private NPCManager npcManager;
+    private FactionManager factionManager;
 
     private void Start()
     {
         uiManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         questManager = GameObject.FindGameObjectWithTag("QuestManager").GetComponent<QuestManager>();
         npcManager = GameObject.FindGameObjectWithTag("NPCManager").GetComponent<NPCManager>();
+        factionManager = GameObject.FindGameObjectWithTag("FactionManager").GetComponent<FactionManager>();
     }
 
     public void StartDialogueGraph()
@@ -155,6 +157,24 @@ public class DialogueParser : MonoBehaviour
             SetNPCToGraphNode node = graph.current as SetNPCToGraphNode;
             npcManager.SetNPCToGraph(node.npcToChange, node.graphToChangeTo);            
             NextNode("exit");
+        }
+        else if(parts[0].Trim() == "Reputation")
+        {
+            factionManager.AddReputation(parts[1], Int32.Parse(parts[2]));
+            NextNode("exit");
+        }
+        else if(parts[0].Trim() == "FactionCheckReputation")
+        {
+            bool checkedBool = factionManager.CheckReputation(parts[1], Int32.Parse(parts[2]));
+            Debug.Log(checkedBool);
+            if (checkedBool)
+            {
+                NextNode("pass");
+            }
+            else
+            {
+                NextNode("fail");
+            }
         }
     }
 

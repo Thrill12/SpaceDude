@@ -705,3 +705,6 @@
 /Assets/Resources/Sounds/UI/Unequip.wav filter=lfs diff=lfs merge=lfs -text
 /Assets/Resources/Sprites/SuitEnvironments/Premade/tileset.png.meta filter=lfs diff=lfs merge=lfs -text
 /Assets/Resources/Sprites/UI/СommonElement/Background.jpg filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sprites/UI/21-46-40[[:space:]]Haven[[:space:]]Screenshot.bmp filter=lfs diff=lfs merge=lfs -text
+/Assets/Resources/Sprites/UI/wp1911892-world-map-hd-wallpapers.jpg filter=lfs diff=lfs merge=lfs -text
+/Assets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db filter=lfs diff=lfs merge=lfs -text

@@ -63,7 +63,6 @@ public class LightningBoltSpawner : Projectile
             bolt.GetComponent<LightningBoltScript>().StartPosition = gameObject.transform.position;
 
             bolt.GetComponent<LightningBoltScript>().EndPosition = transform.position + (Vector3)Random.insideUnitCircle;
-            Debug.Log("Spawned in circle");
         }
     }
 }

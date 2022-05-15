@@ -12,7 +12,6 @@ public class MagnumOpus : StraightShootingGun
 
     public override void Attack(GameObject weaponObject, AudioSource audioSource, WeaponsHolder holder, PlayerInput playerInput = null)
     {
-        Debug.Log("Attacking");
         //base.Attack(weaponObject, audioSource, holder, playerInput, hitEffects);
 
         if (ignoreAmmo == false && currentBullets == 0)
@@ -28,8 +27,7 @@ public class MagnumOpus : StraightShootingGun
         GameObject proj = Instantiate(projectile, shootSource.transform.position, Quaternion.identity);
 
         //Have to make it relative ofc
-        proj.GetComponent<Rigidbody2D>().velocity = hostEntity.gameObject.GetComponent<Rigidbody2D>().velocity;
-        proj.GetComponent<Rigidbody2D>().AddForce((projectileSpeed.Value) * lookDir.normalized);
+        proj.GetComponent<Rigidbody2D>().velocity = ((projectileSpeed.Value) * lookDir.normalized);
         proj.GetComponent<Projectile>().entityShotFrom = hostEntity;
         proj.GetComponent<Projectile>().weaponShotFrom = this;
         proj.GetComponent<Projectile>().damage = hostEntity.damageMultiplier.Value * damage.Value;

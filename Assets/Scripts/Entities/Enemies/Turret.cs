@@ -7,9 +7,7 @@ using UnityEngine.Rendering.Universal;
 public class Turret : BaseEnemy
 {
     private bool isEnemyInRange = false;
-    public float detectionRange;
-
-    public List<string> enemyTags = new List<string>();
+    public float detectionRange;  
 
     private Light2D lighttt;
 

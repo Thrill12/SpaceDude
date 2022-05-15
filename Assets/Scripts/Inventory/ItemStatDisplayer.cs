@@ -21,6 +21,7 @@ public class ItemStatDisplayer : MonoBehaviour
     public TMP_Text itemValue;
     public TMP_Text itemDescription;
     public TMP_Text itemSlotText;
+    public TMP_Text itemSet;
 
     [Header("Equippables")]
 
@@ -57,6 +58,11 @@ public class ItemStatDisplayer : MonoBehaviour
             equippableXPBar.fillAmount = equip.itemCurrentXP / equip.itemXPToNextLevel;
             equippableXP.text = $"<color=#718093>{equip.itemCurrentXP}<color=white>/<color=#e84118>{equip.itemXPToNextLevel}";
             equippableLevel.text = "Lv. " + equip.itemLevel;
+
+            if(equip.itemSet != null)
+            {
+                itemSet.text = $"<color=#{ColorUtility.ToHtmlStringRGB(equip.itemSet.itemSetColour)}>[" + equip.itemSet.itemSetName + $"]</color>";
+            }
 
             List<string> itemStatsStrings = equip.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                 .Where(x => x.FieldType == typeof(Stat)).Select(x => x.Name).ToList();
@@ -104,7 +110,7 @@ public class ItemStatDisplayer : MonoBehaviour
 
             itemName.text = item.itemName;
 
-            if (equip.itemMods.Any())
+            if (equip.itemMods.Any() || equip.itemSet != null)
             {
                 itemModifiersHolder.SetActive(false);
                 foreach (var mod in equip.itemMods)
@@ -147,18 +153,169 @@ public class ItemStatDisplayer : MonoBehaviour
 
                     activatedModifiers.Add(modObj);
                 }
+
+                #region ItemSetDisplaying
+                if (equip.itemSet.modifiersTwoEquipped.Count > 0)
+                {
+                    GameObject titleObj = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                    TMP_Text titleText = titleObj.GetComponent<TMP_Text>();
+                    titleText.text = $"\n<color=#{ColorUtility.ToHtmlStringRGB(equip.itemSet.itemSetColour)}>[{equip.itemSet.itemSetName}] 2 items equipped: ";
+
+                    activatedModifiers.Add(titleObj);
+
+                    foreach (var mod in equip.itemSet.modifiersTwoEquipped)
+                    {
+                        GameObject modObj = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                        TMP_Text modText = modObj.GetComponent<TMP_Text>();
+
+                        TextInfo info = new CultureInfo("en-US", false).TextInfo;
+
+                        if (mod.Value > 0)
+                        {
+                            if (mod.Type == Modifier.StatModType.Flat)
+                            {
+                                modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentAdd)
+                            {
+                                modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentMult)
+                            {
+                                modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% increased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                        }
+                        else
+                        {
+                            if (mod.Type == Modifier.StatModType.Flat)
+                            {
+                                modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentAdd)
+                            {
+                                modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentMult)
+                            {
+                                modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% decreased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                        }
+
+                        activatedModifiers.Add(modObj);
+                    }
+                }
+
+                if (equip.itemSet.modifiersThreeEquipped.Count > 0)
+                {
+                    GameObject titleObj = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                    TMP_Text titleText = titleObj.GetComponent<TMP_Text>();
+                    titleText.text = $"\n<color=#{ColorUtility.ToHtmlStringRGB(equip.itemSet.itemSetColour)}>[{equip.itemSet.itemSetName}] 3 items equipped: ";
+
+                    activatedModifiers.Add(titleObj);
+
+                    foreach (var mod in equip.itemSet.modifiersThreeEquipped)
+                    {
+                        GameObject modObj = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                        TMP_Text modText = modObj.GetComponent<TMP_Text>();
+
+                        TextInfo info = new CultureInfo("en-US", false).TextInfo;
+
+                        if (mod.Value > 0)
+                        {
+                            if (mod.Type == Modifier.StatModType.Flat)
+                            {
+                                modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentAdd)
+                            {
+                                modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentMult)
+                            {
+                                modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% increased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                        }
+                        else
+                        {
+                            if (mod.Type == Modifier.StatModType.Flat)
+                            {
+                                modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentAdd)
+                            {
+                                modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentMult)
+                            {
+                                modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% decreased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                        }
+
+                        activatedModifiers.Add(modObj);
+                    }
+                }
+
+                if (equip.itemSet.modifiersFourEquipped.Count > 0)
+                {
+                    GameObject titleObj = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                    TMP_Text titleText = titleObj.GetComponent<TMP_Text>();
+                    titleText.text = $"\n<color=#{ColorUtility.ToHtmlStringRGB(equip.itemSet.itemSetColour)}>[{equip.itemSet.itemSetName}] 4 items equipped: ";
+
+                    activatedModifiers.Add(titleObj);
+
+                    foreach (var mod in equip.itemSet.modifiersFourEquipped)
+                    {
+                        GameObject modObj = Instantiate(itemStatModifierObject, itemStatsHolder.transform);
+                        TMP_Text modText = modObj.GetComponent<TMP_Text>();
+
+                        TextInfo info = new CultureInfo("en-US", false).TextInfo;
+
+                        if (mod.Value > 0)
+                        {
+                            if (mod.Type == Modifier.StatModType.Flat)
+                            {
+                                modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentAdd)
+                            {
+                                modText.text = "+" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentMult)
+                            {
+                                modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% increased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                        }
+                        else
+                        {
+                            if (mod.Type == Modifier.StatModType.Flat)
+                            {
+                                modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + " " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentAdd)
+                            {
+                                modText.text = "-" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                            else if (mod.Type == Modifier.StatModType.PercentMult)
+                            {
+                                modText.text = "" + Mathf.RoundToInt(Mathf.Abs(mod.Value)) + "% decreased " + info.ToTitleCase(mod.statDisplayStringName) + ".";
+                            }
+                        }
+
+                        activatedModifiers.Add(modObj);
+                    }
+                }
+                #endregion
             }
             else
             {
                 itemModifiersHolder.SetActive(false);
-            }
-
-            
+            }            
         }
         else
         {
             itemName.text = item.itemName + "(" + item.itemStack + ")";
             equippableStatsPage.SetActive(false);
+            itemSet.text = "";
         }
 
         itemSlotText.text = "[" +item.itemType.ToString().Replace("_", " ") + "]";

@@ -18,8 +18,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Paths")]
 
-    public string optionsFilePath = "/SpaceDudeOptions.ini";
-    public string saveFilePath = "/SpaceDudeSave.spsv";
+    public string optionsFilePath = @"\SpaceDudeOptions.ini";
+    public string saveFilePath = @"\";
+    public string baseSavesFolder = @"\Saves\";
 
     [Space(15)]
 
@@ -45,14 +46,50 @@ public class GameManager : MonoBehaviour
         instance = this;
         optionsFilePath = Application.persistentDataPath + optionsFilePath;
         saveFilePath = Application.persistentDataPath + saveFilePath;
+        baseSavesFolder = Application.persistentDataPath + baseSavesFolder;
         
         SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive);
 
-        HandleSaveInit();     
+        LoadSavedOptions();
+        GetAllSaveFiles();
+    }
+
+    public List<string> GetAllSaveFiles()
+    {
+        if (!File.Exists(baseSavesFolder))
+        {
+            Directory.CreateDirectory(baseSavesFolder);
+        }
+
+        List<string> savesFound = Directory.GetFiles(baseSavesFolder).ToList();
+
+        List<string> savesToReturn = new List<string>();
+
+        foreach (var item in savesFound)
+        {
+            var split = item.Split(@"\");
+            savesToReturn.Add(split[split.Count() - 1]);
+        }
+
+        return savesToReturn;
     }
 
     //Function to check if we should load current settings or create new ones for first startup
-    public void HandleSaveInit()
+    public void StartNewSave()
+    {
+        progressSave = new ProgressSave();
+        progressSave.npcStates = new NPCStatesSave();
+        progressSave.questsSaved = new QuestsSavedSO();
+        progressSave.inventorySave = new InventorySave();
+    }
+
+    public void LoadExistingSave(string savePath)
+    {
+        LoadProgress(baseSavesFolder + savePath);
+        Debug.Log("Loaded progress from " + savePath);
+    }
+
+    private void LoadSavedOptions()
     {
         if (File.Exists(optionsFilePath))
         {
@@ -64,18 +101,6 @@ public class GameManager : MonoBehaviour
             Debug.Log("Created options " + optionsFilePath);
             options = new OptionsSO();
             SaveOptions();
-        }
-
-        if (File.Exists(saveFilePath))
-        {
-            LoadProgress();
-        }
-        else
-        {
-            progressSave = new ProgressSave();
-            progressSave.npcStates = new NPCStatesSave();
-            progressSave.questsSaved = new QuestsSavedSO();
-            progressSave.inventorySave = new InventorySave();
         }
     }
 
@@ -99,7 +124,7 @@ public class GameManager : MonoBehaviour
         if(autosavingTimer >= autosaveInterval)
         {
             autosavingTimer = 0;
-            SaveProgress();
+            QuickSaveProgress();
         }
     }
 
@@ -185,7 +210,6 @@ public class GameManager : MonoBehaviour
     //Loads the main menu scene from anywhere else
     public void LoadMainMenu()
     {
-        SaveProgress();
         loadingScreen.SetActive(true);
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.MAIN_GAME));
         scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive));
@@ -369,24 +393,39 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SaveProgress()
+    public void QuickSaveProgress()
+    {
+        SaveEverything();
+
+        string json = Serialization.Serialize(progressSave.GetType(), progressSave);
+        File.WriteAllText(baseSavesFolder + "/" + System.DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + ".spsv", json);
+    }
+
+    public void CustomSave(string saveName)
+    {
+        SaveEverything();
+
+        string json = Serialization.Serialize(progressSave.GetType(), progressSave);
+
+        string customSaveFilePath = baseSavesFolder + saveName + ".spsv";
+        File.WriteAllText(customSaveFilePath, json);
+    }
+
+    private void SaveEverything()
     {
         SaveNPCStates();
         SaveInventory();
         SavePlayerLocations();
         SaveDiscoveries();
-
-        string json = Serialization.Serialize(progressSave.GetType(), progressSave);
-        File.WriteAllText(saveFilePath, json);
     }
 
-    public void LoadProgress()
+    public void LoadProgress(string path)
     {
         Debug.Log("Loading progress Data");
 
-        if (File.Exists(saveFilePath))
+        if (File.Exists(path))
         {
-            progressSave = Serialization.Deserialize(progressSave.GetType(), File.ReadAllText(saveFilePath)) as ProgressSave;
+            progressSave = Serialization.Deserialize(progressSave.GetType(), File.ReadAllText(path)) as ProgressSave;
 
             LoadNPCStates();
         }

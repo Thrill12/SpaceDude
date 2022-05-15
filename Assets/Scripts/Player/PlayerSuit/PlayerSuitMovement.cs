@@ -8,7 +8,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerSuitMovement : MonoBehaviour
 {
-
     [Header("Movement Settings")]
     public float dashSpeed = 5;
     public float dashTime = 1;
@@ -88,18 +87,20 @@ public class PlayerSuitMovement : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if(context.phase == InputActionPhase.Started)
+        if (context.started)
         {
             FindInteract();
         }
     }
 
     //Find nearby interactable, and interacts with the one closest to the front checker
-    private void FindInteract()
+    public void FindInteract()
     {
         List<GameObject> nearby = Physics2D.OverlapCircleAll(frontChecker.transform.position, 0.2f).Select(x => x.gameObject).Where(x => x.GetComponent<Interactable>()).ToList();
+
         if (nearby.Any())
         {
+            Debug.Log("Interacted from player scripts");
             nearby[0].GetComponent<Interactable>().Interact();
             return;
         }
