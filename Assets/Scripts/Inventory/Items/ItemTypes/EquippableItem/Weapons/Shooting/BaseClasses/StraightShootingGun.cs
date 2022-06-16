@@ -26,7 +26,6 @@ public class StraightShootingGun : BaseGun
 
         GameObject proj = Instantiate(projectile, shootSource.transform.position, Quaternion.identity);
 
-        //Have to make it relative ofc
         proj.GetComponent<Rigidbody2D>().velocity = ((projectileSpeed.Value) * lookDir.normalized);
         proj.GetComponent<Projectile>().entityShotFrom = hostEntity;
         proj.GetComponent<Projectile>().weaponShotFrom = this;

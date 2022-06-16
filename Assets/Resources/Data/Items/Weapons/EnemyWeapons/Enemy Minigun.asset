@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: Minigun
   itemDescription: The favourite gun of hte frost tips, this ravage weapon can blast
     through most things imaginable.
-  itemIcon: {fileID: 1568506619, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
+  itemIcon: {fileID: -2067977180, guid: a5752eb35fa4d3b46ab7722716ac79c1, type: 3}
   itemIconPath: Sprites/US
   itemRarity: {fileID: 11400000, guid: 832344019b921514faeab9a22f4c5cfb, type: 2}
   itemValue: 521
@@ -31,6 +31,7 @@ MonoBehaviour:
     _value: 0
     statModifiers: []
     isDirty: 1
+  itemSet: {fileID: 0}
   itemLevel: 1
   itemCurrentXP: 0
   itemXPToNextLevel: 1000
@@ -82,7 +83,7 @@ MonoBehaviour:
   ignoreAmmo: 0
   projectileSpeed:
     statName: Projectile Speed
-    BaseValue: 60000
+    BaseValue: 60
     _value: 0
     statModifiers: []
     isDirty: 1

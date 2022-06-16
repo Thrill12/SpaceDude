@@ -45,8 +45,7 @@ MonoBehaviour:
       _dynamic: 0
   entry: 0
   exit: 0
-  dialogueText: Yooo man thats...Kinda sad. I can't believe there isn't anyone left
-    there.
+  dialogueText: ...Kinda sad. I can't believe there isn't anyone left there.
 --- !u!114 &-4602165403337884498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +183,7 @@ MonoBehaviour:
   dialogue: 
   passButtonString: Yeah, sorry man.
   pass: 0
-  failButtonString: Haha, fuck you
+  failButtonString: I cannot do that im afraid
   fail: 0
 --- !u!114 &-1158815686169968424
 MonoBehaviour:

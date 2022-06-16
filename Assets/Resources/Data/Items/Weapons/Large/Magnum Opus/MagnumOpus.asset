@@ -83,7 +83,7 @@ MonoBehaviour:
   ignoreAmmo: 0
   projectileSpeed:
     statName: Lightning Ball Speed
-    BaseValue: 30
+    BaseValue: 6
     _value: 0
     statModifiers: []
     isDirty: 1

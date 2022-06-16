@@ -89,10 +89,9 @@ public class BaseEntity : MonoBehaviour
         {
             TakeDamagePureNumbers(damageToTake, hitter, ignoreEffect, effectFlags);
 
+            popupPosition += (Vector3)UnityEngine.Random.insideUnitCircle;
             PrefabManager.instance.SpawnNumberPopup(Mathf.RoundToInt(damageToTake), PrefabManager.instance.ascendedColour, popupPosition);
         }
-
-        //(Vector2)transform.position + UnityEngine.Random.insideUnitCircle)
     }
 
     public virtual void TakeDamageNoSound(float damageToTake, Vector3 popupPosition, BaseEntity hitter, bool ignoreEffect = false, EffectToCheck effectFlags = 0)

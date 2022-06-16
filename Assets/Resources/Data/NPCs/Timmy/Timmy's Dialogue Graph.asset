@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Start
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -1016.96967, y: -89.444725}
+  position: {x: -1000, y: -184}
   ports:
     keys:
     - exit
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: Dialogue
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -456.73987, y: -242.1882}
+  position: {x: -536, y: -264}
   ports:
     keys:
     - entry
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: Dialogue
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -364.77136, y: 227.84511}
+  position: {x: -328, y: 280}
   ports:
     keys:
     - entry
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Name: Two Choice
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -499.76965, y: -94.84472}
+  position: {x: -520, y: -136}
   ports:
     keys:
     - entry
@@ -279,7 +279,7 @@ MonoBehaviour:
   dialogue: Hey man, do you wanna help me on a very exciting quest?
   passButtonString: Yes sir, cmhere
   pass: 0
-  failButtonString: No fuck you
+  failButtonString: No, I don't want to help you
   fail: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Name: Dialogue
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 365.01382, y: 280.13394}
+  position: {x: 360, y: 280}
   ports:
     keys:
     - entry
@@ -395,7 +395,7 @@ MonoBehaviour:
       _dynamic: 0
   entry: 0
   exit: 0
-  dialogueText: Okay then, bugger off
+  dialogueText: Okay then, I see how it is
 --- !u!114 &4091862040663903561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Name: Two Choice
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -165.23987, y: -281.7882}
+  position: {x: -200, y: -264}
   ports:
     keys:
     - entry
@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: Two Choice
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -101.96062, y: 264.42957}
+  position: {x: -104, y: 216}
   ports:
     keys:
     - entry
@@ -510,7 +510,7 @@ MonoBehaviour:
       _dynamic: 0
   entry: 0
   dialogue: Are you, like, sure?
-  passButtonString: Yes i dont want your stupid quest
+  passButtonString: Yes i dont want your quest
   pass: 0
   failButtonString: Nevermind, I'll take it
   fail: 0
@@ -574,7 +574,7 @@ MonoBehaviour:
   m_Name: Check Quest Completion
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -760, y: -136}
+  position: {x: -776, y: -184}
   ports:
     keys:
     - entry

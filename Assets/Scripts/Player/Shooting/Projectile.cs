@@ -29,13 +29,13 @@ public class Projectile : MonoBehaviour
         transform.rotation = Quaternion.AngleAxis(angle + 90, Vector3.forward);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<BaseEntity>() && collision.GetComponent<BaseEntity>() != entityShotFrom || ((layerMask.value & (1 << collision.gameObject.layer)) > 0))
+        if (collision.gameObject.GetComponent<BaseEntity>() && collision.gameObject.GetComponent<BaseEntity>() != entityShotFrom || ((layerMask.value & (1 << collision.gameObject.layer)) > 0))
         {
             if (collision.gameObject.GetComponent<BaseEntity>() && collision.gameObject != entityShotFrom.gameObject)
             {
-                collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage, collision.ClosestPoint(gameObject.transform.position), entityShotFrom, false, hitEffects);
+                collision.gameObject.GetComponent<BaseEntity>().TakeDamage(damage, gameObject.transform.position, entityShotFrom, false, hitEffects);
             }
 
             if (collision.gameObject.GetComponent<Rigidbody2D>())
@@ -43,8 +43,10 @@ public class Projectile : MonoBehaviour
                 collision.gameObject.GetComponent<Rigidbody2D>().AddForce(GetComponent<Rigidbody2D>().velocity.normalized, ForceMode2D.Impulse);
             }
 
-            Explode();
-            Destroy(gameObject);
+            if (collision.gameObject != entityShotFrom.gameObject)
+            {
+                Explode();
+            }
         }
     }
 

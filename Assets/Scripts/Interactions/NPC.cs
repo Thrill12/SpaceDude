@@ -30,8 +30,7 @@ public class NPC : Interactable
     }
 
     private void Start()
-    {
-        
+    {    
         gameEvents = GameObject.FindGameObjectWithTag("GameEvents").GetComponent<GameEvents>();
 
         dialogueGraph = Resources.Load<DialogueGraph>(dialogueGraphPath);
@@ -44,9 +43,7 @@ public class NPC : Interactable
 
         try
         {
-            ProgressSave progressSave = GameManager.instance.progressSave;
-
-            
+            ProgressSave progressSave = GameManager.instance.progressSave;            
 
             if (progressSave.npcStates.npcList.Any(x => x.npcName == npcName))
             {
@@ -57,6 +54,8 @@ public class NPC : Interactable
                     activeQuest = thisNPCSave.activeQuest;
                     dialogueGraphPath = thisNPCSave.dialogueGraphPath;
                 }
+
+                GetComponent<DialogueParser>().StopAllCoroutines();
 
                 dialogueGraph = Resources.Load<DialogueGraph>(dialogueGraphPath);
 

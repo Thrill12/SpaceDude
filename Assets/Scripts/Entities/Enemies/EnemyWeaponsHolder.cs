@@ -89,7 +89,10 @@ public class EnemyWeaponsHolder : WeaponsHolder
             gun.ignoreAmmo = true;
         }
 
-        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform);
+        weaponObject = Instantiate(currentlyEquippedWeapon.weaponObject, weaponObjectPosition.transform.position, Quaternion.identity);
         weaponObject.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+        weaponObject.transform.rotation = gameObject.transform.rotation;
+        currentlyEquippedWeapon.instantiatedWeapon = weaponObject;
+        weaponObject.transform.parent = gameObject.transform;
     }
 }
